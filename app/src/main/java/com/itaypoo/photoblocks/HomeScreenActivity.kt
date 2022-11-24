@@ -114,7 +114,7 @@ class HomeScreenActivity : AppCompatActivity() {
         // Set dialog window width, height, background and position
         menuDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         menuDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        menuDialog.window?.setGravity(Gravity.BOTTOM)
+        menuDialog.window?.setGravity(Gravity.RIGHT)
 
         // Get button views
         val buttonContacts = menuDialog.findViewById<Button>(R.id.nbs_contactsButton)
