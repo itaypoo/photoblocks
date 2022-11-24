@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserSettingsActivity">
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/shrikhand"
+        android:gravity="center"
+        android:text="@string/user_settings_title"
+        android:textColor="@color/on_background"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profilePhotoPreviewImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="60dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:0.7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintWidth_max="300dp"
+        app:shapeAppearance="@style/circleImageView35"
+        app:srcCompat="@drawable/default_profile_photo" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhotoPreviewImage">
+
+        <TextView
+            android:id="@+id/namePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_regular"
+            android:text="UserName"
+            android:textColor="@color/on_background"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/numberPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/lexenddeca_regular"
+            android:text="05012345678"
+            android:textColor="@color/on_background_variant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/namePreview"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:dividerColor="@color/background_variant"
+        app:layout_constraintBottom_toTopOf="@+id/space2"
+        app:layout_constraintEnd_toEndOf="@+id/cardChangeImage"
+        app:layout_constraintStart_toStartOf="@+id/cardChangeName"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="1dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardChangeName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/primary_container"
+        android:clickable="true"
+        android:foreground="@drawable/ripple"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="1:0.4"
+        app:layout_constraintEnd_toStartOf="@+id/space2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/space2"
+        app:layout_constraintWidth_max="200dp">
+
+        <Button
+            android:id="@+id/changeNameContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/primary_container"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:enabled="false"
+            android:fontFamily="@font/manrope_medium"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/change_name"
+            android:textColor="@color/on_primary_container"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_rename"
+            app:iconGravity="textStart"
+            app:iconPadding="2dp"
+            app:iconTint="@color/on_primary_container"
+            app:rippleColor="#00FFFFFF" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardChangeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/primary_container"
+        android:clickable="true"
+        android:foreground="@drawable/ripple"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="1:0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/space2"
+        app:layout_constraintTop_toTopOf="@+id/cardChangeName"
+        app:layout_constraintWidth_max="200dp">
+
+        <Button
+            android:id="@+id/changeImageContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:enabled="false"
+            android:fontFamily="@font/manrope_medium"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/change_pfp"
+            android:textColor="@color/on_primary_container"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_add_photo"
+            app:iconGravity="textStart"
+            app:iconPadding="2dp"
+            app:iconTint="@color/on_primary_container" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardLogOut"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/error_container"
+        android:clickable="true"
+        android:foreground="@drawable/ripple"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="1:0.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardChangeImage"
+        app:layout_constraintWidth_max="420dp">
+
+        <Button
+            android:id="@+id/logOutContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:enabled="false"
+            android:fontFamily="@font/manrope_medium"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/log_out"
+            android:textColor="@color/on_error_container"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_log_out"
+            app:iconGravity="textStart"
+            app:iconPadding="2dp"
+            app:iconTint="@color/on_error_container" />
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:text="@string/new_block"
+        android:textColor="@color/on_primary"
+        android:transitionName="sharedview_button"
+        app:backgroundTint="@color/primary"
+        app:icon="@drawable/icon_add"
+        app:iconTint="@color/on_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

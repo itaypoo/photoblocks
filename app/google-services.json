@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "692445991959",
+    "project_id": "photoblocks-1a69c",
+    "storage_bucket": "photoblocks-1a69c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692445991959:android:97895474e78bc721303852",
+        "android_client_info": {
+          "package_name": "com.itaypoo.photoblocks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692445991959-fqo46anh8b08g92tr533ebuatf08igl2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg4aHAFOL8njQHoFGFteZwCpLbHpMCIA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692445991959-fqo46anh8b08g92tr533ebuatf08igl2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

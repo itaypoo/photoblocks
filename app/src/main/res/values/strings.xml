@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name" translatable="false">photoblocks</string>
+    <string name="title" translatable="false">photoblocks</string>
+    <string name="continue_button">continue</string>
+    <string name="cancel">cancel</string>
+    <string name="phone_number">phone number</string>
+    <string name="invalid_phone_number">please enter a valid phone number</string>
+    <string name="submit_verification_code">submit code</string>
+    <string name="verification_code">verification code</string>
+    <string name="invalid_verification_code">please enter a valid code</string>
+    <string name="code_sent_description">we\'ve sent a 6-digit code to your phone number, please check your messages and enter it here.</string>
+    <string name="setup_profile_title">setup your profile</string>
+    <string name="upload_profile_photo">upload profile photo</string>
+    <string name="complete_profile">complete profile</string>
+    <string name="user_name">user name</string>
+    <string name="invalid_name_too_short">name must be longer than 2 characters</string>
+    <string name="invalid_name_too_long">name must be shorter than 20 characters</string>
+    <string name="my_blocks">my blocks</string>
+    <string name="new_block">new block</string>
+    <string name="create_block_title">open a new block</string>
+    <string name="members">members</string>
+    <string name="change_header_photo">change header photo</string>
+    <string name="block_title_hint">block title</string>
+    <string name="open_block_button">open block</string>
+    <string name="curated_photos_title">curated photos library</string>
+    <string name="curated_photos_desc">this is a library of photos curated just for you. click on a photo to select it, or press cancel to dismiss.</string>
+    <string name="user_settings_title">account settings</string>
+    <string name="change_name">change name</string>
+    <string name="dark_theme">dark theme</string>
+    <string name="log_out">log out</string>
+    <string name="change_pfp">change photo</string>
+    <string name="done">done</string>
+    <string name="new_name">new name</string>
+    <string name="name_changed_alert">user name changed successfully.</string>
+    <string name="name_change_failed_network_error">failed to change name. please check your internet connection.</string>
+    <string name="name_change_failed_unknown">failed changing name. please try again.</string>
+    <string name="uploading_image">uploading image...</string>
+    <string name="unexpected_error_relog">an unexpected error has occurred, please try to log in again.</string>
+    <string name="uploading_image_failed">uploading image failed. please try again.</string>
+    <string name="unexpected_error">an unexpected error has occurred.</string>
+    <string name="pfp_changed_alert">profile photo changed successfully</string>
+    <string name="confirm_log_out">are you sure you want to log out?</string>
+    <string name="confirm_log_out_desc">your account will not be affected - you will be able to log back in.</string>
+    <string name="welcome_message">"welcome to photoblocks, "</string>
+    <string name="welcome_back_message">"welcome back, "</string>
+    <string name="choose_photo_from">choose photo from...</string>
+    <string name="device_gallery">device gallery</string>
+    <string name="curated_photos_library">curated photos library</string>
+    <string name="invalid_block_name_too_short">name must be longer than 4 characters</string>
+    <string name="invalid_block_name_too_long">name must be shorter than 25 characters</string>
+    <string name="block_upload_failed_no_connection">creating block failed - please check your internet connection.</string>
+    <string name="block_upload_failed">creating block failed.</string>
+    <string name="block_created_message">block created!</string>
+    <string name="creating_block">creating your block, hold on...</string>
+    <string name="falied_loading_blocks">failed loading blocks, please try again later</string>
+    <string name="falied_loading_blocks_network">failed loading blocks, please check your internet connection</string>
+</resources>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:backgroundTint="@color/background"
+    android:transitionGroup="true"
+    android:transitionName="sharedview_button"
+    tools:context=".CreateBlockActivity">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/shrikhand"
+        android:gravity="center"
+        android:text="@string/create_block_title"
+        android:textColor="@color/on_background"
+        android:textSize="30sp"
+        android:transitionName="sharedview_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/blockPreviewCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="13dp"
+        app:cardBackgroundColor="@color/background_variant"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="1:0.45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintWidth_max="500dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/blockPreviewImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/default_block_image" />
+
+            <ImageView
+                android:id="@+id/blockColorGradient"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/two_sided_gradient"
+                app:tint="#99C8D7" />
+
+            <TextView
+                android:id="@+id/blockNameError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/error_container"
+                android:padding="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="Error text Error text Error text "
+                android:textColor="@color/on_error_container"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/blockTitleEditText"
+                app:layout_constraintStart_toStartOf="@+id/blockTitleEditText"
+                app:layout_constraintTop_toBottomOf="@+id/blockTitleEditText" />
+
+            <Button
+                android:id="@+id/blockChangePhotoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#94D3E8"
+                android:fontFamily="@font/manrope_medium"
+                android:text="@string/change_header_photo"
+                android:visibility="visible"
+                app:icon="@drawable/icon_add_photo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/blockNameError" />
+
+            <EditText
+                android:id="@+id/blockTitleEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="#6DFFFFFF"
+                android:ems="10"
+                android:fontFamily="@font/manrope_medium"
+                android:gravity="center"
+                android:hint="@string/block_title_hint"
+                android:inputType="textPersonName"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:textColor="#121212"
+                android:textColorHint="#121212"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.32999998"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/membersCard"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        app:cardBackgroundColor="@color/primary_container"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/blockPreviewCard"
+        app:layout_constraintStart_toStartOf="@+id/blockPreviewCard"
+        app:layout_constraintTop_toBottomOf="@+id/blockPreviewCard">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/manrope_medium"
+                android:text="@string/members"
+                android:textColor="@color/on_primary_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <Button
+        android:id="@+id/openBlockButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/manrope_medium"
+        android:text="@string/open_block_button"
+        android:transitionName="sharedview_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_max="500dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

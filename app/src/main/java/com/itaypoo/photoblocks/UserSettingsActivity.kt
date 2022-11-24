@@ -1,0 +1,267 @@
+package com.itaypoo.photoblocks
+
+import android.animation.ValueAnimator
+import android.app.Dialog
+import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.transition.ChangeImageTransform
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.animation.AnimationUtils
+import android.view.animation.DecelerateInterpolator
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import com.itaypoo.helpers.AppUtils
+import com.itaypoo.helpers.Consts
+import com.itaypoo.photoblocks.databinding.ActivityUserSettingsBinding
+import com.itaypoo.photoblockslib.inputCheck
+import java.io.File
+import java.util.*
+
+class UserSettingsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityUserSettingsBinding
+
+    private lateinit var database: FirebaseFirestore
+    private lateinit var storageRef: StorageReference
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setupTransitions()
+        super.onCreate(savedInstanceState)
+        binding = ActivityUserSettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        database = Firebase.firestore
+        storageRef = FirebaseStorage.getInstance().reference
+
+        binding.namePreview.text = AppUtils.currentUser?.name
+        binding.numberPreview.text = AppUtils.currentUser?.phoneNumber
+        Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePhotoPreviewImage)
+
+        var fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in_from_bottom)
+        binding.root.startAnimation(fadeInAnim)
+
+        // Set on click listeners for buttons
+        binding.cardChangeName.setOnClickListener { openChangeNameDialog() }
+        binding.cardChangeImage.setOnClickListener { changeProfilePhoto() }
+        binding.cardLogOut.setOnClickListener {
+            // Show confirmation dialog before logging out
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.confirm_log_out))
+                .setMessage(resources.getString(R.string.confirm_log_out_desc))
+                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                    // Log out denied.
+                }
+                .setPositiveButton(resources.getString(R.string.log_out)) { dialog, which ->
+                    // Log out confirmed
+                    logOut()
+                }
+                .show()
+        }
+    }
+
+    private fun setupTransitions(){
+        with(window) {
+            requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+            // set an exit transition
+            enterTransition = ChangeImageTransform()
+        }
+    }
+
+    private fun viewScaleAnimation(view: View, duration: Long){
+        val interpolator = DecelerateInterpolator()
+        // Animate a float from 0 to 1
+        val scaleAnim = ValueAnimator.ofFloat(0.0F, 1.0F)
+        scaleAnim.duration = duration
+        scaleAnim.interpolator = interpolator
+
+        // Change view scale.y to that float in layout, every tick of the value change
+        scaleAnim.addUpdateListener {
+            val animatedValue = scaleAnim.animatedValue as Float
+            view.scaleY = animatedValue
+        }
+
+        // Start scale animation
+        scaleAnim.start()
+    }
+
+    override fun finish() {
+        super.finish()
+        // Fade out anim when activity finishes
+        var fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_out_to_bottom)
+        binding.root.startAnimation(fadeInAnim)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun openChangeNameDialog(){
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_text_input)
+
+        // Set dialog window width, height, background and position
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setGravity(Gravity.CENTER)
+
+        // Get dialog views
+        val cancelButton = dialog.findViewById<Button>(R.id.inputDialog_cancelButton)
+        val doneButton = dialog.findViewById<Button>(R.id.inputDialog_doneButton)
+        val errorText = dialog.findViewById<TextView>(R.id.inputDialog_errorText)
+        val textInput = dialog.findViewById<EditText>(R.id.inputDialog_editText)
+
+        // Init views
+        dialog.findViewById<TextView>(R.id.inputDialog_titleText)
+            .text = getString(R.string.change_name)
+        textInput.hint = getString(R.string.new_name)
+        errorText.visibility = View.GONE
+
+        // Set cancel onclick and done onclick
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        doneButton.setOnClickListener {
+            // Check if inputted name is valid
+            val text = textInput.text.toString()
+            val valid = inputCheck.checkUserName(text)
+
+            errorText.visibility = View.GONE
+            when(valid){
+                inputCheck.USER_NAME_TOO_SHORT -> {
+                    // Name is too short
+                    errorText.visibility = View.VISIBLE
+                    errorText.text = getString(R.string.invalid_name_too_short)
+                }
+                inputCheck.USER_NAME_TOO_LONG -> {
+                    // Name is too long
+                    errorText.visibility = View.VISIBLE
+                    errorText.text = getString(R.string.invalid_name_too_long)
+                }
+                inputCheck.USER_NAME_VALID -> {
+                    // Name is valid
+                    changeUserName(text)
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun changeUserName(newName: String){
+        if(AppUtils.currentUser != null && AppUtils.currentUser!!.databaseId != null){
+            database.collection("users").document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
+                // Name update success, update UI
+                Snackbar.make(binding.root, getString(R.string.name_changed_alert), Snackbar.LENGTH_SHORT).show()
+                AppUtils.currentUser!!.name = newName
+                binding.namePreview.text = newName
+            }.addOnFailureListener {
+                // Name update failed
+                if(it is FirebaseNetworkException){
+                    Snackbar.make(binding.root, getString(R.string.name_change_failed_network_error), Snackbar.LENGTH_SHORT).show()
+                }
+                else{
+                    Snackbar.make(binding.root, getString(R.string.name_change_failed_unknown), Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+        else{
+            // No logged in user?? Error
+            Snackbar.make(binding.root, getString(R.string.unexpected_error_relog), Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+
+    private fun changeProfilePhoto(){
+        if(AppUtils.currentUser != null && AppUtils.currentUser!!.databaseId != null){
+            val cropIntent = Intent(this, ImageCropActivity::class.java)
+            cropIntent.putExtra(Consts.Extras.CROP_INPUT_RATIO, Consts.Extras.RATIO_ONE_TO_ONE)
+            startActivityForResult(cropIntent, Consts.RequestCode.CROP_IMAGE_ACTIVITY)
+        }
+        else{
+            // No logged in user?? Error
+            Snackbar.make(binding.root, getString(R.string.unexpected_error_relog), Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == Consts.RequestCode.CROP_IMAGE_ACTIVITY && resultCode == RESULT_OK && data != null){
+            // User chose an image and cropped it. Now get the image and update upload it to storage.
+            val path = data.getStringExtra(Consts.Extras.CROP_OUTPUT_CROPPEDFILENAME).toString()
+            Snackbar.make(binding.root, getString(R.string.uploading_image), Snackbar.LENGTH_SHORT).show()
+
+            // Delete previous profile photo from storage
+            // Current user cannot be null - checked before
+            // IMPORTENT - do not delete old photo if it is the default one!
+            // default photo is only stored once in the database thus must not be deleted
+            val oldRef = Firebase.storage.getReferenceFromUrl(AppUtils.currentUser!!.profilePhotoUrl)
+            if((AppUtils.currentUser!!.profilePhotoUrl) != Consts.Defaults.USER_PFP_URL){
+                oldRef.delete()
+            }
+
+            // Upload new profile photo under a generated UUID
+            val absPath = getFileStreamPath(path).absolutePath
+            val file = File(absPath)
+            val uri = Uri.fromFile(file)
+            val uuid = UUID.randomUUID().toString()
+            val uploadTask = storageRef.child("userProfileImages/$uuid").putFile(uri)
+
+            uploadTask.addOnFailureListener{
+                // Uploading image failed, reset chosen image
+                Snackbar.make(binding.root, getString(R.string.uploading_image_failed), Snackbar.LENGTH_SHORT).show()
+
+            }.addOnSuccessListener {
+                // Uploading image success, get its url, finish uploading room data to firestore
+                storageRef.child("userProfileImages/$uuid").downloadUrl.
+                addOnSuccessListener {
+                    // Save new image url and update UI
+                    AppUtils.currentUser?.profilePhotoUrl = it.toString()
+                    val bitmap = AppUtils.getBitmapFromPrivateInternal(path, this)
+                    binding.profilePhotoPreviewImage.setImageBitmap(bitmap)
+                    Snackbar.make(binding.root, getString(R.string.pfp_changed_alert), Snackbar.LENGTH_SHORT).show()
+
+                    // Update firestore user with the new image url
+                    database.collection("users").document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
+                }.
+                addOnFailureListener{
+                    // Unknown error when getting photo url
+                    Snackbar.make(binding.root, getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun logOut(){
+        // Delete user data from AppUtils and SharedPreferences
+        AppUtils.currentUser = null
+
+        val sharedPref: SharedPreferences = getSharedPreferences(Consts.SharedPrefs.PATH, MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
+        editor.apply()
+
+        // Go to splash screen
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
+}

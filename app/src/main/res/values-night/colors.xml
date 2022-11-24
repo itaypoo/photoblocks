@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primary">#ABC7FF</color>
+    <color name="on_primary">#002F65</color>
+
+    <color name="primary_container">#282E45</color>
+    <color name="on_primary_container">#D7E3FF</color>
+
+    <color name="background">#1A1B1F</color>
+    <color name="on_background">#E3E2E6</color>
+
+    <color name="background_variant">#313234</color>
+    <color name="on_background_variant">#C4C6D0</color>
+
+    <color name="error">#FFB4AB</color>
+    <color name="on_error">#690005</color>
+
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFDAD6</color>
+
+    <color name="dialog_background">#2A2D36</color>
+    <color name="dialog_primary">#ADC1F4</color>
+
+</resources>

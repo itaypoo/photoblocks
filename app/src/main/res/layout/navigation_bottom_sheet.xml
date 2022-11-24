@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_rectangle"
+    android:backgroundTint="@color/background">
+
+    <Button
+        android:id="@+id/nbs_contactsButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="center|left"
+        android:paddingStart="30dp"
+        android:text="contacts"
+        android:textColor="@color/on_background"
+        android:textSize="20sp"
+        app:icon="@drawable/icon_people"
+        app:iconPadding="30dp"
+        app:iconSize="27dp"
+        app:iconTint="@color/on_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="@color/background_variant" />
+
+    <Button
+        android:id="@+id/nbs_joinWithCodeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="center|left"
+        android:paddingStart="30dp"
+        android:text="join with code"
+        android:textColor="@color/on_background"
+        android:textSize="20sp"
+        app:icon="@drawable/icon_key"
+        app:iconPadding="30dp"
+        app:iconSize="27dp"
+        app:iconTint="@color/on_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nbs_contactsButton"
+        app:rippleColor="@color/background_variant" />
+
+    <Button
+        android:id="@+id/nbs_optionsButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="center|left"
+        android:paddingStart="30dp"
+        android:text="options"
+        android:textColor="@color/on_background"
+        android:textSize="20sp"
+        app:icon="@drawable/icon_settings"
+        app:iconPadding="30dp"
+        app:iconSize="27dp"
+        app:iconTint="@color/on_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nbs_joinWithCodeButton"
+        app:rippleColor="@color/background_variant" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nbs_optionsButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
