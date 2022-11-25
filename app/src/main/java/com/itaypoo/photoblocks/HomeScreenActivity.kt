@@ -27,6 +27,7 @@ import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
 import com.itaypoo.photoblockslib.Block
+import io.grpc.TlsServerCredentials.Feature
 
 
 class HomeScreenActivity : AppCompatActivity() {
@@ -108,12 +109,13 @@ class HomeScreenActivity : AppCompatActivity() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun setupMenuDialog() {
-        menuDialog = Dialog(this)
-        menuDialog.setContentView(R.layout.navigation_bottom_sheet)
+        menuDialog = Dialog(this, R.style.CustomDialog)
+        menuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        menuDialog.setContentView(R.layout.dialog_sidebar_menu)
 
         // Set dialog window width, height, background and position
-        menuDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         menuDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        menuDialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
         menuDialog.window?.setGravity(Gravity.RIGHT)
 
         // Get button views

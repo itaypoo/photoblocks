@@ -16,10 +16,21 @@
 
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
+
     </style>
 
     <style name="circleImageView35" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">35%</item>
     </style>
+
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
+    </style>
+
+    <style name="CustomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_right</item>
+    </style>
+
 </resources>

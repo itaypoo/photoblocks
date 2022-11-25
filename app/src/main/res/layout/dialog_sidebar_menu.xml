@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="-35dp"
+        android:layout_marginBottom="10dp"
+        app:cardBackgroundColor="#000000"
+        app:cardCornerRadius="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|top"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <Button
+                    android:id="@+id/nbs_contactsButton"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/rounded_rectangle"
+                    android:backgroundTint="@color/dialog_primary"
+                    android:fontFamily="@font/manrope_medium"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="contacts"
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/icon_people"
+                    app:iconGravity="textTop"
+                    app:iconSize="30dp"
+                    app:iconTint="@color/on_primary" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <Button
+                    android:id="@+id/nbs_optionsButton"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/rounded_rectangle"
+                    android:backgroundTint="@color/dialog_primary"
+                    android:fontFamily="@font/manrope_medium"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="settings"
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/icon_settings"
+                    app:iconGravity="textTop"
+                    app:iconSize="30dp"
+                    app:iconTint="@color/on_primary" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <Button
+                    android:id="@+id/nbs_joinWithCodeButton"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/rounded_rectangle"
+                    android:fontFamily="@font/manrope_medium"
+                    android:maxEms="6"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="0dp"
+                    android:text="join with code"
+                    android:textColor="#FFFFFF"
+                    app:icon="@drawable/icon_key"
+                    app:iconGravity="textTop"
+                    app:iconSize="30dp"
+                    app:iconTint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/shrikhand"
+                    android:gravity="bottom|center_horizontal"
+                    android:text="photoblocks"
+                    android:textColor="#CDCDCD"
+                    android:textSize="10sp" />
+
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="35dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
