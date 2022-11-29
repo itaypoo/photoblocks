@@ -1,14 +1,20 @@
 package com.itaypoo.photoblockslib
 
 data class Block(
+
     var databaseId: String?,
     var title: String,
     var creatorId: String,
     var coverImageUrl: String,
+    var creationTime: String,
+
     var primaryColor: Number,
     var secondaryColor: Number,
-    var creationTime: Number,
-    var members: List<String>,
+
+    var collageEnabled: Boolean,
+    var collageOrderedByLikes: Boolean,
+    var collageImageTime: Int
+
     ) {
 
     fun toHashMap(): HashMap<String, Any>{
@@ -16,10 +22,12 @@ data class Block(
             "title" to title,
             "creatorId" to creatorId,
             "coverImageUrl" to coverImageUrl,
+            "creationTime" to creationTime,
             "primaryColor" to primaryColor,
             "secondaryColor" to secondaryColor,
-            "creationTime" to creationTime,
-            "members" to members
+            "collageEnabled" to collageEnabled,
+            "collageOrderedByLikes" to collageOrderedByLikes,
+            "collageImageTime" to collageImageTime
         )
     }
 

@@ -13,6 +13,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityMainBinding
 import com.itaypoo.photoblockslib.User
 
@@ -35,8 +36,14 @@ class MainActivity : AppCompatActivity() {
 
         nextIntent = Intent(this, PhoneAuthActivity::class.java)
 
-        // Check if user login is saved on device
         val sharedPref: SharedPreferences = getSharedPreferences(Consts.SharedPrefs.PATH, MODE_PRIVATE)
+
+        // Remove saved user -- UNCOMMENT FOR DEBUGGING PURPOSES ONLY
+//        val editor = sharedPref.edit()
+//        editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
+//        editor.commit()
+
+        // Check if user login is saved on device
         val savedUserId = sharedPref.getString(Consts.SharedPrefs.SAVED_USER_ID_KEY,  null)
 
         if(savedUserId != null){
@@ -44,18 +51,7 @@ class MainActivity : AppCompatActivity() {
             val database = Firebase.firestore
             database.collection("users").document(savedUserId).get().addOnSuccessListener {
                 // Getting user success
-                val user = User(
-                    it.id,
-                    it.get("name") as String,
-                    it.get("phoneNumber") as String,
-                    it.get("profilePhotoUrl") as String,
-                    it.get("creationYear") as Number,
-                    it.get("creationDay") as Number,
-                    it.get("creationMinute") as Number,
-                    it.get("isPrivate") as Boolean,
-                    it.get("blocksJoined") as List<String>,
-                    it.get("blockInvitations") as List<String>,
-                )
+                val user = FirebaseUtils.ObjectFromDoc.User(it)
                 AppUtils.currentUser = user
 
                 nextIntent = Intent(this, HomeScreenActivity::class.java)

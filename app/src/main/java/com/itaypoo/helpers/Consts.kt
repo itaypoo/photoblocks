@@ -1,5 +1,7 @@
 package com.itaypoo.helpers
 
+import android.graphics.Color
+
 object Consts {
     // Request Codes ( for startActivityForResult() )
     internal object RequestCode{
@@ -15,9 +17,15 @@ object Consts {
         const val USER_NAME = "photoblocks user"
         const val USER_PRIVACY_MODE = false
 
+        const val BLOCK_NAME = "new block"
         const val BLOCK_COVER_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/photoblocks-1a69c.appspot.com/o/defaults%2FdefaultCoverImage.png?alt=media&token=83dd2244-2c86-49c5-a3f6-5d9cae5c0751"
-        const val BLOCK_PRIMARY_COLOR = "#6E7478"
-        const val BLOCK_SECONDARY_COLOR = "#51708A"
+        val BLOCK_PRIMARY_COLOR = Color.parseColor("#6E7478")
+        val BLOCK_SECONDARY_COLOR = Color.parseColor("#51708A")
+        const val BLOCK_COLLAGE_ENABLED = true
+        const val BLOCK_COLLAGE_ORDERED_BY_LIKES = true
+        const val BLOCK_COLLAGE_IMAGE_TIME = 5000
+
+        const val DATE_FORMAT = "MM-dd-yyyy-HH-mm-ss"
     }
 
     // Shared preferences keys and path

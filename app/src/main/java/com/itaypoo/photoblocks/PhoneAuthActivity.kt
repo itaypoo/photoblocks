@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityPhoneAuthBinding
 import com.itaypoo.photoblockslib.User
 import java.util.concurrent.TimeUnit
@@ -214,18 +215,7 @@ class PhoneAuthActivity : AppCompatActivity() {
             else{
                 // A user with this phone number exists, load it's data and log in
                 val doc = it.documents[0]
-                val user = User(
-                    doc.id,
-                    doc.get("name") as String,
-                    doc.get("phoneNumber") as String,
-                    doc.get("profilePhotoUrl") as String,
-                    doc.get("creationYear") as Number,
-                    doc.get("creationDay") as Number,
-                    doc.get("creationMinute") as Number,
-                    doc.get("isPrivate") as Boolean,
-                    doc.get("blocksJoined") as List<String>,
-                    doc.get("blockInvitations") as List<String>,
-                )
+                val user = FirebaseUtils.ObjectFromDoc.User(doc)
                 AppUtils.currentUser = user
 
                 // Save user id in local for auto log in

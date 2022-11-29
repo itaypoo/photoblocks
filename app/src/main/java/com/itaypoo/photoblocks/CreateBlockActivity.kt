@@ -33,8 +33,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityCreateBlockBinding
 import com.itaypoo.photoblockslib.Block
+import com.itaypoo.photoblockslib.BlockMember
 import com.itaypoo.photoblockslib.inputCheck
 import java.io.File
 import java.util.*
@@ -74,16 +76,7 @@ class CreateBlockActivity : AppCompatActivity() {
         }
 
         // Init block
-        newBlock = Block(
-            null,
-            getString(R.string.new_block),
-            AppUtils.currentUser!!.databaseId!!,
-            Consts.Defaults.BLOCK_COVER_IMAGE_URL,
-            69,                               // TEMPORARY
-            69,                            // TEMPORARY
-            69,                            // TEMPORARY
-            listOf(AppUtils.currentUser!!.databaseId!!)
-        )
+        newBlock = FirebaseUtils.DefaultObjects.Block(AppUtils.currentUser!!)
 
     }
 
@@ -211,10 +204,10 @@ class CreateBlockActivity : AppCompatActivity() {
         // Generate a color palette that matches the selected picture
         val palette = Palette.from(bitmap).generate()
 
-        if(palette.lightVibrantSwatch == null) { newBlock.primaryColor = Color.parseColor(Consts.Defaults.BLOCK_PRIMARY_COLOR) }
+        if(palette.lightVibrantSwatch == null) { newBlock.primaryColor = Consts.Defaults.BLOCK_PRIMARY_COLOR }
         else { newBlock.primaryColor = palette.lightVibrantSwatch!!.rgb }
 
-        if(palette.dominantSwatch == null) { newBlock.secondaryColor = Color.parseColor(Consts.Defaults.BLOCK_SECONDARY_COLOR) }
+        if(palette.dominantSwatch == null) { newBlock.secondaryColor = Consts.Defaults.BLOCK_SECONDARY_COLOR }
         else { newBlock.secondaryColor = palette.dominantSwatch!!.rgb }
 
         // Update UI
@@ -313,6 +306,27 @@ class CreateBlockActivity : AppCompatActivity() {
         }.addOnSuccessListener {
             // Uploading block success!
             Toast.makeText(this, getString(R.string.block_created_message), Toast.LENGTH_SHORT).show()
+            uploadUserBlockMember(it.id)
+        }
+    }
+
+    private fun uploadUserBlockMember(blockId: String) {
+        // Last step of creating the block - Uploading a user member, thus adding the current user to the created block
+        val member = BlockMember(
+            null,
+            blockId,
+            AppUtils.currentUser!!.databaseId!!,
+            AppUtils.currentTimeString()
+        )
+        database.collection("blockMembers").add(member.toHashMap()).addOnFailureListener {
+            if(it is FirebaseNetworkException){
+                Snackbar.make(this, binding.root, getString(R.string.block_upload_failed_no_connection), Snackbar.LENGTH_SHORT).show()
+            }
+            else{
+                Snackbar.make(this, binding.root, getString(R.string.block_upload_failed), Snackbar.LENGTH_SHORT).show()
+            }
+        }.addOnSuccessListener {
+            Toast.makeText(this, "USER ADDED TO BLOCK", Toast.LENGTH_SHORT).show()
             finish()
         }
     }

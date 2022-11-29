@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivitySetupUserBinding
 import com.itaypoo.photoblockslib.User
 import com.itaypoo.photoblockslib.inputCheck
@@ -60,19 +61,7 @@ class SetupUserActivity : AppCompatActivity() {
         }
 
         // Init user object
-        val timeList = AppUtils.getGlobalTime()
-        user = User(
-            null,
-            Consts.Defaults.USER_NAME,
-            phoneNumber,
-            Consts.Defaults.USER_PFP_URL,
-            timeList[0],
-            timeList[1],
-            timeList[2],
-            Consts.Defaults.USER_PRIVACY_MODE,
-            listOf("joinedBlock1", "joinedBlock2", "BLOCK3"),
-            listOf("invited1", "2I", "BRUH INVATATION")
-        )
+        user = FirebaseUtils.DefaultObjects.User(phoneNumber)
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

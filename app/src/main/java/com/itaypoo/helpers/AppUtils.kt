@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.toColor
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.photoblockslib.Block
@@ -13,6 +14,7 @@ import com.itaypoo.photoblockslib.User
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 object AppUtils {
@@ -27,6 +29,7 @@ object AppUtils {
         storageRef = FirebaseStorage.getInstance().reference
     }
 
+    // Save a bitmap to private internal storage
     fun saveBitmapToPrivateInternal(bitmap: Bitmap, fileName: String, context: Context): String? {
         var fileName: String? = fileName // No .png or .jpg needed
         try {
@@ -46,8 +49,8 @@ object AppUtils {
         return fileName
     }
 
+    // Get a bitmap that was saved in internal storage (Preferably from saveBitmapToPrivateInternal())
     fun getBitmapFromPrivateInternal(fileName: String, context: Context): Bitmap{
-        // Get bitmap that was saved in internal storage
         val inputStream = context.openFileInput(fileName)
         val res = BitmapFactory.decodeStream(inputStream)
         // Remember to close input stream
@@ -56,20 +59,7 @@ object AppUtils {
         return res
     }
 
-    fun getGlobalTime(): List<Int>{
-        // Get current time in GMT
-        // Returns a list of (year, day, minute)
-        val dateFormat: DateFormat = DateFormat.getTimeInstance()
-        dateFormat.setTimeZone(TimeZone.getTimeZone("gmt"))
-        val cal: Calendar = dateFormat.getCalendar()
-
-        val year: Int = cal.get(Calendar.YEAR)
-        val day: Int = cal.get(Calendar.DAY_OF_YEAR)
-        val minute: Int = cal.get(Calendar.MINUTE)
-
-        return listOf<Int>(year, day, minute)
-    }
-
+    // Invert a color using its RGB values
     fun invertColor(color: Int, alpha: Int): Int{
         val red: Int = ( 255 - color.toColor().red() ).toInt()
         val green: Int = ( 255 - color.toColor().green() ).toInt()
@@ -78,4 +68,8 @@ object AppUtils {
         return Color.argb(alpha, red, green, blue)
     }
 
+    fun currentTimeString(): String{
+        val df = SimpleDateFormat("MM")
+        return df.format(Calendar.getInstance().time)
+    }
 }

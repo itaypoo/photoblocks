@@ -25,9 +25,9 @@ import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.BlockListAdapter
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
 import com.itaypoo.photoblockslib.Block
-import io.grpc.TlsServerCredentials.Feature
 
 
 class HomeScreenActivity : AppCompatActivity() {
@@ -83,7 +83,7 @@ class HomeScreenActivity : AppCompatActivity() {
         }
 
         // Load block list
-        loadBlockList()
+        loadBlocksJoined()
 
         // Open menu on menu button click
         setupMenuDialog()
@@ -139,38 +139,57 @@ class HomeScreenActivity : AppCompatActivity() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    private fun loadBlockList() {
+    private fun loadBlocksJoined() {
         // Get all blocks that the current user is a member of
-        database.collection("blocks").whereArrayContains("members", AppUtils.currentUser!!.databaseId!!).get()
+        database.collection("blockMembers").whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
         .addOnFailureListener {
 
-            // Loading block list failed
+            // Loading members list failed
             if(it is FirebaseNetworkException)
                 Snackbar.make(this, binding.root, getString(R.string.falied_loading_blocks_network), Snackbar.LENGTH_LONG).show()
             else Snackbar.make(this, binding.root, getString(R.string.falied_loading_blocks), Snackbar.LENGTH_LONG).show()
 
         }.addOnSuccessListener {
 
-            // Loading block list complete
-            // Generate a list of all blocks loaded
-            val blockList: MutableList<Block> = mutableListOf()
+            // Loading members list complete
+            // Generate a list of all the block ID's
+            val blockIdList: MutableList<String> = mutableListOf()
             for(doc in it){
-                val block = Block(
-                    doc.id,
-                    doc.get("title") as String,
-                    doc.get("creatorId") as String,
-                    doc.get("coverImageUrl") as String,
-                    doc.get("primaryColor") as Number,
-                    doc.get("secondaryColor") as Number,
-                    doc.get("creationTime") as Number,
-                    doc.get("members") as List<String>
-                )
-
-                blockList.add(block)
+                blockIdList.add(doc.get("blockId") as String)
             }
 
-            // Setup block RecyclerView
-            val adapter = BlockListAdapter(blockList, this)
+            // Now we have all the block the user is a member of. Lets load them..
+            loadBlocksList(blockIdList)
+
+        }
+    }
+
+    private fun loadBlocksList(blockIdList: MutableList<String>){
+        val finalBlockList: MutableList<Block> = mutableListOf()
+
+        // Load all blocks that were found to contain the user as a member
+        database.collection("blocks").get().addOnFailureListener {
+
+            // Loading blocks list failed
+            if(it is FirebaseNetworkException)
+                Snackbar.make(this, binding.root, getString(R.string.falied_loading_blocks_network), Snackbar.LENGTH_LONG).show()
+            else Snackbar.make(this, binding.root, getString(R.string.falied_loading_blocks), Snackbar.LENGTH_LONG).show()
+        }.addOnSuccessListener {
+
+            // Loaded all blocks
+            // Loop through all blocks loaded
+            for(doc in it){
+
+                // If this block is in blockIdList, add it to finalBlockList.
+                if(blockIdList.contains(doc.id)){
+                    val newblock = FirebaseUtils.ObjectFromDoc.Block(doc)
+                    finalBlockList.add(newblock)
+                }
+
+            }
+
+            // All relevant blocks are loaded. Now lets fill the RecyclerView with them -
+            val adapter = BlockListAdapter(finalBlockList, this)
             binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
             binding.blockRecyclerView.adapter = adapter
 
