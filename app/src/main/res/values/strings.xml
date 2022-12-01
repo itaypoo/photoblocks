@@ -23,7 +23,7 @@
     <string name="block_title_hint">block title</string>
     <string name="open_block_button">open block</string>
     <string name="curated_photos_title">curated photos library</string>
-    <string name="curated_photos_desc">this is a library of photos curated just for you. click on a photo to select it, or press cancel to dismiss.</string>
+    <string name="curated_photos_desc">this is a library of photos curated just for you, so choose wisely! click on a photo to select it, or press cancel to dismiss.</string>
     <string name="user_settings_title">account settings</string>
     <string name="change_name">change name</string>
     <string name="dark_theme">dark theme</string>
