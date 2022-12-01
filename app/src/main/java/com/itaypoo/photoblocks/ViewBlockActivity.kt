@@ -1,6 +1,7 @@
 package com.itaypoo.photoblocks
 
 import android.animation.ObjectAnimator
+import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.itaypoo.helpers.AppUtils
+import com.itaypoo.helpers.ViewAnimator
 import com.itaypoo.photoblocks.databinding.ActivityViewBlockBinding
 import com.itaypoo.photoblockslib.Block
 import java.time.Duration
@@ -42,8 +44,7 @@ class ViewBlockActivity : AppCompatActivity() {
 
         // Init block view
         initTopBarUi()
-        topBarAnimator.openTopBar(binding)
-        topBarAnimator.mainInterpolator = DecelerateInterpolator()
+        topBarAnimator.openTopBar(binding, true)
 
         binding.backButton.setOnClickListener {
             finish()
@@ -54,7 +55,7 @@ class ViewBlockActivity : AppCompatActivity() {
         }
 
         binding.openButton.setOnClickListener {
-            topBarAnimator.openTopBar(binding)
+            topBarAnimator.openTopBar(binding, false)
         }
 
     }
@@ -64,6 +65,8 @@ class ViewBlockActivity : AppCompatActivity() {
     private fun initTopBarUi() {
         val bgColor = currentBlock.secondaryColor.toInt()
         val bgInvertedColor = AppUtils.invertColor(bgColor, 255)
+
+        Glide.with(this).load(currentBlock.coverImageUrl).into(binding.blockImagePreview)
 
         binding.titleTextSmall.text = currentBlock.title
         binding.titleTextBig.text = currentBlock.title
@@ -77,55 +80,38 @@ class ViewBlockActivity : AppCompatActivity() {
         binding.titleTextBig.setTextColor( bgInvertedColor )
         binding.titleTextSmall.setTextColor( bgInvertedColor )
 
-        Glide.with(this).load(currentBlock.coverImageUrl).into(binding.blockImagePreview)
+
+
     }
 
     // Top bar animator object
     //////////////////////////////////////////////
     internal object topBarAnimator{
-        var mainInterpolator: Interpolator? = null
+        var mainInterpolator: TimeInterpolator = DecelerateInterpolator()
         private var animDuration: Long = 300
 
-        fun fadeView(view: View, startAlpha: Float, endAlpha: Float, animDuration: Long){
-            view.alpha = startAlpha
-            ObjectAnimator.ofFloat(view, "alpha", endAlpha).apply {
-                duration = animDuration
-                interpolator = mainInterpolator
-                start()
-            }
-        }
+        fun openTopBar(binding: ActivityViewBlockBinding, isInstant: Boolean){
+            if(isInstant) animDuration = 1
 
-        fun animateViewHeight(view: View, endHeight: Int, duration: Long){
-            val anim = ValueAnimator.ofInt(view.measuredHeight, endHeight)
-            anim.addUpdateListener { valueAnimator ->
-                val height = valueAnimator.animatedValue as Int
-                val newParams: ViewGroup.LayoutParams = view.layoutParams
-                newParams.height = height
-                view.layoutParams = newParams
-            }
-            anim.interpolator = mainInterpolator
-            anim.duration = duration
-            anim.start()
-        }
-
-        fun openTopBar(binding: ActivityViewBlockBinding){
             // Scale up card
-            animateViewHeight(binding.topBarCardView, 500, animDuration)
+            ViewAnimator.animateViewHeight(binding.topBarCardView, 500, animDuration, mainInterpolator)
             // Fade in big title, preview image
-            fadeView(binding.titleTextBig, 0.0f, 1.0f, animDuration)
-            fadeView(binding.blockImagePreview, 0.0f, 1.0f, animDuration)
+            ViewAnimator.fadeView(binding.titleTextBig, 0.0f, 1.0f, animDuration, mainInterpolator)
+            ViewAnimator.fadeView(binding.blockImagePreview, 0.0f, 1.0f, animDuration, mainInterpolator)
             // Fade out small title
-            fadeView(binding.titleTextSmall, 1.0f, 0.0f, animDuration)
+            ViewAnimator.fadeView(binding.titleTextSmall, 1.0f, 0.0f, animDuration, mainInterpolator)
+
+            if(isInstant) animDuration = 300
         }
 
         fun closeTopBar(binding: ActivityViewBlockBinding){
             // Scale down card
-            animateViewHeight(binding.topBarCardView, 180, animDuration)
+            ViewAnimator.animateViewHeight(binding.topBarCardView, 180, animDuration, mainInterpolator)
             // Fade out big title, preview image
-            fadeView(binding.titleTextBig, 1.0f, 0.0f, animDuration)
-            fadeView(binding.blockImagePreview, 1.0f, 0.0f, animDuration)
+            ViewAnimator.fadeView(binding.titleTextBig, 1.0f, 0.0f, animDuration, mainInterpolator)
+            ViewAnimator.fadeView(binding.blockImagePreview, 1.0f, 0.0f, animDuration, mainInterpolator)
             // Fade in small title
-            fadeView(binding.titleTextSmall, 0.0f, 1.0f, animDuration)
+            ViewAnimator.fadeView(binding.titleTextSmall, 0.0f, 1.0f, animDuration, mainInterpolator)
         }
     }
     /////////////////////////////////////////////

@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.BlockListAdapter
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.ContactsUtils
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
 import com.itaypoo.photoblockslib.Block
@@ -50,6 +51,8 @@ class HomeScreenActivity : AppCompatActivity() {
             Toast.makeText(this, "Error getting user data.", Toast.LENGTH_SHORT).show()
             finish()
         }
+
+        ContactsUtils.getList(contentResolver)
 
         setupTransitions()
         super.onCreate(savedInstanceState)
@@ -197,7 +200,6 @@ class HomeScreenActivity : AppCompatActivity() {
                 // On block clicked
                 AppUtils.passedBlock = it
                 startActivity(Intent(this, ViewBlockActivity::class.java))
-                overridePendingTransition(0, 0)
             }
 
         }

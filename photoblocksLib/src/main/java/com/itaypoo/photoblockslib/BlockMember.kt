@@ -7,7 +7,8 @@ data class BlockMember(
     var databaseId: String?,
     var blockId: String,
     var memberId: String,
-    var memberSinceTime: String
+    var memberSinceTime: String,
+    var isAdmin: Boolean
 
     ) {
 
@@ -15,7 +16,8 @@ data class BlockMember(
         return hashMapOf(
             "blockId" to blockId,
             "memberId" to memberId,
-            "memberSinceTime" to memberSinceTime
+            "memberSinceTime" to memberSinceTime,
+            "isAdmin" to isAdmin
         )
     }
 

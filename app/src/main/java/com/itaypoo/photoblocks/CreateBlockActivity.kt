@@ -316,7 +316,8 @@ class CreateBlockActivity : AppCompatActivity() {
             null,
             blockId,
             AppUtils.currentUser!!.databaseId!!,
-            AppUtils.currentTimeString()
+            AppUtils.currentTimeString(),
+            true // The creator user will always be an admin
         )
         database.collection("blockMembers").add(member.toHashMap()).addOnFailureListener {
             if(it is FirebaseNetworkException){
