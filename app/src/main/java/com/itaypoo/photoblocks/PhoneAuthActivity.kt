@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.ContactsUtils
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityPhoneAuthBinding
 import com.itaypoo.photoblockslib.User
@@ -62,7 +63,7 @@ class PhoneAuthActivity : AppCompatActivity() {
         binding.continueButton.setOnClickListener{
             // Check input phone number
             val num = binding.phoneNumberEditText.text.toString()
-            if(num.isNotEmpty() && num.isNotBlank()){
+            if(num.isNotEmpty() && num.isNotBlank() && ContactsUtils.validatedPhoneNumber(num) != null){
                 // Valid phone number, send verification code
                 binding.invalidNumberText.visibility = View.GONE
                 phoneNumber = num
@@ -75,6 +76,7 @@ class PhoneAuthActivity : AppCompatActivity() {
             else{
                 // Invalid phone number entered, force focus number editText
                 binding.invalidNumberText.visibility = View.VISIBLE
+                binding.invalidNumberText.text = getString(R.string.invalid_phone_number)
                 binding.phoneNumberEditText.requestFocus()
                 val imm: InputMethodManager =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

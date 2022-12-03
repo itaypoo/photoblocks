@@ -141,7 +141,7 @@ class UserSettingsActivity : AppCompatActivity() {
         doneButton.setOnClickListener {
             // Check if inputted name is valid
             val text = textInput.text.toString()
-            val valid = inputCheck.checkUserName(text)
+            val valid = inputCheck.validateUserName(text)
 
             errorText.visibility = View.GONE
             when(valid){

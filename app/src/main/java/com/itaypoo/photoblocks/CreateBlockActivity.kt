@@ -224,7 +224,7 @@ class CreateBlockActivity : AppCompatActivity() {
         // Make sure it has all values set, and its cover image is in the database.
 
         val chosenName = binding.blockTitleEditText.text.toString()
-        val nameValidation = inputCheck.checkBlockName(chosenName)
+        val nameValidation = inputCheck.validateBlockName(chosenName)
 
         binding.blockNameError.visibility = View.GONE
 

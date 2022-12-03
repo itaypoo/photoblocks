@@ -10,7 +10,7 @@ object inputCheck {
     private val userNameMinLength = 2
     private val userNameMaxLength = 15
 
-    fun checkUserName(name: String?): Int{
+    fun validateUserName(name: String?): Int{
         if(name != null){
             if(name.length < userNameMinLength) return USER_NAME_TOO_SHORT
             else if(name.length > userNameMaxLength) return USER_NAME_TOO_LONG
@@ -27,7 +27,7 @@ object inputCheck {
     private val blockNameMinLength = 4
     private val blockNameMaxLength = 25
 
-    fun checkBlockName(name: String?): Int{
+    fun validateBlockName(name: String?): Int{
         if(name != null){
             if(name.length < blockNameMinLength) return BLOCK_NAME_TOO_SHORT
             else if(name.length > blockNameMaxLength) return BLOCK_NAME_TOO_LONG

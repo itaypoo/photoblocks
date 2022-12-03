@@ -86,7 +86,7 @@ class SetupUserActivity : AppCompatActivity() {
         user.name = binding.userNameEditText.text.toString()
 
         // Check if user name is valid
-        val validRes = inputCheck.checkUserName(user.name)
+        val validRes = inputCheck.validateUserName(user.name)
 
         if(validRes == inputCheck.USER_NAME_VALID){
             // Valid name. Upload user to firebase
