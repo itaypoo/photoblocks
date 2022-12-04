@@ -25,8 +25,8 @@ object ContactsUtils {
     }
 
     @SuppressLint("Range")
-    fun getList(resolver: ContentResolver): MutableList<ContactModel>?{
-        if(contactList != null) return contactList
+    fun getList(resolver: ContentResolver): MutableList<ContactModel>{
+        if(contactList != null) return contactList!!
         // If contact list was not yet generated
         contactList = mutableListOf()
 
@@ -59,7 +59,7 @@ object ContactsUtils {
         }
         cursor.close()
 
-        return contactList
+        return contactList!!
     }
 
 }

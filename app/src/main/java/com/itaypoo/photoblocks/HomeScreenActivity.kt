@@ -95,9 +95,10 @@ class HomeScreenActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
-            val intent = Intent(this, CreateBlockActivity::class.java)
-            startActivity(intent,
-                ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
+            //val intent = Intent(this, CreateBlockActivity::class.java)
+            //startActivity(intent,
+            //    ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
+            startActivity(Intent(this, ChooseContactActivity::class.java))
         }
     }
 
