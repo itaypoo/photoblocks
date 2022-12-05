@@ -54,4 +54,6 @@
     <string name="creating_block">creating your block, hold on...</string>
     <string name="falied_loading_blocks">failed loading blocks, please try again later</string>
     <string name="falied_loading_blocks_network">failed loading blocks, please check your internet connection</string>
+    <string name="generic_network_error">please check you internet connection and try again.</string>
+    <string name="generic_unknown_error">an unknown error has occurred. please try again</string>
 </resources>

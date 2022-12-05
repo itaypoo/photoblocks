@@ -3,22 +3,23 @@ package com.itaypoo.photoblocks
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.ContactModel
 import com.itaypoo.helpers.ContactsUtils
+import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
+import com.itaypoo.photoblockslib.User
 import kotlinx.coroutines.*
 
 class ChooseContactActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseContactBinding
 
     private lateinit var database: FirebaseFirestore
-
-    private lateinit var contactsList: MutableList<ContactModel>
-    private lateinit var contactsThatHaveUser: MutableList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,40 +28,45 @@ class ChooseContactActivity : AppCompatActivity() {
 
         database = Firebase.firestore
 
-        contactsList = ContactsUtils.getList(this.contentResolver)
-        //contactsThatHaveUser = getContactsThatHaveUser(contactsList)
+        // Get the contacts list
+        val contactsList = ContactsUtils.getList(this.contentResolver)
 
-        GlobalScope.launch(Dispatchers.IO) {
-            for(c in contactsList){
-                val res = async { contactHasUser(c) }
-                Log.d("This", "Name: ${c.displayName}    , Count: ${res.await()}")
-                while(res == null){}
+        // First, get all users so we can match them with the contacts list
+        val contactUserList = getContactsThatHaveUser(contactsList)
+
+
+    }
+
+    private fun getContactsThatHaveUser(contactList: MutableList<ContactModel>): MutableList<User>{
+        // Get all users that have their phone number in contactList
+        val resList: MutableList<User> = mutableListOf()
+
+        database.collection("users").get().addOnFailureListener{
+
+            // Getting users failed
+            if(it is FirebaseNetworkException)
+                Snackbar.make(this, binding.root, getString(R.string.generic_network_error), Snackbar.LENGTH_LONG).show()
+            else Snackbar.make(this, binding.root, getString(R.string.generic_unknown_error), Snackbar.LENGTH_LONG).show()
+
+        }.addOnSuccessListener {
+
+            // Getting users complete
+
+            val contactPhoneNumberList: MutableList<String> = mutableListOf()
+            for(contact in contactList) contactPhoneNumberList.add(contact.phoneNumber)
+
+            // Now loop through all users and add users that match a contact to contactsThatHaveUser
+            for(doc in it){
+                val docUser: User = FirebaseUtils.ObjectFromDoc.User(doc)
+                if(contactPhoneNumberList.contains(docUser.phoneNumber)){
+                    resList.add(docUser)
+                    Log.d("USER CONTACT", "${docUser.name}")
+                }
             }
 
         }
-        Log.d("This", "After")
-    }
 
-    suspend fun contactHasUser(contact: ContactModel): Int {
-        var count = 0
-
-        var complete = false
-
-        // Start a query of counting the users with this contacts phone number
-        val countQuery = database.collection("users").whereEqualTo("phoneNumber", contact.phoneNumber).count().get(AggregateSource.SERVER)
-        countQuery.addOnSuccessListener {
-            count = it.count.toInt()
-        }.addOnCompleteListener{
-            complete = true
-        }
-
-        // Wait until query is complete
-        while (!complete) {
-            delay(1)
-        }
-
-
-        return count
+        return resList
     }
 
 }
