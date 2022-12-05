@@ -3,12 +3,14 @@ package com.itaypoo.photoblocks
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.itaypoo.adapters.UserContactAdapter
 import com.itaypoo.helpers.ContactModel
 import com.itaypoo.helpers.ContactsUtils
 import com.itaypoo.helpers.FirebaseUtils
@@ -32,13 +34,21 @@ class ChooseContactActivity : AppCompatActivity() {
         val contactsList = ContactsUtils.getList(this.contentResolver)
 
         // First, get all users so we can match them with the contacts list
-        val contactUserList = getContactsThatHaveUser(contactsList)
+        generateContactUserPairList(contactsList)
 
     }
 
-    private fun getContactsThatHaveUser(contactList: MutableList<ContactModel>): MutableList<User>{
+    private fun contactWhereNumberIs(list: MutableList<ContactModel>, num: String): ContactModel?{
+        var res: ContactModel? = null
+        for(contact in list){
+            if(contact.phoneNumber == num) res = contact
+        }
+        return res
+    }
+
+    private fun generateContactUserPairList(contactList: MutableList<ContactModel>){
         // Get all users that have their phone number in contactList
-        val resList: MutableList<User> = mutableListOf()
+        val resList: MutableList<Pair<ContactModel, User?>> = mutableListOf()
 
         database.collection("users").get().addOnFailureListener{
 
@@ -54,18 +64,41 @@ class ChooseContactActivity : AppCompatActivity() {
             val contactPhoneNumberList: MutableList<String> = mutableListOf()
             for(contact in contactList) contactPhoneNumberList.add(contact.phoneNumber)
 
-            // Now loop through all users and add users that match a contact to contactsThatHaveUser
+            // Now loop through all users and add users that match a contact to the result list
             for(doc in it){
                 val docUser: User = FirebaseUtils.ObjectFromDoc.User(doc)
+
                 if(contactPhoneNumberList.contains(docUser.phoneNumber)){
-                    resList.add(docUser)
-                    Log.d("USER CONTACT", docUser.name)
+                    // Add this contact with it's user to the result list, remove it from the numbers list
+                    val contactModel: ContactModel = contactWhereNumberIs(contactList, docUser.phoneNumber)!!
+                    val pair = Pair(contactModel, docUser)
+                    contactPhoneNumberList.remove(docUser.phoneNumber)
+                    resList.add(pair)
+
+                    Log.d("Contact with a user", docUser.name)
                 }
             }
+            // All contacts with users have been added. Now add those without users.
+            for(number in contactPhoneNumberList){
+                val contactModel: ContactModel = contactWhereNumberIs(contactList, number)!!
+                val pair: Pair<ContactModel, User?> = Pair(contactModel, null)
+                resList.add(pair)
+
+                Log.d("Contact with NO user", contactModel.displayName)
+            }
+
+            // Done getting list. Final step::
+            setUpContactRecycler(resList)
 
         }
 
-        return resList
+    }
+
+    private fun setUpContactRecycler(contactUserPairs: MutableList<Pair<ContactModel, User?>>){
+        // Now that we have the contact user list we can finally set up the recyclerView with our adapter.
+        val adapter = UserContactAdapter(contactUserPairs, this)
+        binding.contactUserRecycler.layoutManager = LinearLayoutManager(this)
+        binding.contactUserRecycler.adapter = adapter
     }
 
 }
