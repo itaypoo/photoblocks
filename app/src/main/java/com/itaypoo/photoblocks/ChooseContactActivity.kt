@@ -34,7 +34,6 @@ class ChooseContactActivity : AppCompatActivity() {
         // First, get all users so we can match them with the contacts list
         val contactUserList = getContactsThatHaveUser(contactsList)
 
-
     }
 
     private fun getContactsThatHaveUser(contactList: MutableList<ContactModel>): MutableList<User>{
@@ -60,7 +59,7 @@ class ChooseContactActivity : AppCompatActivity() {
                 val docUser: User = FirebaseUtils.ObjectFromDoc.User(doc)
                 if(contactPhoneNumberList.contains(docUser.phoneNumber)){
                     resList.add(docUser)
-                    Log.d("USER CONTACT", "${docUser.name}")
+                    Log.d("USER CONTACT", docUser.name)
                 }
             }
 
