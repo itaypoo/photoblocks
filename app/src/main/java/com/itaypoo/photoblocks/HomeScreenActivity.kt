@@ -52,8 +52,6 @@ class HomeScreenActivity : AppCompatActivity() {
             finish()
         }
 
-        ContactsUtils.getList(contentResolver)
-
         setupTransitions()
         super.onCreate(savedInstanceState)
         binding = ActivityHomeScreenBinding.inflate(layoutInflater)

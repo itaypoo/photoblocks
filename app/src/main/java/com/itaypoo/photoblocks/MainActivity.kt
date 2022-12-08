@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPref: SharedPreferences = getSharedPreferences(Consts.SharedPrefs.PATH, MODE_PRIVATE)
 
-        // Remove saved user -- UNCOMMENT FOR DEBUGGING PURPOSES ONLY
+        ////// Remove saved user -- UNCOMMENT FOR DEBUGGING PURPOSES ONLY //////
 //        val editor = sharedPref.edit()
 //        editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
 //        editor.commit()

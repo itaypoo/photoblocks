@@ -1,12 +1,14 @@
 package com.itaypoo.photoblocks
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -16,7 +18,6 @@ import com.itaypoo.helpers.ContactsUtils
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
 import com.itaypoo.photoblockslib.User
-import kotlinx.coroutines.*
 
 class ChooseContactActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseContactBinding
@@ -30,13 +31,39 @@ class ChooseContactActivity : AppCompatActivity() {
 
         database = Firebase.firestore
 
-        // Get the contacts list
-        val contactsList = ContactsUtils.getList(this.contentResolver)
-
-        // First, get all users so we can match them with the contacts list
-        generateContactUserPairList(contactsList)
+        // Get permission from the user to read phone contacts
+        requestPermissions(arrayOf("android.permission.READ_CONTACTS"), 80)
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == 80){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                permissionGranted()
+            }
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED){
+                permissionDenied()
+            }
+        }
+    }
+
+    private fun permissionGranted(){
+        Toast.makeText(this, "GRANTED", Toast.LENGTH_SHORT).show()
+        val contactsList = ContactsUtils.getList(contentResolver)
+        generateContactUserPairList(contactsList)
+    }
+
+    private fun permissionDenied(){
+        Toast.makeText(this, "DENIED", Toast.LENGTH_SHORT).show()
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun contactWhereNumberIs(list: MutableList<ContactModel>, num: String): ContactModel?{
         var res: ContactModel? = null

@@ -6,7 +6,7 @@ import android.animation.ValueAnimator
 import android.view.View
 import android.view.ViewGroup
 
-object ViewAnimator {
+object ObjectViewAnimator {
 
     /*
         VIEW ANIMATOR
@@ -20,16 +20,17 @@ object ViewAnimator {
 
      */
 
-    fun fadeView(view: View, startAlpha: Float, endAlpha: Float, animDuration: Long, animInterpolator: TimeInterpolator){
+    fun fadeView(view: View, startAlpha: Float, endAlpha: Float, animDuration: Long, animInterpolator: TimeInterpolator, delay: Long = 0L){
         view.alpha = startAlpha
         ObjectAnimator.ofFloat(view, "alpha", endAlpha).apply {
             duration = animDuration
             interpolator = animInterpolator
+            setStartDelay(delay)
             start()
         }
     }
 
-    fun animateViewWidth(view: View, endWidth: Int, duration: Long, animInterpolator: TimeInterpolator){
+    fun animateViewWidth(view: View, endWidth: Int, duration: Long, animInterpolator: TimeInterpolator, delay: Long = 0L){
         val anim = ValueAnimator.ofInt(view.measuredHeight, endWidth)
         anim.addUpdateListener { valueAnimator ->
             val width = valueAnimator.animatedValue as Int
@@ -37,12 +38,13 @@ object ViewAnimator {
             newParams.width = width
             view.layoutParams = newParams
         }
+        anim.startDelay = delay
         anim.interpolator = animInterpolator
         anim.duration = duration
         anim.start()
     }
 
-    fun animateViewHeight(view: View, endHeight: Int, duration: Long, animInterpolator: TimeInterpolator){
+    fun animateViewHeight(view: View, endHeight: Int, duration: Long, animInterpolator: TimeInterpolator, delay: Long = 0L){
         val anim = ValueAnimator.ofInt(view.measuredHeight, endHeight)
         anim.addUpdateListener { valueAnimator ->
             val height = valueAnimator.animatedValue as Int
@@ -50,6 +52,7 @@ object ViewAnimator {
             newParams.height = height
             view.layoutParams = newParams
         }
+        anim.startDelay = delay
         anim.interpolator = animInterpolator
         anim.duration = duration
         anim.start()

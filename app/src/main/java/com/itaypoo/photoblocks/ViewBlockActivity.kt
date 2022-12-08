@@ -1,25 +1,16 @@
 package com.itaypoo.photoblocks
 
-import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
-import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
-import android.view.animation.Interpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.itaypoo.helpers.AppUtils
-import com.itaypoo.helpers.ViewAnimator
+import com.itaypoo.helpers.ObjectViewAnimator
 import com.itaypoo.photoblocks.databinding.ActivityViewBlockBinding
 import com.itaypoo.photoblockslib.Block
-import java.time.Duration
 
 
 class ViewBlockActivity : AppCompatActivity() {
@@ -94,24 +85,24 @@ class ViewBlockActivity : AppCompatActivity() {
             if(isInstant) animDuration = 1
 
             // Scale up card
-            ViewAnimator.animateViewHeight(binding.topBarCardView, 500, animDuration, mainInterpolator)
+            ObjectViewAnimator.animateViewHeight(binding.topBarCardView, 500, animDuration, mainInterpolator)
             // Fade in big title, preview image
-            ViewAnimator.fadeView(binding.titleTextBig, 0.0f, 1.0f, animDuration, mainInterpolator)
-            ViewAnimator.fadeView(binding.blockImagePreview, 0.0f, 1.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.titleTextBig, 0.0f, 1.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.blockImagePreview, 0.0f, 1.0f, animDuration, mainInterpolator)
             // Fade out small title
-            ViewAnimator.fadeView(binding.titleTextSmall, 1.0f, 0.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.titleTextSmall, 1.0f, 0.0f, animDuration, mainInterpolator)
 
             if(isInstant) animDuration = 300
         }
 
         fun closeTopBar(binding: ActivityViewBlockBinding){
             // Scale down card
-            ViewAnimator.animateViewHeight(binding.topBarCardView, 180, animDuration, mainInterpolator)
+            ObjectViewAnimator.animateViewHeight(binding.topBarCardView, 180, animDuration, mainInterpolator)
             // Fade out big title, preview image
-            ViewAnimator.fadeView(binding.titleTextBig, 1.0f, 0.0f, animDuration, mainInterpolator)
-            ViewAnimator.fadeView(binding.blockImagePreview, 1.0f, 0.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.titleTextBig, 1.0f, 0.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.blockImagePreview, 1.0f, 0.0f, animDuration, mainInterpolator)
             // Fade in small title
-            ViewAnimator.fadeView(binding.titleTextSmall, 0.0f, 1.0f, animDuration, mainInterpolator)
+            ObjectViewAnimator.fadeView(binding.titleTextSmall, 0.0f, 1.0f, animDuration, mainInterpolator)
         }
     }
     /////////////////////////////////////////////

@@ -4,11 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ViewAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.itaypoo.helpers.ContactModel
+import com.itaypoo.helpers.ObjectViewAnimator
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.User
@@ -77,6 +80,9 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
 
             holder.profilePhoto.setImageResource(R.drawable.unknown_user_profile_photo)
         }
+
+        // Fade in the view ordered by position
+        ObjectViewAnimator.fadeView(holder.itemView, 0.0F, 1.0F, 100, DecelerateInterpolator())
 
     }
 
