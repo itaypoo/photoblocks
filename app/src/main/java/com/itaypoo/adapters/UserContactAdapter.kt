@@ -26,7 +26,8 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
         val bottomNameText: TextView
 
         init {
-            // Define click listener for the ViewHolder's View.
+            // Get views
+            view.alpha = 0.0F
             addIcon = view.findViewById(R.id.contactItem_addIcon)
             messageIcon = view.findViewById(R.id.contactItem_messageIcon)
             profilePhoto = view.findViewById(R.id.contactItem_profilePhoto)

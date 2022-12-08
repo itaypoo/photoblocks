@@ -37,7 +37,7 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
         val dateText: TextView
 
         init {
-            // Define click listener for the ViewHolder's View.
+            // Get views
             view.alpha = 0.0F
             coverImagePreview = view.findViewById(R.id.blockItem_photoPreview)
             imageGradient = view.findViewById(R.id.blockItem_gradient)
