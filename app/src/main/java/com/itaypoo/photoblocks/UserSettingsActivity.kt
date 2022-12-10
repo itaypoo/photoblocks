@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
+import com.itaypoo.helpers.CustomDialogMaker
 import com.itaypoo.photoblocks.databinding.ActivityUserSettingsBinding
 import com.itaypoo.photoblockslib.inputCheck
 import java.io.File
@@ -64,18 +65,20 @@ class UserSettingsActivity : AppCompatActivity() {
         binding.cardChangeName.setOnClickListener { openChangeNameDialog() }
         binding.cardChangeImage.setOnClickListener { changeProfilePhoto() }
         binding.cardLogOut.setOnClickListener {
+
             // Show confirmation dialog before logging out
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.confirm_log_out))
-                .setMessage(resources.getString(R.string.confirm_log_out_desc))
-                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
-                    // Log out denied.
-                }
-                .setPositiveButton(resources.getString(R.string.log_out)) { dialog, which ->
-                    // Log out confirmed
-                    logOut()
-                }
-                .show()
+            val d = CustomDialogMaker.makeYesNoDialog(
+                this,
+                getString(R.string.confirm_log_out),
+                getString(R.string.confirm_log_out_desc),
+                false,
+                false,
+                getString(R.string.log_out) // Change the "yes" button text to "log out"
+            )
+            d.noButton.setOnClickListener { d.dialog.dismiss() }
+            d.yesButton.setOnClickListener { logOut() }
+            d.dialog.show()
+
         }
     }
 
@@ -114,56 +117,42 @@ class UserSettingsActivity : AppCompatActivity() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun openChangeNameDialog(){
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_text_input)
-
-        // Set dialog window width, height, background and position
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setGravity(Gravity.CENTER)
-
-        // Get dialog views
-        val cancelButton = dialog.findViewById<Button>(R.id.inputDialog_cancelButton)
-        val doneButton = dialog.findViewById<Button>(R.id.inputDialog_doneButton)
-        val errorText = dialog.findViewById<TextView>(R.id.inputDialog_errorText)
-        val textInput = dialog.findViewById<EditText>(R.id.inputDialog_editText)
-
-        // Init views
-        dialog.findViewById<TextView>(R.id.inputDialog_titleText)
-            .text = getString(R.string.change_name)
-        textInput.hint = getString(R.string.new_name)
-        errorText.visibility = View.GONE
+        val d = CustomDialogMaker.makeTextInputDialog(
+            this,
+            getString(R.string.change_name),
+            getString(R.string.new_name),
+        )
 
         // Set cancel onclick and done onclick
-        cancelButton.setOnClickListener {
-            dialog.dismiss()
+        d.cancelButton.setOnClickListener {
+            d.dialog.dismiss()
         }
-        doneButton.setOnClickListener {
+        d.doneButton.setOnClickListener {
             // Check if inputted name is valid
-            val text = textInput.text.toString()
+            val text = d.editText.text.toString()
             val valid = inputCheck.validateUserName(text)
 
-            errorText.visibility = View.GONE
+            d.errorTextView.visibility = View.GONE
             when(valid){
                 inputCheck.USER_NAME_TOO_SHORT -> {
                     // Name is too short
-                    errorText.visibility = View.VISIBLE
-                    errorText.text = getString(R.string.invalid_name_too_short)
+                    d.errorTextView.visibility = View.VISIBLE
+                    d.errorTextView.text = getString(R.string.invalid_name_too_short)
                 }
                 inputCheck.USER_NAME_TOO_LONG -> {
                     // Name is too long
-                    errorText.visibility = View.VISIBLE
-                    errorText.text = getString(R.string.invalid_name_too_long)
+                    d.errorTextView.visibility = View.VISIBLE
+                    d.errorTextView.text = getString(R.string.invalid_name_too_long)
                 }
                 inputCheck.USER_NAME_VALID -> {
                     // Name is valid
                     changeUserName(text)
-                    dialog.dismiss()
+                    d.dialog.dismiss()
                 }
             }
         }
 
-        dialog.show()
+        d.dialog.show()
     }
 
     private fun changeUserName(newName: String){

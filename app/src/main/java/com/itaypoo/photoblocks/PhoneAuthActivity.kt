@@ -62,8 +62,10 @@ class PhoneAuthActivity : AppCompatActivity() {
         // On continue button click (enter phone number)
         binding.continueButton.setOnClickListener{
             // Check input phone number
-            val num = binding.phoneNumberEditText.text.toString()
+            var num = binding.phoneNumberEditText.text.toString()
             if(num.isNotEmpty() && num.isNotBlank() && ContactsUtils.validatedPhoneNumber(num) != null){
+                // Standardize the phone number format (remove dashes, spaces...)
+                num = ContactsUtils.validatedPhoneNumber(num)!!
                 // Valid phone number, send verification code
                 binding.invalidNumberText.visibility = View.GONE
                 phoneNumber = num

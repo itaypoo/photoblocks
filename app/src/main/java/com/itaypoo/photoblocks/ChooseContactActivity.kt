@@ -1,12 +1,11 @@
 package com.itaypoo.photoblocks
 
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.itaypoo.adapters.UserContactAdapter
 import com.itaypoo.helpers.ContactModel
 import com.itaypoo.helpers.ContactsUtils
+import com.itaypoo.helpers.CustomDialogMaker
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
 import com.itaypoo.photoblockslib.User
@@ -54,13 +54,33 @@ class ChooseContactActivity : AppCompatActivity() {
     }
 
     private fun permissionGranted(){
-        Toast.makeText(this, "GRANTED", Toast.LENGTH_SHORT).show()
+        // We have permission! Start the process.
         val contactsList = ContactsUtils.getList(contentResolver)
         generateContactUserPairList(contactsList)
     }
 
     private fun permissionDenied(){
-        Toast.makeText(this, "DENIED", Toast.LENGTH_SHORT).show()
+        // Create a message dialog telling the user that permission is needed
+        val d = CustomDialogMaker.makeYesNoDialog(
+            this,
+            getString(R.string.dialog_title_permission_needed),   // Title text
+            getString(R.string.dialog_message_permission_needed), // Message text
+            false,
+            true,
+            null,
+            getString(R.string.back_button)
+        )
+
+        d.noButton.setOnClickListener {
+            d.dialog.dismiss()
+        }
+        d.dialog.setOnDismissListener {
+            // Finish with a bad result when dialog is removed
+            setResult(RESULT_CANCELED)
+            finish()
+        }
+        d.dialog.show()
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

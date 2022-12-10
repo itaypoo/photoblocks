@@ -56,4 +56,9 @@
     <string name="falied_loading_blocks_network">failed loading blocks, please check your internet connection</string>
     <string name="generic_network_error">please check you internet connection and try again.</string>
     <string name="generic_unknown_error">an unknown error has occurred. please try again</string>
+    <string name="dialog_title_permission_needed">we need your permission!</string>
+    <string name="dialog_message_permission_needed">to select a user from your contacts, we need permission to access your contacts list. please enable this permission in app settings.</string>
+    <string name="back_button">back</string>
+    <string name="no">nah</string>
+    <string name="yes">yes</string>
 </resources>

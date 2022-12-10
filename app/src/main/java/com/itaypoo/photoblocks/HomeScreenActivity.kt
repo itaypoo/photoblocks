@@ -1,12 +1,12 @@
 package com.itaypoo.photoblocks
 
-import android.app.ActivityOptions
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.Fade
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
@@ -23,10 +23,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.BlockListAdapter
-import com.itaypoo.helpers.AppUtils
-import com.itaypoo.helpers.Consts
-import com.itaypoo.helpers.ContactsUtils
-import com.itaypoo.helpers.FirebaseUtils
+import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
 import com.itaypoo.photoblockslib.Block
 
