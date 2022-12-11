@@ -9,6 +9,7 @@ object Consts {
         const val GALLERY_PICKER_MULTIPLE = 20
         const val CROP_IMAGE_ACTIVITY = 30
         const val CURATED_PHOTOS_ACTIVITY = 40
+        const val CHOOSE_CONTACT_USER_ACTIVITY = 50
     }
 
     // Default values
@@ -46,7 +47,7 @@ object Consts {
 
         const val SIGNIN_TYPE = "signin_type"
 
-        const val CHOOSECONTACT_CHOSEN_USER_ID = "chosen_user_id"
+        const val CHOOSECONTACT_OUTPUT_USER = "chosen_user_id"
     }
 
     // Identify how a user logged in (used in home page extras)

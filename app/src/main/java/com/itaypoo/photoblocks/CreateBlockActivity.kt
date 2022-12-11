@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.transition.Explode
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityCreateBlockBinding
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
+import com.itaypoo.photoblockslib.User
 import com.itaypoo.photoblockslib.inputCheck
 import java.io.File
 import java.util.*
@@ -47,6 +49,8 @@ class CreateBlockActivity : AppCompatActivity() {
 
     private lateinit var database: FirebaseFirestore
     private lateinit var storageRef: StorageReference
+
+    private val membersList: MutableList<User> = mutableListOf()
 
     private var uploadImageFileName: String? = null
     private lateinit var newBlock: Block
@@ -75,7 +79,7 @@ class CreateBlockActivity : AppCompatActivity() {
             prepareBlock()
         }
         binding.addContactButton.setOnClickListener {
-            startActivity(Intent(this, ChooseContactActivity::class.java))
+            startActivityForResult(Intent(this, ChooseContactActivity::class.java), Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY)
         }
 
         // Init block
@@ -186,9 +190,9 @@ class CreateBlockActivity : AppCompatActivity() {
 
             }
         }
-        else{
+        else if(requestCode == Consts.RequestCode.CROP_IMAGE_ACTIVITY){
             //
-            // Gallery photo chosen
+            // Gallery photo chosen (and cropped)
             //
             if(resultCode == RESULT_OK && data != null){
                 // Save filename for later uploading to database
@@ -198,6 +202,16 @@ class CreateBlockActivity : AppCompatActivity() {
                 // Update UI
                 val bitmap = AppUtils.getBitmapFromPrivateInternal(path, this)
                 updateCoverImage(bitmap)
+            }
+        }
+        else if(requestCode == Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY){
+            //
+            // User chosen from contacts
+            //
+            if(resultCode == RESULT_OK && data != null){
+                val chosenUser = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
+                Log.d("CHOSEN USER", chosenUser.phoneNumber)
+                membersList.add(chosenUser)
             }
         }
 
@@ -334,5 +348,7 @@ class CreateBlockActivity : AppCompatActivity() {
             finish()
         }
     }
+
+
 
 }

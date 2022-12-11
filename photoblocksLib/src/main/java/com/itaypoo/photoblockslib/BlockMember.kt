@@ -1,5 +1,6 @@
 package com.itaypoo.photoblockslib
 
+import java.io.Serializable
 import java.util.Calendar
 
 data class BlockMember(
@@ -10,7 +11,7 @@ data class BlockMember(
     var memberSinceTime: String,
     var isAdmin: Boolean
 
-    ) {
+    ) : Serializable {
 
     fun toHashMap(): HashMap<String, Any>{
         return hashMapOf(

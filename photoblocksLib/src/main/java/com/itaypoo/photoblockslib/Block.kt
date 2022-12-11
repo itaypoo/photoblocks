@@ -1,5 +1,8 @@
 package com.itaypoo.photoblockslib
 
+import java.io.Serializable
+
+
 data class Block(
 
     var databaseId: String?,
@@ -15,7 +18,7 @@ data class Block(
     var collageOrderedByLikes: Boolean,
     var collageImageTime: Int
 
-    ) {
+    ) : Serializable {
 
     fun toHashMap(): HashMap<String, Any>{
         return hashMapOf<String, Any>(

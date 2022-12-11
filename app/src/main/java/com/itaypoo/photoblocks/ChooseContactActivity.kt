@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,6 +22,15 @@ class ChooseContactActivity : AppCompatActivity() {
 
     private lateinit var database: FirebaseFirestore
     private var resIntent = Intent()
+
+    /*
+
+     --- Activity for selecting a user from the contact list ---
+
+     OUTPUT EXTRAS: Chosen user class (photoblocksLib.User)
+     the output is a Serialized user.
+
+    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,7 +158,7 @@ class ChooseContactActivity : AppCompatActivity() {
         adapter.onItemClickListener = {
             // Check if the chosen pair has a user
             if(it.second != null){
-                resIntent.putExtra(Consts.Extras.CHOOSECONTACT_CHOSEN_USER_ID, it.second!!.databaseId)
+                resIntent.putExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER, it.second)
                 setResult(RESULT_OK, resIntent)
                 finish()
             }

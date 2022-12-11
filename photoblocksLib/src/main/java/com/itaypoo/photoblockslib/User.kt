@@ -1,6 +1,6 @@
 package com.itaypoo.photoblockslib
 
-import java.util.Calendar
+import java.io.Serializable
 
 data class User(
 
@@ -11,7 +11,7 @@ data class User(
     var creationTime: String,
     var isPrivate: Boolean
 
-) {
+) : Serializable {
 
     fun toHashMap(): HashMap<String, Any> {
         return hashMapOf(
