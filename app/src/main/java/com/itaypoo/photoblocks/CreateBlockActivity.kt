@@ -21,7 +21,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.itaypoo.adapters.UserPhotoAdapter
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.FirebaseUtils
@@ -212,6 +215,11 @@ class CreateBlockActivity : AppCompatActivity() {
                 val chosenUser = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
                 Log.d("CHOSEN USER", chosenUser.phoneNumber)
                 membersList.add(chosenUser)
+
+                // Load the pfp recycler view
+                val memberAdapter = UserPhotoAdapter(membersList, this)
+                binding.memberRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                binding.memberRecycler.adapter = memberAdapter
             }
         }
 
