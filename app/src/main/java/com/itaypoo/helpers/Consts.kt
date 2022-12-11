@@ -45,6 +45,8 @@ object Consts {
         const val RATIO_BLOCK_COVER = 2
 
         const val SIGNIN_TYPE = "signin_type"
+
+        const val CHOOSECONTACT_CHOSEN_USER_ID = "chosen_user_id"
     }
 
     // Identify how a user logged in (used in home page extras)

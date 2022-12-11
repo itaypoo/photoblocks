@@ -8,6 +8,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewAnimator
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.itaypoo.helpers.ContactModel
@@ -20,6 +21,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 class UserContactAdapter(private val userContactList: MutableList<Pair<ContactModel, User?>>, private val context: Context):
     RecyclerView.Adapter<UserContactAdapter.ViewHolder>() {
 
+    // Listener for item click
+    var onItemClickListener: ((Pair<ContactModel, User?>) -> Unit)? = null
+
     // Class for a viewHolder in the recyclerView
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val addIcon: ImageView
@@ -27,6 +31,7 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
         val profilePhoto: CircleImageView
         val topNameText: TextView
         val bottomNameText: TextView
+        val cardView: CardView
 
         init {
             // Get views
@@ -36,6 +41,7 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
             profilePhoto = view.findViewById(R.id.contactItem_profilePhoto)
             topNameText = view.findViewById(R.id.contactItem_topNameText)
             bottomNameText = view.findViewById(R.id.contactItem_bottomNameText)
+            cardView = view.findViewById(R.id.contactItem_cardView)
         }
     }
 
@@ -83,6 +89,11 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
 
         // Fade in the view ordered by position
         ObjectViewAnimator.fadeView(holder.itemView, 0.0F, 1.0F, 100, DecelerateInterpolator())
+
+        // Invoke listener when view is clicked, pass the current photo pair
+        holder.cardView.setOnClickListener {
+            onItemClickListener?.invoke(pair)
+        }
 
     }
 

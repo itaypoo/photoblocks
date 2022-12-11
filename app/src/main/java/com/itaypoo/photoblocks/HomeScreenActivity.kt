@@ -1,5 +1,6 @@
 package com.itaypoo.photoblocks
 
+import android.app.ActivityOptions
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -90,11 +91,10 @@ class HomeScreenActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
-            //val intent = Intent(this, CreateBlockActivity::class.java)
-            //startActivity(intent,
-            //    ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
-            startActivity(Intent(this, ChooseContactActivity::class.java))
+            val intent = Intent(this, CreateBlockActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
         }
+
     }
 
     private fun setupTransitions(){

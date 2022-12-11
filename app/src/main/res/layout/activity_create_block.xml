@@ -128,7 +128,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/membersCard"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/primary_container"
         app:cardCornerRadius="25dp"
@@ -137,22 +137,44 @@
         app:layout_constraintStart_toStartOf="@+id/blockPreviewCard"
         app:layout_constraintTop_toBottomOf="@+id/blockPreviewCard">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="8dp"
                 android:fontFamily="@font/manrope_medium"
                 android:text="@string/members"
-                android:textColor="@color/on_primary_container"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textColor="@color/on_primary_container" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/memberRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8" />
+
+                <ImageButton
+                    android:id="@+id/addContactButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded_rectangle"
+                    android:backgroundTint="@color/on_primary_container"
+                    app:srcCompat="@drawable/icon_add_person"
+                    app:tint="@color/on_primary"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 

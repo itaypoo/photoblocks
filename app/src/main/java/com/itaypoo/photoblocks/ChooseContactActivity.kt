@@ -1,8 +1,10 @@
 package com.itaypoo.photoblocks
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -12,10 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.adapters.UserContactAdapter
-import com.itaypoo.helpers.ContactModel
-import com.itaypoo.helpers.ContactsUtils
-import com.itaypoo.helpers.CustomDialogMaker
-import com.itaypoo.helpers.FirebaseUtils
+import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
 import com.itaypoo.photoblockslib.User
 
@@ -23,6 +22,7 @@ class ChooseContactActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseContactBinding
 
     private lateinit var database: FirebaseFirestore
+    private var resIntent = Intent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,6 +146,18 @@ class ChooseContactActivity : AppCompatActivity() {
         val adapter = UserContactAdapter(contactUserPairs, this)
         binding.contactUserRecycler.layoutManager = LinearLayoutManager(this)
         binding.contactUserRecycler.adapter = adapter
+        
+        adapter.onItemClickListener = {
+            // Check if the chosen pair has a user
+            if(it.second != null){
+                resIntent.putExtra(Consts.Extras.CHOOSECONTACT_CHOSEN_USER_ID, it.second!!.databaseId)
+                setResult(RESULT_OK, resIntent)
+                finish()
+            }
+            else{
+                Toast.makeText(this, "NO USER", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }
