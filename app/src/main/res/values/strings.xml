@@ -61,4 +61,6 @@
     <string name="back_button">back</string>
     <string name="no">nah</string>
     <string name="yes">yes</string>
+    <string name="remove_member">remove member</string>
+    <string name="user_already_member_of_block">that user is already a member!</string>
 </resources>

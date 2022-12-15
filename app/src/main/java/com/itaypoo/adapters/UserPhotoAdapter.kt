@@ -27,10 +27,12 @@ class UserPhotoAdapter(private val userList: MutableList<User>, private val cont
     // Class for a viewHolder in the recyclerView
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView
+        val nameText: TextView
 
         init {
             // Get views
             imageView = view.findViewById(R.id.userPhoto_imageView)
+            nameText = view.findViewById(R.id.userPhoto_nameText)
         }
     }
 
@@ -50,6 +52,7 @@ class UserPhotoAdapter(private val userList: MutableList<User>, private val cont
 
         // Load the profile photo
         Glide.with(context).load(user.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(holder.imageView)
+        holder.nameText.text = user.name
 
         // Invoke listener when view is clicked, pass the current photo pair
         holder.imageView.setOnClickListener {

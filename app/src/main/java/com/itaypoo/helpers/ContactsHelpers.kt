@@ -15,6 +15,14 @@ data class ContactModel(
 object ContactsUtils {
     private var contactList: MutableList<ContactModel>? = null
 
+    // Return the contact in a list that matches the given phone number
+    fun contactsListContainsNumber(phoneNum: String, list: MutableList<ContactModel>): ContactModel?{
+        var res: ContactModel? = null
+        for(contact in list){
+            if(contact.phoneNumber == phoneNum) res = contact
+        }
+        return res
+    }
 
     // Retrun validated phone number
     fun validatedPhoneNumber(phoneNum: String): String?{
@@ -46,10 +54,10 @@ object ContactsUtils {
             val contactName = cursor.getString( cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME) )
             val contactNumber = cursor.getString( cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER) )
 
-            val validated = validatedPhoneNumber(contactNumber)
-            if(validated != null){
+            val validatedNum = validatedPhoneNumber(contactNumber)
+            if(validatedNum != null && validatedNum != AppUtils.currentUser?.phoneNumber){
                 // Phone number is valid
-                val model = ContactModel(contactName, validated)
+                val model = ContactModel(contactName, validatedNum)
                 if(!contactList!!.contains(model)){
                     // Add to list if it doesn't contain this contact
                     contactList!!.add(model)

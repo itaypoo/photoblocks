@@ -35,9 +35,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.UserPhotoAdapter
-import com.itaypoo.helpers.AppUtils
-import com.itaypoo.helpers.Consts
-import com.itaypoo.helpers.FirebaseUtils
+import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityCreateBlockBinding
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
@@ -214,12 +212,48 @@ class CreateBlockActivity : AppCompatActivity() {
             if(resultCode == RESULT_OK && data != null){
                 val chosenUser = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
                 Log.d("CHOSEN USER", chosenUser.phoneNumber)
+
+                // Check if that user is already a member of the block
+                if(membersList.contains(chosenUser)){
+                    Snackbar.make(binding.root, getString(R.string.user_already_member_of_block), Snackbar.LENGTH_SHORT).show()
+                    return
+                }
+
                 membersList.add(chosenUser)
 
                 // Load the pfp recycler view
                 val memberAdapter = UserPhotoAdapter(membersList, this)
                 binding.memberRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
                 binding.memberRecycler.adapter = memberAdapter
+
+                memberAdapter.onItemClickListener = {
+                    val itUser = it
+                    val contactList = ContactsUtils.getList(contentResolver)
+                    val userContact = ContactsUtils.contactsListContainsNumber(itUser.phoneNumber, contactList)
+                    val d = CustomDialogMaker.makeUserProfileDialog(
+                        this,
+                        itUser,
+                        false,
+                        false,
+                        getString(R.string.remove_member),
+                        getString(R.string.back_button),
+                        userContact?.displayName
+                    )
+
+                    d.dialog.show()
+                    d.noButton.setOnClickListener {
+                        d.dialog.dismiss()
+                    }
+                    d.yesButton.setOnClickListener {
+                        val position = membersList.indexOf(itUser)
+
+                        membersList.removeAt(position)
+                        memberAdapter.notifyItemRemoved(position)
+                        memberAdapter.notifyItemRangeChanged(position, membersList.size)
+
+                        d.dialog.dismiss()
+                    }
+                }
             }
         }
 

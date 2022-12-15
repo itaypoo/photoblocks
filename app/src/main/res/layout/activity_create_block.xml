@@ -130,7 +130,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/primary_container"
+        app:cardBackgroundColor="@color/background_variant"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="@+id/blockPreviewCard"
@@ -141,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/textView4"
@@ -149,28 +149,49 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="@string/members"
-                android:textColor="@color/on_primary_container" />
+                android:textColor="@color/on_background"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/memberRecycler"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="8" />
+                    android:layout_weight="8"
+                    app:cardBackgroundColor="#00FFFFFF"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/memberRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="8">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
 
                 <ImageButton
                     android:id="@+id/addContactButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/rounded_rectangle"
-                    android:backgroundTint="@color/on_primary_container"
-                    app:srcCompat="@drawable/icon_add_person"
-                    app:tint="@color/on_primary"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    android:backgroundTint="@color/on_background_variant"
+                    android:tint="@color/background_variant"
+                    app:srcCompat="@drawable/icon_add_person" />
+
             </LinearLayout>
 
         </LinearLayout>
