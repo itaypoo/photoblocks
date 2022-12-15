@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -365,31 +366,19 @@ class CreateBlockActivity : AppCompatActivity() {
         }.addOnSuccessListener {
             // Uploading block success!
             Toast.makeText(this, getString(R.string.block_created_message), Toast.LENGTH_SHORT).show()
-            uploadUserBlockMember(it.id)
+            uploadUserBlockMembers(it.id)
         }
     }
 
-    private fun uploadUserBlockMember(blockId: String) {
-        // Last step of creating the block - Uploading a user member, thus adding the current user to the created block
-        val member = BlockMember(
-            null,
-            blockId,
-            AppUtils.currentUser!!.databaseId!!,
-            AppUtils.currentTimeString(),
-            true // The creator user will always be an admin
-        )
-        database.collection("blockMembers").add(member.toHashMap()).addOnFailureListener {
-            if(it is FirebaseNetworkException){
-                Snackbar.make(this, binding.root, getString(R.string.block_upload_failed_no_connection), Snackbar.LENGTH_SHORT).show()
-            }
-            else{
-                Snackbar.make(this, binding.root, getString(R.string.block_upload_failed), Snackbar.LENGTH_SHORT).show()
-            }
-        }.addOnSuccessListener {
-            Toast.makeText(this, "USER ADDED TO BLOCK", Toast.LENGTH_SHORT).show()
-            finish()
-        }
+    private fun uploadUserBlockMembers(blockId: String) {
+        // Last step of creating the block - Uploading user members, thus adding the user members list to the created block
+
+
     }
+
+    private fun addBlockMember(userId: String, isAdmin: Boolean): Task<Boolean>
+
+
 
 
 

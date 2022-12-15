@@ -63,4 +63,7 @@
     <string name="yes">yes</string>
     <string name="remove_member">remove member</string>
     <string name="user_already_member_of_block">that user is already a member!</string>
+    <string name="is_not_on_photoblocks">" is not on photoblocks!"</string>
+    <string name="not_on_photoblocks_desc">want to sent a message inviting them to join?</string>
+    <string name="join_photoblocks_sms">I want to share my memories with you! Join me on photoblocks: https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL697473_RGB_PNG_namnse.jpg</string>
 </resources>

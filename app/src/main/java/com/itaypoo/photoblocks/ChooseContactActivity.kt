@@ -2,6 +2,7 @@ package com.itaypoo.photoblocks
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -163,7 +164,27 @@ class ChooseContactActivity : AppCompatActivity() {
                 finish()
             }
             else{
-                Toast.makeText(this, "NO USER", Toast.LENGTH_SHORT).show()
+                // The pair does not have a user. Open an invitation dialog
+                val itContact = it
+                val d = CustomDialogMaker.makeYesNoDialog(
+                    this,
+                    itContact.first.displayName + getString(R.string.is_not_on_photoblocks),
+                    getString(R.string.not_on_photoblocks_desc)
+                )
+                d.dialog.show()
+
+                d.noButton.setOnClickListener {
+                    d.dialog.dismiss()
+                }
+                d.yesButton.setOnClickListener {
+                    // Send an invitation SMS message to the contact
+                    val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", itContact.first.phoneNumber, null))
+                    smsIntent.putExtra("sms_body", getString(R.string.join_photoblocks_sms))
+                    startActivity(smsIntent)
+
+                    d.dialog.dismiss()
+                }
+
             }
         }
     }
