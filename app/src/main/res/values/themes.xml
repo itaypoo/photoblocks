@@ -21,7 +21,7 @@
 
     <style name="circleImageView35" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">35%</item>
+        <item name="cornerSize">50%</item>
     </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <TextView
@@ -14,7 +15,7 @@
         android:fontFamily="@font/shrikhand"
         android:gravity="center"
         android:text="@string/title"
-        android:textColor="@color/primary"
+        android:textColor="@color/on_primary"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +44,7 @@
             android:letterSpacing="0.015"
             android:maxLines="1"
             android:textColor="@color/on_background"
-            android:textColorHighlight="@color/primary_container"
+            android:textColorHighlight="@color/background_variant"
             tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -69,13 +70,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_rectangle"
-        android:backgroundTint="@color/error_container"
+        android:backgroundTint="@color/error"
         android:fontFamily="@font/manrope_medium"
         android:padding="5dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="@string/invalid_phone_number"
-        android:textColor="@color/on_error_container"
+        android:textColor="@color/on_error"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/textField"
         app:layout_constraintStart_toStartOf="@+id/textField"
@@ -146,13 +147,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_rectangle"
-        android:backgroundTint="@color/error_container"
+        android:backgroundTint="@color/error"
         android:fontFamily="@font/manrope_medium"
         android:padding="5dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="@string/invalid_verification_code"
-        android:textColor="@color/on_error_container"
+        android:textColor="@color/on_error"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/textField"
         app:layout_constraintStart_toStartOf="@+id/textField"

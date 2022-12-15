@@ -59,10 +59,6 @@ class HomeScreenActivity : AppCompatActivity() {
         storageRef = FirebaseStorage.getInstance().reference
         database = Firebase.firestore
 
-        // Set window colors
-        window.statusBarColor = getColor(R.color.background_variant)
-        window.navigationBarColor = getColor(R.color.background_variant)
-
         // Load user pfp with Glide
         Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePicture)
 

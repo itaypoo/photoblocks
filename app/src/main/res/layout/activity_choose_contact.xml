@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ChooseContactActivity">
 
     <TextView
@@ -15,7 +16,8 @@
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/shrikhand"
         android:gravity="center"
-        android:text="Select a contact"
+        android:text="@string/select_contact"
+        android:textColor="@color/on_background"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

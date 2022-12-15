@@ -103,7 +103,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/no"
-                        android:textColor="@color/dialog_primary" />
+                        android:textColor="@color/on_primary" />
 
                     <Space
                         android:layout_width="10dp"
@@ -116,10 +116,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/dialog_primary"
+                        android:backgroundTint="@color/primary"
                         android:fontFamily="@font/manrope_medium"
                         android:text="@string/yes"
-                        android:textColor="@color/dialog_background" />
+                        android:textColor="@color/on_primary" />
 
                 </LinearLayout>
             </LinearLayout>

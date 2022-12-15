@@ -55,7 +55,6 @@ class UserSettingsActivity : AppCompatActivity() {
         storageRef = FirebaseStorage.getInstance().reference
 
         binding.namePreview.text = AppUtils.currentUser?.name
-        binding.numberPreview.text = AppUtils.currentUser?.phoneNumber
         Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePhotoPreviewImage)
 
         var fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in_from_bottom)

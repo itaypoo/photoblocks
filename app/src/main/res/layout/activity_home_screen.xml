@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_variant"
-    android:backgroundTint="@color/background_variant"
+    android:background="@color/background"
     tools:context=".HomeScreenActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profilePicture"
         android:layout_width="43dp"
         android:layout_height="43dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/default_profile_photo"
         app:layout_constraintBottom_toBottomOf="@+id/titleText"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/shrikhand"
         android:text="@string/my_blocks"
@@ -38,7 +37,7 @@
         android:id="@+id/menuButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="2dp"
         android:background="#00FFFFFF"
         android:scaleType="center"
@@ -46,102 +45,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleText"
         app:srcCompat="@drawable/icon_menu"
+        app:tint="@color/on_background"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="3dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText">
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/background_variant"
+        android:ems="10"
+        android:hint="search blocks..."
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textColorHint="@color/on_background_variant"
+        app:layout_constraintEnd_toEndOf="@+id/menuButton"
+        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:backgroundTint="@color/primary_container"
-            android:fontFamily="@font/lexenddeca_regular"
-            android:text="outdoor"
-            android:textColor="@color/on_primary_container"
-            app:chipCornerRadius="20dp"
-            app:chipStrokeColor="@color/primary_container" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip2"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:backgroundTint="#00FFFFFF"
-            android:fontFamily="@font/lexenddeca_regular"
-            android:text="vacation"
-            android:textColor="@color/on_background_variant"
-            app:chipCornerRadius="20dp"
-            app:chipStrokeColor="@color/on_background_variant" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip3"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:backgroundTint="#00FFFFFF"
-            android:text="familly"
-            android:textColor="@color/on_background_variant"
-            app:chipCornerRadius="20dp"
-            app:chipStrokeColor="@color/on_background_variant" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip4"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:backgroundTint="#00FFFFFF"
-            android:text="party"
-            android:textColor="@color/on_background_variant"
-            app:chipCornerRadius="20dp"
-            app:chipStrokeColor="@color/on_background_variant" />
-
-    </com.google.android.material.chip.ChipGroup>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:tint="@color/on_background_variant"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
+        app:srcCompat="@drawable/icon_search" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/backgroundCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:transitionGroup="false"
-        app:cardBackgroundColor="@color/background"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardBackgroundColor="#00FFFFFF"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup" >
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/blockRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="-40dp"
-                app:cardBackgroundColor="#00FFFFFF"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/blockRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </androidx.cardview.widget.CardView>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent" />
 
     </androidx.cardview.widget.CardView>
 
@@ -152,9 +106,10 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/manrope_medium"
-        android:padding="20dp"
         android:paddingStart="20dp"
+        android:paddingTop="20dp"
         android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
         android:text="@string/new_block"
         android:textColor="@color/on_primary"
         android:transitionName="sharedview_button"
@@ -164,5 +119,6 @@
         app:iconTint="@color/on_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
