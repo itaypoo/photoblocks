@@ -1,5 +1,6 @@
 package com.itaypoo.photoblocks
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -27,6 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
@@ -42,8 +45,13 @@ import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
 import com.itaypoo.photoblockslib.User
 import com.itaypoo.photoblockslib.inputCheck
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.tasks.await
 import java.io.File
+import java.lang.Exception
 import java.util.*
+import java.util.concurrent.Executor
+import kotlin.coroutines.coroutineContext
 
 
 class CreateBlockActivity : AppCompatActivity() {
@@ -366,20 +374,47 @@ class CreateBlockActivity : AppCompatActivity() {
         }.addOnSuccessListener {
             // Uploading block success!
             Toast.makeText(this, getString(R.string.block_created_message), Toast.LENGTH_SHORT).show()
-            uploadUserBlockMembers(it.id)
+
+            // Upload this user member as an admin
+            val blockId = it.id
+            val memberModel = BlockMember(
+                null,
+                blockId,
+                AppUtils.currentUser!!.databaseId!!,
+                AppUtils.currentTimeString(),
+                true
+            )
+            database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
+                uploadUserBlockMembers(blockId)
+            }
         }
     }
 
     private fun uploadUserBlockMembers(blockId: String) {
         // Last step of creating the block - Uploading user members, thus adding the user members list to the created block
 
+        val taskCount = membersList.size
+        var tasksDone = 0
+
+        val collection = database.collection("blockMembers")
+
+        for(member in membersList){
+            val memberModel = BlockMember(
+                null,
+                blockId,
+                member.databaseId!!,
+                AppUtils.currentTimeString(),
+                false
+            )
+            collection.add(memberModel.toHashMap()).addOnCompleteListener {
+                tasksDone += 1
+                if(tasksDone == taskCount){
+                    // Done uploading all members!
+                    finish()
+                }
+            }
+        }
 
     }
-
-    private fun addBlockMember(userId: String, isAdmin: Boolean): Task<Boolean>
-
-
-
-
 
 }
