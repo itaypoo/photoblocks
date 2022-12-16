@@ -205,7 +205,7 @@
                 android:background="#00FFFFFF"
                 android:onClick="rotateButton_click"
                 android:padding="7dp"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/finishButton"
                 app:layout_constraintEnd_toStartOf="@+id/finishButton"
                 app:layout_constraintStart_toEndOf="@+id/cancelButton"

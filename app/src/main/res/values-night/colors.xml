@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#3C3F5B</color>
-    <color name="on_primary">#ABC1ED</color>
+    <color name="primary">#6D78A5</color>
+    <color name="primary_text">#ABC1ED</color>
 
     <color name="tertiary">#582F5F</color>
-    <color name="on_tertiary">#CDAFCE</color>
+    <color name="tertiary_text">#CDAFCE</color>
 
     <color name="error">#732D42</color>
-    <color name="on_error">#EFB8BA</color>
+    <color name="error_text">#EFB8BA</color>
 
     <color name="background">#1C1A1D</color>
     <color name="on_background">#F8F2F2</color>
 
     <color name="background_variant">#34313A</color>
-    <color name="on_background_variant">#6A6575</color>
+    <color name="background_variant_text">#6A6575</color>
 
     <color name="dialog_background">#2A2D36</color>
 

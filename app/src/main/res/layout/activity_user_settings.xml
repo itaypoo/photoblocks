@@ -133,12 +133,12 @@
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
             android:text="@string/change_name"
-            android:textColor="@color/on_primary"
+            android:textColor="@color/background"
             android:textSize="15sp"
             app:icon="@drawable/icon_rename"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
-            app:iconTint="@color/on_primary"
+            app:iconTint="@color/background"
             app:rippleColor="#00FFFFFF" />
 
     </androidx.cardview.widget.CardView>
@@ -175,12 +175,12 @@
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
             android:text="@string/change_pfp"
-            android:textColor="@color/on_primary"
+            android:textColor="@color/background"
             android:textSize="15sp"
             app:icon="@drawable/icon_add_photo"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
-            app:iconTint="@color/on_primary" />
+            app:iconTint="@color/background" />
 
     </androidx.cardview.widget.CardView>
 
@@ -218,12 +218,12 @@
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
             android:text="@string/log_out"
-            android:textColor="@color/on_error"
+            android:textColor="@color/background"
             android:textSize="15sp"
             app:icon="@drawable/icon_log_out"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
-            app:iconTint="@color/on_error" />
+            app:iconTint="@color/background" />
 
     </androidx.cardview.widget.CardView>
 
@@ -256,12 +256,12 @@
             android:paddingTop="0dp"
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
-            android:textColor="@color/on_tertiary"
+            android:textColor="@color/background"
             android:textSize="15sp"
             app:icon="@drawable/icon_rename"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
-            app:iconTint="@color/on_tertiary"
+            app:iconTint="@color/background"
             app:rippleColor="#00FFFFFF" />
 
     </androidx.cardview.widget.CardView>

@@ -61,7 +61,7 @@
         android:padding="10dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
-        android:textColorHint="@color/on_background_variant"
+        android:textColorHint="@color/background_variant_text"
         app:layout_constraintEnd_toEndOf="@+id/menuButton"
         app:layout_constraintStart_toStartOf="@+id/profilePicture"
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
@@ -72,7 +72,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:tint="@color/on_background_variant"
+        app:tint="@color/background_variant_text"
         app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
         app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
@@ -111,12 +111,12 @@
         android:paddingEnd="20dp"
         android:paddingBottom="20dp"
         android:text="@string/new_block"
-        android:textColor="@color/on_primary"
+        android:textColor="@color/background"
         android:transitionName="sharedview_button"
         app:backgroundTint="@color/primary"
         app:cornerRadius="100dp"
         app:icon="@drawable/icon_add"
-        app:iconTint="@color/on_primary"
+        app:iconTint="@color/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
