@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="Title TextView"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/on_primary"
                 android:textSize="24sp" />
 
             <Space
@@ -73,7 +73,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/no"
-                        android:textColor="@color/tertiary_text" />
+                        android:textColor="@color/on_primary" />
 
                     <Space
                         android:layout_width="10dp"
@@ -89,7 +89,7 @@
                         android:backgroundTint="@color/primary"
                         android:fontFamily="@font/manrope_medium"
                         android:text="@string/yes"
-                        android:textColor="@color/background" />
+                        android:textColor="@color/on_primary" />
 
                 </LinearLayout>
             </LinearLayout>

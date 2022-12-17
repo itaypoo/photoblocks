@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="@string/choose_photo_from"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/on_primary"
                 android:textSize="24sp" />
 
             <Space
@@ -99,9 +99,9 @@
                 android:paddingRight="0dp"
                 android:paddingBottom="0dp"
                 android:text="@string/cancel"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/on_primary"
                 android:visibility="visible"
-                app:strokeColor="@color/primary_text" />
+                app:strokeColor="@color/on_primary" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

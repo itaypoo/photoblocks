@@ -92,15 +92,15 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/manrope_medium"
         android:text="@string/upload_profile_photo"
-        android:textColor="@color/tertiary_text"
+        android:textColor="@color/on_tertiary"
         app:icon="@drawable/icon_add_photo"
         app:iconGravity="textStart"
-        app:iconTint="@color/tertiary_text"
+        app:iconTint="@color/on_tertiary"
         app:layout_constraintEnd_toEndOf="@+id/textField"
         app:layout_constraintStart_toStartOf="@+id/textField"
         app:layout_constraintTop_toBottomOf="@+id/invalidNameError"
         app:rippleColor="#03FFFFFF"
-        app:strokeColor="@color/tertiary_text" />
+        app:strokeColor="@color/on_tertiary" />
 
     <TextView
         android:id="@+id/invalidNameError"
@@ -113,7 +113,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="please enter a valid number"
-        android:textColor="@color/background"
+        android:textColor="@color/on_error"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/textField"
         app:layout_constraintStart_toStartOf="@+id/textField"

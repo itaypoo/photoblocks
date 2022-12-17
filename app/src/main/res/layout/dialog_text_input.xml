@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="Title TextView"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/on_primary"
                 android:textSize="24sp" />
 
             <Space
@@ -60,7 +60,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="Error text"
-                android:textColor="@color/background" />
+                android:textColor="@color/on_error" />
 
             <Space
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/cancel"
-                        android:textColor="@color/tertiary_text" />
+                        android:textColor="@color/on_primary" />
 
                     <Space
                         android:layout_width="10dp"
@@ -107,7 +107,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="@string/done"
-                        android:textColor="@color/background" />
+                        android:textColor="@color/on_primary" />
                 </LinearLayout>
             </LinearLayout>
 

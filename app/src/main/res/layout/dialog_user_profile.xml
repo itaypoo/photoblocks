@@ -69,7 +69,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_medium"
                             android:text="+11020304050"
-                            android:textColor="@color/background_variant_text"
+                            android:textColor="@color/on_background_variant"
                             android:textSize="10sp" />
                     </LinearLayout>
 
@@ -103,7 +103,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/no"
-                        android:textColor="@color/tertiary_text" />
+                        android:textColor="@color/on_primary" />
 
                     <Space
                         android:layout_width="10dp"
@@ -119,7 +119,7 @@
                         android:backgroundTint="@color/primary"
                         android:fontFamily="@font/manrope_medium"
                         android:text="@string/yes"
-                        android:textColor="@color/background" />
+                        android:textColor="@color/on_primary" />
 
                 </LinearLayout>
             </LinearLayout>
