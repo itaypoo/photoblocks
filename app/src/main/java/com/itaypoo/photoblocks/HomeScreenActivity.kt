@@ -8,12 +8,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.Fade
 import android.util.Log
-import android.view.Gravity
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -32,6 +31,8 @@ import com.itaypoo.photoblockslib.Block
 class HomeScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeScreenBinding
     private lateinit var menuDialog: Dialog
+
+    private lateinit var blockList: MutableList<Block>
 
     private lateinit var storageRef: StorageReference
     private lateinit var database: FirebaseFirestore
@@ -90,6 +91,25 @@ class HomeScreenActivity : AppCompatActivity() {
             val intent = Intent(this, CreateBlockActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
         }
+        
+        // Search bar functionality
+        binding.searchBarEditText.addTextChangedListener {
+
+            val searchText: String = binding.searchBarEditText.text.toString().lowercase()
+            // filter out all blocks that do not contain the text in their title
+
+            val filetredList = mutableListOf<Block>()
+
+            for(block in blockList){
+                if(block.title.lowercase().contains(searchText)){
+                    filetredList.add(block)
+                }
+            }
+
+            val adapter = BlockListAdapter(filetredList, this)
+            binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.blockRecyclerView.adapter = adapter
+        }
 
     }
 
@@ -99,6 +119,10 @@ class HomeScreenActivity : AppCompatActivity() {
             // set an exit transition
             exitTransition = Fade()
         }
+    }
+
+    override fun onBackPressed() {
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +184,7 @@ class HomeScreenActivity : AppCompatActivity() {
     }
 
     private fun loadBlocksList(blockIdList: MutableList<String>){
-        val finalBlockList: MutableList<Block> = mutableListOf()
+        blockList = mutableListOf()
 
         // Load all blocks that were found to contain the user as a member
         database.collection("blocks").get().addOnFailureListener {
@@ -178,13 +202,13 @@ class HomeScreenActivity : AppCompatActivity() {
                 // If this block is in blockIdList, add it to finalBlockList.
                 if(blockIdList.contains(doc.id)){
                     val newblock = FirebaseUtils.ObjectFromDoc.Block(doc)
-                    finalBlockList.add(newblock)
+                    blockList.add(newblock)
                 }
 
             }
 
             // All relevant blocks are loaded. Now lets fill the RecyclerView with them -
-            val adapter = BlockListAdapter(finalBlockList, this)
+            val adapter = BlockListAdapter(blockList, this)
             binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
             binding.blockRecyclerView.adapter = adapter
 

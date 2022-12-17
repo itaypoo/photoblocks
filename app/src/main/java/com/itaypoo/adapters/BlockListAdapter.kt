@@ -108,14 +108,14 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
     private fun fadeInView(view: View, position: Int){
         ObjectAnimator.ofFloat(view, "alpha", 1.0F).apply {
             duration = 300
-            startDelay = (position*7).toLong()
+            startDelay = (position*70).toLong()
             interpolator = DecelerateInterpolator()
             start()
         }
         view.translationY = 100F
         ObjectAnimator.ofFloat(view, "translationY", 0.0F).apply {
             duration = 300
-            startDelay = (position*7).toLong()
+            startDelay = (position*70).toLong()
             interpolator = DecelerateInterpolator()
             start()
         }
