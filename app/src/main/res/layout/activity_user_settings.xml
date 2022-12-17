@@ -258,7 +258,7 @@
             android:paddingBottom="0dp"
             android:textColor="@color/on_tertiary"
             android:textSize="15sp"
-            app:icon="@drawable/icon_rename"
+            app:icon="@drawable/icon_lock_open"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
             app:iconTint="@color/on_tertiary"

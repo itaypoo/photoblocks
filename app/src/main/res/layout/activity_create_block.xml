@@ -26,6 +26,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/blockNameError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/error"
+        android:gravity="center"
+        android:padding="5dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="Error text Error text Error text "
+        android:textColor="@color/on_error"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/blockPreviewCard" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/blockPreviewCard"
         android:layout_width="0dp"
@@ -68,59 +86,43 @@
                 app:srcCompat="@drawable/two_sided_gradient"
                 app:tint="#99C8D7" />
 
-            <TextView
-                android:id="@+id/blockNameError"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/rounded_rectangle"
-                android:backgroundTint="@color/error"
-                android:padding="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="Error text Error text Error text "
-                android:textColor="@color/on_error"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/blockTitleEditText"
-                app:layout_constraintStart_toStartOf="@+id/blockTitleEditText"
-                app:layout_constraintTop_toBottomOf="@+id/blockTitleEditText" />
-
-            <Button
-                android:id="@+id/blockChangePhotoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#94D3E8"
-                android:fontFamily="@font/manrope_medium"
-                android:text="@string/change_header_photo"
-                android:visibility="visible"
-                app:icon="@drawable/icon_add_photo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/blockNameError" />
-
-            <EditText
-                android:id="@+id/blockTitleEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/rounded_rectangle"
-                android:backgroundTint="#6DFFFFFF"
-                android:ems="10"
-                android:fontFamily="@font/manrope_medium"
-                android:gravity="center"
-                android:hint="@string/block_title_hint"
-                android:inputType="textPersonName"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:textColor="#121212"
-                android:textColorHint="#121212"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.32999998"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <EditText
+                    android:id="@+id/blockTitleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rectangle"
+                    android:backgroundTint="#6DFFFFFF"
+                    android:ems="10"
+                    android:fontFamily="@font/manrope_medium"
+                    android:gravity="center"
+                    android:hint="@string/block_title_hint"
+                    android:inputType="textPersonName"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:textColor="#121212"
+                    android:textColorHint="#121212"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/blockChangePhotoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#94D3E8"
+                    android:fontFamily="@font/manrope_medium"
+                    android:text="@string/change_header_photo"
+                    android:visibility="visible"
+                    app:icon="@drawable/icon_add_photo" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -135,7 +137,7 @@
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="@+id/blockPreviewCard"
         app:layout_constraintStart_toStartOf="@+id/blockPreviewCard"
-        app:layout_constraintTop_toBottomOf="@+id/blockPreviewCard">
+        app:layout_constraintTop_toBottomOf="@+id/blockNameError">
 
         <LinearLayout
             android:layout_width="match_parent"
