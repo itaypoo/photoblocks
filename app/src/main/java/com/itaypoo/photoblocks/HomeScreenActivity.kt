@@ -106,9 +106,26 @@ class HomeScreenActivity : AppCompatActivity() {
                 }
             }
 
+            // set the button to a search button or a delete button
+            if(searchText.isBlank()){
+                binding.searchBarImageButton.setImageResource(R.drawable.icon_search)
+            }
+            else{
+                binding.searchBarImageButton.setImageResource(R.drawable.icon_close)
+            }
+
+            // refresh the recyclerView
             val adapter = BlockListAdapter(filetredList, this)
             binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
             binding.blockRecyclerView.adapter = adapter
+        }
+
+        // search bar delete button
+        binding.searchBarImageButton.setOnClickListener {
+            if(binding.searchBarEditText.text.toString().isNotBlank()){
+                binding.searchBarImageButton.setImageResource(R.drawable.icon_search)
+                binding.searchBarEditText.text = null
+            }
         }
 
     }
