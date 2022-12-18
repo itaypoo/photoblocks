@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -23,7 +22,6 @@ class ChooseContactActivity : AppCompatActivity() {
 
     private lateinit var database: FirebaseFirestore
     private var resIntent = Intent()
-
     /*
 
      --- Activity for selecting a user from the contact list ---

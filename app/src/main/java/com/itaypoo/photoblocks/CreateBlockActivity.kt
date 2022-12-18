@@ -1,6 +1,5 @@
 package com.itaypoo.photoblocks
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -22,15 +21,11 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,13 +40,8 @@ import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
 import com.itaypoo.photoblockslib.User
 import com.itaypoo.photoblockslib.inputCheck
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.tasks.await
 import java.io.File
-import java.lang.Exception
 import java.util.*
-import java.util.concurrent.Executor
-import kotlin.coroutines.coroutineContext
 
 
 class CreateBlockActivity : AppCompatActivity() {
