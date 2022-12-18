@@ -115,9 +115,7 @@ class HomeScreenActivity : AppCompatActivity() {
             }
 
             // refresh the recyclerView
-            val adapter = BlockListAdapter(filetredList, this)
-            binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
-            binding.blockRecyclerView.adapter = adapter
+            setUpBlockRecycler(filetredList)
         }
 
         // search bar delete button
@@ -152,7 +150,7 @@ class HomeScreenActivity : AppCompatActivity() {
         // Set dialog window width, height, background and position
         menuDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         menuDialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        menuDialog.window?.setGravity(Gravity.RIGHT)
+        menuDialog.window?.setGravity(Gravity.END)
 
         // Get button views
         val buttonContacts = menuDialog.findViewById<Button>(R.id.nbs_contactsButton)
@@ -225,16 +223,20 @@ class HomeScreenActivity : AppCompatActivity() {
             }
 
             // All relevant blocks are loaded. Now lets fill the RecyclerView with them -
-            val adapter = BlockListAdapter(blockList, this)
-            binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
-            binding.blockRecyclerView.adapter = adapter
+            setUpBlockRecycler(blockList)
 
-            adapter.onItemClickListener = {
-                // On block clicked
-                AppUtils.passedBlock = it
-                startActivity(Intent(this, ViewBlockActivity::class.java))
-            }
+        }
+    }
 
+    private fun setUpBlockRecycler(blockList: MutableList<Block>){
+        val adapter = BlockListAdapter(blockList, this)
+        binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.blockRecyclerView.adapter = adapter
+
+        adapter.onItemClickListener = {
+            // On block clicked
+            AppUtils.passedBlock = it
+            startActivity(Intent(this, ViewBlockActivity::class.java))
         }
     }
 
