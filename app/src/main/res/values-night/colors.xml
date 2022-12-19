@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#5668B6</color>
-    <color name="on_primary">#D7E3FA</color>
+    <color name="primary">#7BACF8</color>
+    <color name="on_primary">#00256E</color>
 
-    <color name="tertiary">#D47E4F</color>
-    <color name="on_tertiary">#F9E8DE</color>
+    <color name="tertiary">#FCC834</color>
+    <color name="on_tertiary">#36261D</color>
 
-    <color name="error">#922948</color>
-    <color name="on_error">#EFB8BA</color>
+    <color name="error">#EF665C</color>
+    <color name="on_error">#431F20</color>
 
     <color name="background">#1C1A1D</color>
     <color name="on_background">#F8F2F2</color>

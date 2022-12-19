@@ -14,7 +14,7 @@
         android:id="@+id/textView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/shrikhand"
         android:gravity="center"
         android:text="@string/create_block_title"
@@ -48,9 +48,9 @@
         android:id="@+id/blockPreviewCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="13dp"
+        android:layout_marginEnd="20dp"
         app:cardBackgroundColor="@color/background_variant"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
@@ -203,17 +203,28 @@
 
     <Button
         android:id="@+id/openBlockButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/manrope_medium"
         android:text="@string/open_block_button"
         android:transitionName="sharedview_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_max="500dp" />
+
+    <Button
+        android:id="@+id/createBlockCancelButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/cancel"
+        android:textColor="@color/on_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

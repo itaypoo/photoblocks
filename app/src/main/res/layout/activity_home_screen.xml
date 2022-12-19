@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
         android:fontFamily="@font/shrikhand"
         android:text="@string/my_blocks"
         android:textColor="@color/on_background"
@@ -33,17 +32,17 @@
         app:layout_constraintStart_toEndOf="@+id/profilePicture"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <Button
         android:id="@+id/menuButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:background="#00FFFFFF"
+        app:icon="@drawable/icon_menu"
+        app:iconTint="@color/on_background"
         app:layout_constraintBottom_toBottomOf="@+id/titleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleText"
-        app:srcCompat="@drawable/icon_menu"
-        app:tint="@color/on_background"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <EditText
@@ -104,7 +103,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/manrope_medium"
         android:paddingStart="20dp"

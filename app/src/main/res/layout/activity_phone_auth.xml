@@ -15,7 +15,7 @@
         android:fontFamily="@font/shrikhand"
         android:gravity="center"
         android:text="@string/title"
-        android:textColor="@color/on_primary"
+        android:textColor="@color/primary"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,16 +51,14 @@
 
     <Button
         android:id="@+id/continueButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/manrope_medium"
         android:text="@string/continue_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_max="500dp"
         tools:ignore="DuplicateClickableBoundsCheck" />
 
@@ -116,16 +114,14 @@
 
     <Button
         android:id="@+id/submitCodeButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:fontFamily="@font/manrope_medium"
         android:text="@string/submit_verification_code"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/codeDescriptionText"
@@ -154,7 +150,7 @@
         android:paddingEnd="10dp"
         android:text="@string/invalid_verification_code"
         android:textColor="@color/on_error"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/textField"
         app:layout_constraintStart_toStartOf="@+id/textField"
         app:layout_constraintTop_toBottomOf="@+id/textField2" />

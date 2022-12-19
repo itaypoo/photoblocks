@@ -81,6 +81,9 @@ class CreateBlockActivity : AppCompatActivity() {
         binding.addContactButton.setOnClickListener {
             startActivityForResult(Intent(this, ChooseContactActivity::class.java), Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY)
         }
+        binding.createBlockCancelButton.setOnClickListener {
+            finish()
+        }
 
         // Init block
         newBlock = FirebaseUtils.DefaultObjects.Block(AppUtils.currentUser!!)

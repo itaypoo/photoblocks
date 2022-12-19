@@ -38,6 +38,12 @@ class ChooseContactActivity : AppCompatActivity() {
 
         database = Firebase.firestore
 
+        // back button
+        binding.chooseContactBackButton.setOnClickListener {
+            setResult(RESULT_CANCELED)
+            finish()
+        }
+
         // Get permission from the user to read phone contacts
         requestPermissions(arrayOf("android.permission.READ_CONTACTS"), 80)
 

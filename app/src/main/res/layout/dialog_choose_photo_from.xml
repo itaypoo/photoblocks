@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="@string/choose_photo_from"
-                android:textColor="@color/on_primary"
+                android:textColor="@color/primary"
                 android:textSize="24sp" />
 
             <Space
@@ -84,24 +84,23 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:layout_height="16dp"
                 android:visibility="visible" />
 
             <Button
                 android:id="@+id/photoDialog_cancelButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:paddingLeft="0dp"
                 android:paddingTop="0dp"
                 android:paddingRight="0dp"
                 android:paddingBottom="0dp"
                 android:text="@string/cancel"
-                android:textColor="@color/on_primary"
+                android:textColor="@color/on_background"
                 android:visibility="visible"
-                app:strokeColor="@color/on_primary" />
+                app:strokeColor="@color/primary" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

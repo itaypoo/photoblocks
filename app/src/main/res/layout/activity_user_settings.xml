@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="80dp"
         android:padding="0dp"
         app:cardCornerRadius="1000dp"
@@ -48,23 +48,25 @@
     <Space
         android:id="@+id/space2"
         android:layout_width="1dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+        app:layout_constraintTop_toTopOf="@+id/cardChangeImage" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:visibility="visible"
         app:cardBackgroundColor="@color/background_variant"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="@+id/cardChangeImage"
-        app:layout_constraintStart_toStartOf="@+id/cardChangeName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/namePreview">
 
         <LinearLayout
@@ -107,16 +109,17 @@
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@color/primary"
         android:clickable="true"
         android:foreground="@drawable/ripple"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
-        app:layout_constraintDimensionRatio="1:0.4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:0.5"
         app:layout_constraintEnd_toStartOf="@+id/space2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/space2"
         app:layout_constraintWidth_max="200dp">
 
         <Button
@@ -136,7 +139,7 @@
             android:textColor="@color/on_primary"
             android:textSize="15sp"
             app:icon="@drawable/icon_rename"
-            app:iconGravity="textStart"
+            app:iconGravity="textTop"
             app:iconPadding="2dp"
             app:iconTint="@color/on_primary"
             app:rippleColor="#00FFFFFF" />
@@ -149,16 +152,17 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@color/primary"
         android:clickable="true"
         android:foreground="@drawable/ripple"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
-        app:layout_constraintDimensionRatio="1:0.4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/space2"
-        app:layout_constraintTop_toTopOf="@+id/space2"
         app:layout_constraintWidth_max="200dp">
 
         <Button
@@ -178,7 +182,7 @@
             android:textColor="@color/on_primary"
             android:textSize="15sp"
             app:icon="@drawable/icon_add_photo"
-            app:iconGravity="textStart"
+            app:iconGravity="textTop"
             app:iconPadding="2dp"
             app:iconTint="@color/on_primary" />
 
@@ -189,18 +193,19 @@
         android:id="@+id/cardLogOut"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
         android:backgroundTint="@color/error"
         android:clickable="true"
         android:foreground="@drawable/ripple"
         app:cardCornerRadius="30dp"
         app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardChangeName"
         app:layout_constraintDimensionRatio="1:0.25"
         app:layout_constraintEnd_toStartOf="@+id/cardLock"
         app:layout_constraintStart_toStartOf="@+id/cardChangeName"
-        app:layout_constraintTop_toBottomOf="@+id/cardChangeImage"
-        app:layout_constraintWidth_max="420dp">
+        app:layout_constraintWidth_max="420dp"
+        tools:ignore="TouchTargetSizeCheck">
 
         <Button
             android:id="@+id/logOutContent"
@@ -231,16 +236,15 @@
         android:id="@+id/cardLock"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         android:backgroundTint="@color/tertiary"
         android:clickable="true"
         android:foreground="@drawable/ripple"
-        app:cardCornerRadius="30dp"
+        app:cardCornerRadius="1000dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardLogOut"
-        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintDimensionRatio="1:0.7"
         app:layout_constraintEnd_toEndOf="@+id/cardChangeImage"
-        app:layout_constraintTop_toBottomOf="@+id/cardChangeImage"
+        app:layout_constraintTop_toTopOf="@+id/cardLogOut"
         app:layout_constraintWidth_max="200dp">
 
         <Button
@@ -265,5 +269,15 @@
             app:rippleColor="#00FFFFFF" />
 
     </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/usetSettingsBackButton"
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/icon_back"
+        app:iconTint="@color/on_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,9 +57,6 @@ class UserSettingsActivity : AppCompatActivity() {
         binding.namePreview.text = AppUtils.currentUser?.name
         Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePhotoPreviewImage)
 
-        var fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in_from_bottom)
-        binding.root.startAnimation(fadeInAnim)
-
         // Set on click listeners for buttons
         binding.cardChangeName.setOnClickListener { openChangeNameDialog() }
         binding.cardChangeImage.setOnClickListener { changeProfilePhoto() }
@@ -78,6 +75,11 @@ class UserSettingsActivity : AppCompatActivity() {
             d.yesButton.setOnClickListener { logOut() }
             d.dialog.show()
 
+        }
+
+        // back button
+        binding.usetSettingsBackButton.setOnClickListener {
+            finish()
         }
     }
 
@@ -104,13 +106,6 @@ class UserSettingsActivity : AppCompatActivity() {
 
         // Start scale animation
         scaleAnim.start()
-    }
-
-    override fun finish() {
-        super.finish()
-        // Fade out anim when activity finishes
-        var fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_out_to_bottom)
-        binding.root.startAnimation(fadeInAnim)
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

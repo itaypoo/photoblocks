@@ -41,12 +41,12 @@
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
                     android:text="contacts"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     app:icon="@drawable/icon_people"
                     app:iconGravity="textTop"
                     app:iconPadding="5dp"
                     app:iconSize="30dp"
-                    app:iconTint="#000000" />
+                    app:iconTint="#FFFFFF" />
 
                 <Space
                     android:layout_width="10dp"
@@ -64,12 +64,12 @@
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
                     android:text="settings"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     app:icon="@drawable/icon_settings"
                     app:iconGravity="textTop"
                     app:iconPadding="5dp"
                     app:iconSize="30dp"
-                    app:iconTint="#000000" />
+                    app:iconTint="#FFFFFF" />
 
                 <Space
                     android:layout_width="10dp"
@@ -87,12 +87,12 @@
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
                     android:text="join with code"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     app:icon="@drawable/icon_key"
                     app:iconGravity="textTop"
                     app:iconPadding="5dp"
                     app:iconSize="30dp"
-                    app:iconTint="#000000" />
+                    app:iconTint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/textView7"

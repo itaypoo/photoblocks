@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/manrope_medium"
                 android:text="Title TextView"
-                android:textColor="@color/on_primary"
+                android:textColor="@color/primary"
                 android:textSize="24sp" />
 
             <Space
@@ -79,7 +79,7 @@
 
                     <Button
                         android:id="@+id/inputDialog_cancelButton"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -89,7 +89,8 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/cancel"
-                        android:textColor="@color/on_primary" />
+                        android:textColor="@color/on_background"
+                        app:strokeColor="@color/primary" />
 
                     <Space
                         android:layout_width="10dp"
