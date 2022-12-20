@@ -10,9 +10,11 @@ import android.transition.ChangeImageTransform
 import android.view.View
 import android.view.Window
 import android.view.animation.DecelerateInterpolator
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -47,10 +49,13 @@ class UserSettingsActivity : AppCompatActivity() {
         binding.namePreview.text = AppUtils.currentUser?.name
         Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePhotoPreviewImage)
 
+        // Get user statistics
+        getStats()
+
         // Set on click listeners for buttons
         binding.cardChangeName.setOnClickListener { openChangeNameDialog() }
         binding.cardChangeImage.setOnClickListener { changeProfilePhoto() }
-        binding.cardLogOut.setOnClickListener {
+        binding.logOutButton.setOnClickListener {
 
             // Show confirmation dialog before logging out
             val d = CustomDialogMaker.makeYesNoDialog(
@@ -96,6 +101,18 @@ class UserSettingsActivity : AppCompatActivity() {
 
         // Start scale animation
         scaleAnim.start()
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun getStats(){
+
+        // Count blocks the user is in
+        val query = database.collection("blockMembers").whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
+        query.addOnSuccessListener {
+            binding.blockCountText.text = it.size().toString() + " " + getString(R.string.stats_blocks_joined)
+        }
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

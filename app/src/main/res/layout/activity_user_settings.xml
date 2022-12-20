@@ -54,6 +54,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardChangeImage" />
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/cardChangeName"
+        app:layout_constraintDimensionRatio="1:0.17"
+        app:layout_constraintEnd_toEndOf="@+id/cardChangeImage"
+        app:layout_constraintStart_toStartOf="@+id/cardChangeName">
+
+        <Button
+            android:id="@+id/logOutButton"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/manrope_medium"
+            android:gravity="left|center_vertical"
+            android:paddingStart="30dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/log_out"
+            android:textColor="@color/on_error"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_log_out"
+            app:iconGravity="textStart"
+            app:iconPadding="2dp"
+            app:iconTint="@color/on_error"
+            app:strokeColor="@color/primary" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/privateButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:backgroundTint="@color/tertiary"
+            app:icon="@drawable/icon_lock_open"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/on_background" />
+
+    </LinearLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="0dp"
@@ -75,6 +124,7 @@
             android:dividerPadding="0dp"
             android:orientation="vertical"
             android:padding="15dp"
+            android:paddingEnd="30dp"
             android:showDividers="middle|beginning|end">
 
             <LinearLayout
@@ -83,23 +133,85 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/icon_people"
+                    app:srcCompat="@drawable/icon_auto_awsome"
                     app:tint="@color/on_background" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="joined oct. 3rd, 2022"
                     android:textColor="@color/on_background" />
 
             </LinearLayout>
 
-            <com.google.android.material.divider.MaterialDivider
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icon_block"
+                    app:tint="@color/on_background" />
+
+                <TextView
+                    android:id="@+id/blockCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8 blocks joined"
+                    android:textColor="@color/on_background" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icon_image"
+                    app:tint="@color/on_background" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="6 images uploaded"
+                    android:textColor="@color/on_background" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icon_message"
+                    app:tint="@color/on_background" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 comments written"
+                    android:textColor="@color/on_background" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -189,87 +301,6 @@
 
     </androidx.cardview.widget.CardView>
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardLogOut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="15dp"
-        android:backgroundTint="@color/error"
-        android:clickable="true"
-        android:foreground="@drawable/ripple"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardChangeName"
-        app:layout_constraintDimensionRatio="1:0.25"
-        app:layout_constraintEnd_toStartOf="@+id/cardLock"
-        app:layout_constraintStart_toStartOf="@+id/cardChangeName"
-        app:layout_constraintWidth_max="420dp"
-        tools:ignore="TouchTargetSizeCheck">
-
-        <Button
-            android:id="@+id/logOutContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/error"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:enabled="false"
-            android:fontFamily="@font/manrope_medium"
-            android:gravity="left|center_vertical"
-            android:paddingStart="30dp"
-            android:paddingLeft="0dp"
-            android:paddingTop="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
-            android:text="@string/log_out"
-            android:textColor="@color/on_error"
-            android:textSize="15sp"
-            app:icon="@drawable/icon_log_out"
-            app:iconGravity="textStart"
-            app:iconPadding="2dp"
-            app:iconTint="@color/on_error" />
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardLock"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:backgroundTint="@color/tertiary"
-        android:clickable="true"
-        android:foreground="@drawable/ripple"
-        app:cardCornerRadius="1000dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardLogOut"
-        app:layout_constraintDimensionRatio="1:0.7"
-        app:layout_constraintEnd_toEndOf="@+id/cardChangeImage"
-        app:layout_constraintTop_toTopOf="@+id/cardLogOut"
-        app:layout_constraintWidth_max="200dp">
-
-        <Button
-            android:id="@+id/lockContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/tertiary"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:enabled="false"
-            android:fontFamily="@font/manrope_medium"
-            android:paddingLeft="0dp"
-            android:paddingTop="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
-            android:textColor="@color/on_tertiary"
-            android:textSize="15sp"
-            app:icon="@drawable/icon_lock_open"
-            app:iconGravity="textStart"
-            app:iconPadding="2dp"
-            app:iconTint="@color/on_tertiary"
-            app:rippleColor="#00FFFFFF" />
-
-    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/usetSettingsBackButton"
