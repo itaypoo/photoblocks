@@ -1,26 +1,16 @@
 package com.itaypoo.photoblocks
 
 import android.animation.ValueAnimator
-import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.ChangeImageTransform
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
-import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -244,7 +234,7 @@ class UserSettingsActivity : AppCompatActivity() {
         editor.apply()
 
         // Go to splash screen
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, SplashActivity::class.java))
     }
 
 }

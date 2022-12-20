@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
@@ -15,12 +14,11 @@ import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.FirebaseUtils
-import com.itaypoo.photoblocks.databinding.ActivityMainBinding
-import com.itaypoo.photoblockslib.User
+import com.itaypoo.photoblocks.databinding.ActivitySplashBinding
 
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
     private lateinit var nextIntent: Intent
 
     private var queriesDone = false
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Set device background colors to fit the UI

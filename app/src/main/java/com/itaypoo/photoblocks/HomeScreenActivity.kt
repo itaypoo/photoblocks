@@ -89,7 +89,11 @@ class HomeScreenActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             val intent = Intent(this, CreateBlockActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, binding.fab, "sharedview_button").toBundle())
+            startActivity(intent)
+        }
+        // Open notification list on pfp click
+        binding.profilePicture.setOnClickListener{
+            startActivity(Intent(this, NotificationsActivity::class.java))
         }
         
         // Search bar functionality

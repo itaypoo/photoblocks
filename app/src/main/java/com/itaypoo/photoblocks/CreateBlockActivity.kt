@@ -36,10 +36,7 @@ import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.UserPhotoAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityCreateBlockBinding
-import com.itaypoo.photoblockslib.Block
-import com.itaypoo.photoblockslib.BlockMember
-import com.itaypoo.photoblockslib.User
-import com.itaypoo.photoblockslib.inputCheck
+import com.itaypoo.photoblockslib.*
 import java.io.File
 import java.util.*
 
@@ -378,31 +375,31 @@ class CreateBlockActivity : AppCompatActivity() {
                 true
             )
             database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
-                uploadUserBlockMembers(blockId)
+                inviteUserBlockMembers(blockId)
             }
         }
     }
 
-    private fun uploadUserBlockMembers(blockId: String) {
-        // Last step of creating the block - Uploading user members, thus adding the user members list to the created block
+    private fun inviteUserBlockMembers(blockId: String) {
+        // Last step of creating the block - Sending a notification inviting each member in the list
 
         val taskCount = membersList.size
         var tasksDone = 0
 
-        val collection = database.collection("blockMembers")
+        val notifContent = NotificationContent.makeContentBlockInvitation(blockId, AppUtils.currentUser!!.databaseId!!)
+        val collection = database.collection("userNotifications")
 
         for(member in membersList){
-            val memberModel = BlockMember(
+            val newNotif = Notification(
                 null,
-                blockId,
                 member.databaseId!!,
-                AppUtils.currentTimeString(),
-                false
+                NotificationType.BLOCK_INVITATION,
+                notifContent
             )
-            collection.add(memberModel.toHashMap()).addOnCompleteListener {
+            collection.add(newNotif.toHashMap()).addOnCompleteListener {
                 tasksDone += 1
                 if(tasksDone == taskCount){
-                    // Done uploading all members!
+                    // Done inviting all members!
                     finish()
                 }
             }

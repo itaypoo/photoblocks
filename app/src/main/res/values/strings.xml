@@ -67,4 +67,5 @@
     <string name="not_on_photoblocks_desc">want to sent a message inviting them to join?</string>
     <string name="join_photoblocks_sms">I want to share my memories with you! Join me on photoblocks: https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/DCTM_Penguin_UK_DK_AL697473_RGB_PNG_namnse.jpg</string>
     <string name="select_contact">Select a contact</string>
+    <string name="notifications">notifications</string>
 </resources>

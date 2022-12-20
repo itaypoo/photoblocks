@@ -2,9 +2,8 @@ package com.itaypoo.helpers
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.itaypoo.photoblockslib.Block
+import com.itaypoo.photoblockslib.Notification
 import com.itaypoo.photoblockslib.User
-import java.text.SimpleDateFormat
-import java.util.*
 
 object FirebaseUtils {
 
@@ -66,6 +65,15 @@ object FirebaseUtils {
                 doc.get("collageEnabled") as Boolean,
                 doc.get("collageOrderedByLikes") as Boolean,
                 (doc.get("collageImageTime") as Number).toInt()
+            )
+        }
+
+        fun Notification(doc: DocumentSnapshot): Notification{
+            return com.itaypoo.photoblockslib.Notification(
+                doc.id,
+                doc.get("recipientId") as String,
+                (doc.get("type") as Number).toInt(),
+                doc.get("content") as String
             )
         }
 
