@@ -227,16 +227,13 @@ class CreateBlockActivity : AppCompatActivity() {
 
                 memberAdapter.onItemClickListener = {
                     val itUser = it
-                    val contactList = ContactsUtils.getList(contentResolver)
-                    val userContact = ContactsUtils.contactsListContainsNumber(itUser.phoneNumber, contactList)
                     val d = CustomDialogMaker.makeUserProfileDialog(
                         this,
                         itUser,
                         false,
                         false,
                         getString(R.string.remove_member),
-                        getString(R.string.back_button),
-                        userContact?.displayName
+                        getString(R.string.back_button)
                     )
 
                     d.dialog.show()
@@ -386,15 +383,15 @@ class CreateBlockActivity : AppCompatActivity() {
         val taskCount = membersList.size
         var tasksDone = 0
 
-        val notifContent = NotificationContent.makeContentBlockInvitation(blockId, AppUtils.currentUser!!.databaseId!!)
         val collection = database.collection("userNotifications")
 
         for(member in membersList){
             val newNotif = Notification(
                 null,
-                member.databaseId!!,
-                NotificationType.BLOCK_INVITATION,
-                notifContent
+                member.databaseId!!,                 // Recipient ID
+                AppUtils.currentUser!!.databaseId!!, // Sender ID
+                NotificationType.BLOCK_INVITATION,   // Notif type
+                blockId                              // Content
             )
             collection.add(newNotif.toHashMap()).addOnCompleteListener {
                 tasksDone += 1

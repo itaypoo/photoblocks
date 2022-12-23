@@ -2,6 +2,7 @@ package com.itaypoo.helpers
 
 import android.app.Dialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.itaypoo.photoblocks.R
+import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.User
 import org.w3c.dom.Text
 
@@ -194,4 +196,53 @@ object CustomDialogMaker {
 
     //endregion
 
+    // BlockViewDialog - A dialog that displays a block with a yes and a no button.
+    //region UserProfileDialog
+
+    fun makeBlockViewDialog(
+        context: Context,
+        block: Block,
+        hideNoButton: Boolean = false,
+        hideYesButton: Boolean = false,
+        overrideYesText: String? = null,
+        overrideNoText: String? = null,
+    ): YesNoDialog {
+
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.dialog_block_view)
+
+        // Set dialog window width, height, background and position
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setGravity(Gravity.CENTER)
+
+        // Get dialog views
+        val yesButton = dialog.findViewById<Button>(R.id.blockViewDialog_yesButton)
+        val noButton = dialog.findViewById<Button>(R.id.blockViewDialog_noButton)
+        val blockTitleText = dialog.findViewById<TextView>(R.id.blockViewDialog_blockTitleText)
+        val blockImage = dialog.findViewById<ImageView>(R.id.blockViewDialog_blockImage)
+        val blockGradient = dialog.findViewById<ImageView>(R.id.blockViewDialog_blockGradient)
+
+        // Init views
+        blockTitleText.text = block.title
+        blockGradient.imageTintList = ColorStateList.valueOf( block.secondaryColor.toInt() )
+
+        // Load block image
+        Glide.with(context).load(block.coverImageUrl).placeholder(R.drawable.default_block_image).into(blockImage)
+
+        if (hideYesButton) yesButton.visibility = View.GONE
+        if (hideNoButton) noButton.visibility = View.GONE
+
+        if (overrideYesText != null) yesButton.text = overrideYesText
+        if (overrideNoText != null) noButton.text = overrideNoText
+
+        // return the dialog with its buttons
+        return YesNoDialog(dialog, yesButton, noButton)
+
+    }
+
+    //endregion
 }

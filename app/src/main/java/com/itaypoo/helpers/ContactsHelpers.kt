@@ -16,7 +16,9 @@ object ContactsUtils {
     private var contactList: MutableList<ContactModel>? = null
 
     // Return the contact in a list that matches the given phone number
-    fun contactsListContainsNumber(phoneNum: String, list: MutableList<ContactModel>): ContactModel?{
+    fun contactsListContainsNumber(phoneNum: String, contentResolver: ContentResolver): ContactModel?{
+        val list = getList(contentResolver)
+
         var res: ContactModel? = null
         for(contact in list){
             if(contact.phoneNumber == phoneNum) res = contact

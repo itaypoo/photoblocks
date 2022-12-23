@@ -1,5 +1,6 @@
 package com.itaypoo.helpers
 
+import android.content.ContentResolver
 import com.google.firebase.firestore.DocumentSnapshot
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.Notification
@@ -42,8 +43,8 @@ object FirebaseUtils {
     internal object ObjectFromDoc{
 
         // Generate a user object from a firebase DocumentSnapshot
-        fun User(doc: DocumentSnapshot): User {
-            return User(
+        fun User(doc: DocumentSnapshot, contentResolver: ContentResolver): User {
+            val res = User(
                 doc.id,
                 doc.get("name") as String,
                 doc.get("phoneNumber") as String,
@@ -51,6 +52,15 @@ object FirebaseUtils {
                 doc.get("creationTime") as String,
                 doc.get("isPrivate") as Boolean
             )
+
+            // If this user exists in contacts, replace its database name with its name in the contact list
+            // But! if this user is the current user, do not replace its name
+            if(res.phoneNumber == AppUtils.currentUser?.phoneNumber){
+                val nameInContacts = ContactsUtils.contactsListContainsNumber(res.phoneNumber, contentResolver)
+                if(nameInContacts?.displayName != null) res.name = nameInContacts.displayName
+            }
+
+            return res
         }
 
         fun Block(doc: DocumentSnapshot): Block {
@@ -69,9 +79,10 @@ object FirebaseUtils {
         }
 
         fun Notification(doc: DocumentSnapshot): Notification{
-            return com.itaypoo.photoblockslib.Notification(
+            return Notification(
                 doc.id,
                 doc.get("recipientId") as String,
+                doc.get("senderId") as String,
                 (doc.get("type") as Number).toInt(),
                 doc.get("content") as String
             )

@@ -126,7 +126,7 @@ class ChooseContactActivity : AppCompatActivity() {
 
             // Now loop through all users and add users that match a contact to the result list
             for(doc in it){
-                val docUser: User = FirebaseUtils.ObjectFromDoc.User(doc)
+                val docUser: User = FirebaseUtils.ObjectFromDoc.User(doc, contentResolver)
 
                 if(contactPhoneNumberList.contains(docUser.phoneNumber)){
                     // Add this contact with it's user to the result list, remove it from the numbers list

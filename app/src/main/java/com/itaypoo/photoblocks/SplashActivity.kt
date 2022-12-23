@@ -50,7 +50,7 @@ class SplashActivity : AppCompatActivity() {
             val database = Firebase.firestore
             database.collection("users").document(savedUserId).get().addOnSuccessListener {
                 // Getting user success
-                val user = FirebaseUtils.ObjectFromDoc.User(it)
+                val user = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 AppUtils.currentUser = user
 
                 nextIntent = Intent(this, HomeScreenActivity::class.java)

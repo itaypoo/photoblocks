@@ -78,12 +78,12 @@
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
             android:text="@string/log_out"
-            android:textColor="@color/on_error"
+            android:textColor="@color/on_background"
             android:textSize="15sp"
             app:icon="@drawable/icon_log_out"
             app:iconGravity="textStart"
             app:iconPadding="2dp"
-            app:iconTint="@color/on_error"
+            app:iconTint="@color/on_background"
             app:strokeColor="@color/primary" />
 
         <Space
@@ -99,7 +99,7 @@
             app:icon="@drawable/icon_lock_open"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconTint="@color/on_background" />
+            app:iconTint="@color/on_tertiary" />
 
     </LinearLayout>
 
@@ -116,7 +116,8 @@
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/namePreview">
+        app:layout_constraintTop_toBottomOf="@+id/namePreview"
+        app:layout_constraintWidth_max="600dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,10 +142,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:text="joined oct. 3rd, 2022"
                     android:textColor="@color/on_background" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -165,10 +171,15 @@
                     android:id="@+id/blockCountText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:text="8 blocks joined"
                     android:textColor="@color/on_background" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,10 +195,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:text="6 images uploaded"
                     android:textColor="@color/on_background" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -207,6 +223,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:text="10 comments written"
                     android:textColor="@color/on_background" />
 

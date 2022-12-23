@@ -1,7 +1,17 @@
 package com.itaypoo.photoblockslib
 
 object NotificationType{
-    const val BLOCK_INVITATION = 1
+    // Invitation to a block
+    // Content: Comment ID
+    const val BLOCK_COMMENT = 1
+
+    // Invitation to a block
+    // Content: Block ID
+    const val BLOCK_INVITATION = 2
+
+    // Post liked notification
+    // Content: Post ID
+    const val POST_LIKE = 3
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -9,6 +19,7 @@ object NotificationType{
 data class Notification(
     val databaseId: String?,
     val recipientId: String,
+    val senderId: String,
     val type: Int,
     val content: String
 ) {
@@ -16,33 +27,10 @@ data class Notification(
     fun toHashMap(): HashMap<String, Any>{
         return hashMapOf(
             "recipientId" to recipientId,
+            "senderId" to senderId,
             "type" to type,
             "content" to content
         )
     }
 
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-object NotificationContent{
-    data class BlockInvitation(val blockId: String, val inviterId: String)
-
-    // Parse content from a given notification
-    fun parseContent(notif: Notification): Any? {
-
-        if(notif.type == NotificationType.BLOCK_INVITATION){
-            // Notification is a block invitation
-            val stringList = notif.content.split(" ")
-            return BlockInvitation(stringList[0], stringList[1])
-        }
-        else{
-            return null
-        }
-
-    }
-
-    fun makeContentBlockInvitation(blockId: String, inviterId: String): String{
-        return blockId + " " + inviterId
-    }
 }

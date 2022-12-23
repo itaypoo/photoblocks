@@ -219,7 +219,7 @@ class PhoneAuthActivity : AppCompatActivity() {
             else{
                 // A user with this phone number exists, load it's data and log in
                 val doc = it.documents[0]
-                val user = FirebaseUtils.ObjectFromDoc.User(doc)
+                val user = FirebaseUtils.ObjectFromDoc.User(doc, contentResolver)
                 AppUtils.currentUser = user
 
                 // Save user id in local for auto log in

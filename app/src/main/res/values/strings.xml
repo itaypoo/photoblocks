@@ -69,4 +69,10 @@
     <string name="select_contact">Select a contact</string>
     <string name="notifications">notifications</string>
     <string name="stats_blocks_joined">blocks joined</string>
+    <string name="notification_block_comment_title">"commented on your block"</string>
+    <string name="notification_block_invite_title">"invited you to join their block!"</string>
+    <string name="notification_post_like_title">liked your post!</string>
+    <string name="join_block">join block</string>
+    <string name="decline">decline</string>
+    <string name="joining_block">joining block...</string>
 </resources>
