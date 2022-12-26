@@ -16,21 +16,27 @@ object NotificationType{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-data class Notification(
-    val databaseId: String?,
+class Notification(
+
+    databaseId: String?,
+    creationDayTime: DayTimeStamp,
+
     val recipientId: String,
     val senderId: String,
     val type: Int,
     val content: String
-) {
 
-    fun toHashMap(): HashMap<String, Any>{
-        return hashMapOf(
+) : DBEntity(databaseId, creationDayTime) {
+
+    override fun toHashMap(): HashMap<String, Any>{
+        val res = hashMapOf(
             "recipientId" to recipientId,
             "senderId" to senderId,
             "type" to type,
             "content" to content
-        )
+        ) + super.toHashMap()
+        res as HashMap<String, Any>
+        return res
     }
 
 }

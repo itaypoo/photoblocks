@@ -2,9 +2,7 @@ package com.itaypoo.helpers
 
 import android.content.ContentResolver
 import com.google.firebase.firestore.DocumentSnapshot
-import com.itaypoo.photoblockslib.Block
-import com.itaypoo.photoblockslib.Notification
-import com.itaypoo.photoblockslib.User
+import com.itaypoo.photoblockslib.*
 
 object FirebaseUtils {
 
@@ -12,12 +10,13 @@ object FirebaseUtils {
 
         // Create a default user. Only requirement for creating a User is a phone number.
         fun User(phoneNum: String): User{
-            return User(
+            return com.itaypoo.photoblockslib.User(
                 null,
+                DayTimeStamp(false),
+
                 Consts.Defaults.USER_NAME,
                 phoneNum,
                 Consts.Defaults.USER_PFP_URL,
-                AppUtils.currentTimeString(),
                 Consts.Defaults.USER_PRIVACY_MODE
             )
         }
@@ -26,10 +25,11 @@ object FirebaseUtils {
         fun Block(creator: User): Block{
             return Block(
                 null,
+                DayTimeStamp(false),
+
                 Consts.Defaults.BLOCK_NAME,
                 creator.databaseId!!,
                 Consts.Defaults.BLOCK_COVER_IMAGE_URL,
-                AppUtils.currentTimeString(),
                 Consts.Defaults.BLOCK_PRIMARY_COLOR,
                 Consts.Defaults.BLOCK_SECONDARY_COLOR,
                 Consts.Defaults.BLOCK_COLLAGE_ENABLED,
@@ -46,10 +46,11 @@ object FirebaseUtils {
         fun User(doc: DocumentSnapshot, contentResolver: ContentResolver): User {
             val res = User(
                 doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
                 doc.get("name") as String,
                 doc.get("phoneNumber") as String,
                 doc.get("profilePhotoUrl") as String,
-                doc.get("creationTime") as String,
                 doc.get("isPrivate") as Boolean
             )
 
@@ -66,10 +67,11 @@ object FirebaseUtils {
         fun Block(doc: DocumentSnapshot): Block {
             return Block(
                 doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
                 doc.get("title") as String,
                 doc.get("creatorId") as String,
                 doc.get("coverImageUrl") as String,
-                doc.get("creationTime") as String,
                 doc.get("primaryColor") as Number,
                 doc.get("secondaryColor") as Number,
                 doc.get("collageEnabled") as Boolean,
@@ -78,12 +80,25 @@ object FirebaseUtils {
             )
         }
 
-        fun Notification(doc: DocumentSnapshot): Notification{
+        fun Notification(doc: DocumentSnapshot): Notification {
             return Notification(
                 doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
                 doc.get("recipientId") as String,
                 doc.get("senderId") as String,
                 (doc.get("type") as Number).toInt(),
+                doc.get("content") as String
+            )
+        }
+
+        fun BlockComment(doc: DocumentSnapshot): BlockComment {
+            return BlockComment(
+                doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
+                doc.get("authorId") as String,
+                doc.get("blockId") as String,
                 doc.get("content") as String
             )
         }

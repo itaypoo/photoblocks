@@ -10,11 +10,9 @@ import android.transition.ChangeImageTransform
 import android.view.View
 import android.view.Window
 import android.view.animation.DecelerateInterpolator
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -133,17 +131,15 @@ class UserSettingsActivity : AppCompatActivity() {
             val text = d.editText.text.toString()
             val valid = inputCheck.validateUserName(text)
 
-            d.errorTextView.visibility = View.GONE
+            d.hideError()
             when(valid){
                 inputCheck.USER_NAME_TOO_SHORT -> {
                     // Name is too short
-                    d.errorTextView.visibility = View.VISIBLE
-                    d.errorTextView.text = getString(R.string.invalid_name_too_short)
+                    d.setError(getString(R.string.invalid_name_too_short))
                 }
                 inputCheck.USER_NAME_TOO_LONG -> {
                     // Name is too long
-                    d.errorTextView.visibility = View.VISIBLE
-                    d.errorTextView.text = getString(R.string.invalid_name_too_long)
+                    d.setError(getString(R.string.invalid_name_too_long))
                 }
                 inputCheck.USER_NAME_VALID -> {
                     // Name is valid

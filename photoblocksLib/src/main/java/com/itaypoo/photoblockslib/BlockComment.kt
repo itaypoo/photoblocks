@@ -1,24 +1,21 @@
 package com.itaypoo.photoblockslib
 
-import java.io.Serializable
-import java.util.Calendar
-
-class BlockMember(
+class BlockComment(
 
     databaseId: String?,
     creationDayTime: DayTimeStamp,
 
-    var blockId: String,
-    var memberId: String,
-    var isAdmin: Boolean
+    val authorId: String,
+    val blockId: String,
+    val content: String,
 
-    ) : Serializable, DBEntity(databaseId, creationDayTime) {
+) : DBEntity(databaseId, creationDayTime) {
 
     override fun toHashMap(): HashMap<String, Any>{
         val res = hashMapOf(
+            "authorId" to authorId,
             "blockId" to blockId,
-            "memberId" to memberId,
-            "isAdmin" to isAdmin
+            "content" to content,
         ) + super.toHashMap()
         res as HashMap<String, Any>
         return res

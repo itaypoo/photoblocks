@@ -154,6 +154,11 @@ class CreateBlockActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        if(requestCode == Consts.RequestCode.VIEW_BLOCK_NO_RETURN){
+            finish()
+            return
+        }
+
         if(requestCode == Consts.RequestCode.CURATED_PHOTOS_ACTIVITY){
             //
             // Curated photo chosen
@@ -210,7 +215,6 @@ class CreateBlockActivity : AppCompatActivity() {
             //
             if(resultCode == RESULT_OK && data != null){
                 val chosenUser = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
-                Log.d("CHOSEN USER", chosenUser.phoneNumber)
 
                 // Check if that user is already a member of the block
                 if(membersList.contains(chosenUser)){
@@ -360,19 +364,23 @@ class CreateBlockActivity : AppCompatActivity() {
             }
         }.addOnSuccessListener {
             // Uploading block success!
-            Toast.makeText(this, getString(R.string.block_created_message), Toast.LENGTH_SHORT).show()
 
             // Upload this user member as an admin
             val blockId = it.id
             val memberModel = BlockMember(
                 null,
+                DayTimeStamp(false),
                 blockId,
                 AppUtils.currentUser!!.databaseId!!,
-                AppUtils.currentTimeString(),
                 true
             )
             database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
-                inviteUserBlockMembers(blockId)
+                // The current user was added as a member. Now, add more members if there are any.
+                newBlock.databaseId = blockId
+                if(membersList.size > 0){
+                    inviteUserBlockMembers(blockId)
+                }
+                else gotoBlock(newBlock)
             }
         }
     }
@@ -388,6 +396,7 @@ class CreateBlockActivity : AppCompatActivity() {
         for(member in membersList){
             val newNotif = Notification(
                 null,
+                DayTimeStamp(false),
                 member.databaseId!!,                 // Recipient ID
                 AppUtils.currentUser!!.databaseId!!, // Sender ID
                 NotificationType.BLOCK_INVITATION,   // Notif type
@@ -397,11 +406,23 @@ class CreateBlockActivity : AppCompatActivity() {
                 tasksDone += 1
                 if(tasksDone == taskCount){
                     // Done inviting all members!
-                    finish()
+                    gotoBlock(newBlock)
                 }
             }
         }
 
+    }
+
+    private fun gotoBlock(passedBlock: Block){
+        AppUtils.homeScreenActivity.loadBlocksJoined()
+
+        val viewBlockIntent = Intent(this, ViewBlockActivity::class.java)
+        val bundle = Bundle()
+
+        bundle.putSerializable(Consts.Extras.PASSED_BLOCK, newBlock)
+        viewBlockIntent.putExtras(bundle)
+
+        startActivityForResult(viewBlockIntent, Consts.RequestCode.VIEW_BLOCK_NO_RETURN)
     }
 
 }

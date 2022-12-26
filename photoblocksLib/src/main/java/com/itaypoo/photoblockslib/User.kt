@@ -2,25 +2,27 @@ package com.itaypoo.photoblockslib
 
 import java.io.Serializable
 
-data class User(
+class User(
 
-    var databaseId: String?,
+    databaseId: String?,
+    creationDayTime: DayTimeStamp,
+
     var name: String,
     var phoneNumber: String,
     var profilePhotoUrl: String,
-    var creationTime: String,
     var isPrivate: Boolean
 
-) : Serializable {
+) : Serializable, DBEntity(databaseId, creationDayTime) {
 
-    fun toHashMap(): HashMap<String, Any> {
-        return hashMapOf(
+    override fun toHashMap(): HashMap<String, Any> {
+        val res = hashMapOf(
             "name" to name,
             "phoneNumber" to phoneNumber,
             "profilePhotoUrl" to profilePhotoUrl,
-            "creationTime" to creationTime,
             "isPrivate" to isPrivate
-        )
+        ) + super.toHashMap()
+        res as HashMap<String, Any>
+        return res
     }
 
 }

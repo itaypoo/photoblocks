@@ -10,6 +10,7 @@ object Consts {
         const val CROP_IMAGE_ACTIVITY = 30
         const val CURATED_PHOTOS_ACTIVITY = 40
         const val CHOOSE_CONTACT_USER_ACTIVITY = 50
+        const val VIEW_BLOCK_NO_RETURN = 60
     }
 
     // Default values
@@ -48,6 +49,12 @@ object Consts {
         const val SIGNIN_TYPE = "signin_type"
 
         const val CHOOSECONTACT_OUTPUT_USER = "chosen_user_id"
+
+        const val RELOAD_BLOCK_LIST = "reload_block_list"
+
+        // Generic extra key for passing classes between activities.
+        const val PASSED_BLOCK = "passed_block"
+        const val PASSED_USER = "passed_user"
     }
 
     // Identify how a user logged in (used in home page extras)

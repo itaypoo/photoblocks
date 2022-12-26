@@ -9,6 +9,7 @@ import androidx.core.graphics.toColor
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.itaypoo.photoblocks.HomeScreenActivity
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.User
 import java.io.ByteArrayOutputStream
@@ -20,9 +21,9 @@ import java.util.*
 object AppUtils {
     var storageRef: StorageReference
     var currentUser: User? = null
+    // If this is true, the home screen will reload its block list once it is on screen.
 
-    // These variables are used to pass data between activities, that we cannot pass with intet.putExtra(). (Like objects)
-    var passedBlock: Block? = null
+    lateinit var homeScreenActivity: HomeScreenActivity
 
     init {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -68,8 +69,4 @@ object AppUtils {
         return Color.argb(alpha, red, green, blue)
     }
 
-    fun currentTimeString(): String{
-        val df = SimpleDateFormat("MM")
-        return df.format(Calendar.getInstance().time)
-    }
 }

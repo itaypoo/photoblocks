@@ -1,6 +1,7 @@
 package com.itaypoo.adapters
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
@@ -39,6 +40,7 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
         init {
             // Get views
             view.alpha = 0.0F
+            view.translationY = 100F
             coverImagePreview = view.findViewById(R.id.blockItem_photoPreview)
             imageGradient = view.findViewById(R.id.blockItem_gradient)
             titleText = view.findViewById(R.id.blockItem_titleText)
@@ -57,7 +59,7 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
         val block: Block = blockList[position]
 
@@ -112,7 +114,6 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
             interpolator = DecelerateInterpolator()
             start()
         }
-        view.translationY = 100F
         ObjectAnimator.ofFloat(view, "translationY", 0.0F).apply {
             duration = 300
             startDelay = (position*70).toLong()

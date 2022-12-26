@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_comment_title">new comment</string>
+    <string name="new_comment_hint">comment text</string>
+    <string name="new_comment_no_text_error">comment text cant be blank</string>
+    <string name="uploading_comment">uploading comment...</string>
+    <string name="uploading_comment_failed_network">uploading comment failed. please check your internet connection</string>
+    <string name="uploading_comment_failed">uploading comment failed</string>
+</resources>

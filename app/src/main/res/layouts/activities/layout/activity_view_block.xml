@@ -65,7 +65,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:alpha="0.0"
                 android:fontFamily="@font/shrikhand"
                 android:gravity="center_vertical"
@@ -73,7 +72,7 @@
                 android:textColor="@color/on_background"
                 android:textSize="23sp"
                 app:layout_constraintBottom_toBottomOf="@+id/backButton"
-                app:layout_constraintEnd_toStartOf="@+id/moreButton"
+                app:layout_constraintEnd_toStartOf="@+id/commentsButton"
                 app:layout_constraintStart_toEndOf="@+id/backButton"
                 app:layout_constraintTop_toTopOf="@+id/backButton" />
 
@@ -86,6 +85,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/icon_back" />
+
+            <ImageView
+                android:id="@+id/commentsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/moreButton"
+                app:layout_constraintEnd_toStartOf="@+id/moreButton"
+                app:layout_constraintTop_toTopOf="@+id/moreButton"
+                app:srcCompat="@drawable/icon_message" />
 
             <ImageView
                 android:id="@+id/moreButton"

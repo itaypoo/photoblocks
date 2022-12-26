@@ -3,6 +3,7 @@ package com.itaypoo.photoblocks
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
@@ -37,10 +38,13 @@ class SplashActivity : AppCompatActivity() {
 
         val sharedPref: SharedPreferences = getSharedPreferences(Consts.SharedPrefs.PATH, MODE_PRIVATE)
 
-        ////// Remove saved user -- UNCOMMENT FOR DEBUGGING PURPOSES ONLY //////
-//        val editor = sharedPref.edit()
-//        editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
-//        editor.commit()
+        ////// Remove saved user -- TRUE FOR DEBUGGING PURPOSES ONLY //////
+        val DEBUG_REMOVE_USER_ON_STARTUP = false
+        if(DEBUG_REMOVE_USER_ON_STARTUP){
+            val editor = sharedPref.edit()
+            editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
+            editor.commit()
+        }
 
         // Check if user login is saved on device
         val savedUserId = sharedPref.getString(Consts.SharedPrefs.SAVED_USER_ID_KEY,  null)
@@ -88,7 +92,10 @@ class SplashActivity : AppCompatActivity() {
         })
 
         // done
+    }
 
+    private fun wl(text: String){
+        Log.e("WriteLine", text)
     }
 
     private fun startNextActivity(){

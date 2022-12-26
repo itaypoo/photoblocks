@@ -1,6 +1,5 @@
 package com.itaypoo.photoblocks
 
-import android.app.ActivityOptions
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -25,7 +25,7 @@ import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.BlockListAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
-import com.itaypoo.photoblockslib.Block
+import com.itaypoo.photoblockslib.*
 
 
 class HomeScreenActivity : AppCompatActivity() {
@@ -37,9 +37,12 @@ class HomeScreenActivity : AppCompatActivity() {
     private lateinit var storageRef: StorageReference
     private lateinit var database: FirebaseFirestore
 
+    private var notifAmount: Int = 0
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppUtils.homeScreenActivity = this
         // Check if a user is saved (should always be true)
         // From now on we can always access AppUtils.currentUser!!.databaseId!!
         if(AppUtils.currentUser == null){
@@ -92,10 +95,16 @@ class HomeScreenActivity : AppCompatActivity() {
             startActivity(intent)
         }
         // Open notification list on pfp click
-        binding.profilePicture.setOnClickListener{
+        val notifListener = View.OnClickListener {
             startActivity(Intent(this, NotificationsActivity::class.java))
         }
-        
+        binding.profilePicture.setOnClickListener(notifListener)
+        binding.notificationDot.setOnClickListener(notifListener)
+        binding.notificationDotOutline.setOnClickListener(notifListener)
+
+        // Load notification amount
+        loadNotificationNumber()
+
         // Search bar functionality
         binding.searchBarEditText.addTextChangedListener {
 
@@ -140,10 +149,6 @@ class HomeScreenActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun setupMenuDialog() {
@@ -177,7 +182,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    private fun loadBlocksJoined() {
+     fun loadBlocksJoined() {
         // Get all blocks that the current user is a member of
         database.collection("blockMembers").whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
         .addOnFailureListener {
@@ -226,6 +231,9 @@ class HomeScreenActivity : AppCompatActivity() {
 
             }
 
+            // Sort list by date
+            blockList = sortByDateBlock(blockList)
+
             // All relevant blocks are loaded. Now lets fill the RecyclerView with them -
             setUpBlockRecycler(blockList)
 
@@ -239,9 +247,56 @@ class HomeScreenActivity : AppCompatActivity() {
 
         adapter.onItemClickListener = {
             // On block clicked
-            AppUtils.passedBlock = it
-            startActivity(Intent(this, ViewBlockActivity::class.java))
+            val viewBlockIntent = Intent(this, ViewBlockActivity::class.java)
+            val bundle = Bundle()
+            bundle.putSerializable(Consts.Extras.PASSED_BLOCK, it)
+            viewBlockIntent.putExtras(bundle)
+            startActivity(viewBlockIntent)
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    fun loadNotificationNumber() {
+        if(notifAmount < 1){
+            binding.notificationDot.visibility = View.INVISIBLE
+            binding.notificationDotOutline.visibility = View.INVISIBLE
+        }
+
+        database.collection("userNotifications").count().get(AggregateSource.SERVER).addOnSuccessListener {
+            notifAmount = it.count.toInt()
+            if(notifAmount > 0) {
+                binding.notificationDot.visibility = View.VISIBLE
+                binding.notificationDotOutline.visibility = View.VISIBLE
+                binding.notificationAmountText.text = it.count.toString()
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    fun sortByDateBlock(entityList: MutableList<Block>): MutableList<Block>{
+
+        val list = entityList
+
+        // Bubble sort
+        for(i in 0 until list.size-1){
+
+            // last i elements are already in place
+            for(h in 0 until list.size-i-1){
+                // if list[h+1] < list[h]
+                if(earlierDate(list[h].creationDayTime, list[h+1].creationDayTime) == list[h+1].creationDayTime){
+                    // swap list[h+1] and list[h]
+                    val swapped = list[h+1]
+                    list[h+1] = list[h]
+                    list[h] = swapped
+                }
+            }
+        }
+
+        list.reverse()
+        return list
+
     }
 
 }

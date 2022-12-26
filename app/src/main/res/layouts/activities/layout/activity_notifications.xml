@@ -8,7 +8,7 @@
     tools:context=".NotificationsActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/notifsBackButton"
         style="?attr/materialIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,9 +27,9 @@
         android:fontFamily="@font/manrope_medium"
         android:text="@string/notifications"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
-        app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toTopOf="@+id/button" />
+        app:layout_constraintBottom_toBottomOf="@+id/notifsBackButton"
+        app:layout_constraintStart_toEndOf="@+id/notifsBackButton"
+        app:layout_constraintTop_toTopOf="@+id/notifsBackButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationsRecycler"
@@ -40,5 +40,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/notifsBackButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

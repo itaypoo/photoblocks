@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.User
-import org.w3c.dom.Text
 
 object CustomDialogMaker {
     // A class for easily creating dialogs to be used instead of the default dialogs.
@@ -101,7 +100,15 @@ object CustomDialogMaker {
     // TextInputDialog - A dialog for getting text from the user.
     //region TextInputDialog
 
-    class TextInputDialog(dialog: Dialog, val editText: EditText, val doneButton: Button, val cancelButton: Button, val errorTextView: TextView): CustomDialog(dialog)
+    class TextInputDialog(dialog: Dialog, val editText: EditText, val doneButton: Button, val cancelButton: Button, private val errorTextView: TextView): CustomDialog(dialog){
+        fun setError(text: String){
+            errorTextView.visibility = View.VISIBLE
+            errorTextView.text = text
+        }
+        fun hideError(){
+            errorTextView.visibility = View.GONE
+        }
+    }
 
     fun makeTextInputDialog(
         context: Context,

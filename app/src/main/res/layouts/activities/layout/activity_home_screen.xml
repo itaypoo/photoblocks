@@ -78,6 +78,42 @@
         app:tint="@color/on_background_variant" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/notification_dot_outline"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:cardBackgroundColor="@color/background"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/notification_dot"
+        app:layout_constraintEnd_toEndOf="@+id/notification_dot"
+        app:layout_constraintStart_toStartOf="@+id/notification_dot"
+        app:layout_constraintTop_toTopOf="@+id/notification_dot" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/notification_dot"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="-2dp"
+        android:layout_marginEnd="-2dp"
+        app:cardBackgroundColor="@color/error"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toTopOf="@+id/profilePicture" >
+
+        <TextView
+            android:id="@+id/notificationAmountText"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:fontFamily="@font/manrope_medium"
+            android:gravity="center_horizontal|top"
+            android:text="6"
+            android:textColor="@color/background"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="0dp"
         android:layout_height="0dp"

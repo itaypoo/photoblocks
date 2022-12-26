@@ -18,6 +18,7 @@ import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityNotificationsBinding
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
+import com.itaypoo.photoblockslib.DayTimeStamp
 import com.itaypoo.photoblockslib.Notification
 
 class NotificationsActivity : AppCompatActivity() {
@@ -44,6 +45,11 @@ class NotificationsActivity : AppCompatActivity() {
 
         // Get notifications
         getNotifList()
+
+        // set onClicks
+        binding.notifsBackButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun getNotifList() {
@@ -64,7 +70,6 @@ class NotificationsActivity : AppCompatActivity() {
                 // Add all notifications to the list
                 val docNotif = FirebaseUtils.ObjectFromDoc.Notification(doc)
                 notificationList.add(docNotif)
-                Toast.makeText(this, docNotif.content, Toast.LENGTH_SHORT).show()
             }
 
             setUpNotifRecycler()
@@ -105,9 +110,9 @@ class NotificationsActivity : AppCompatActivity() {
                     // Add the current user as a member to this block
                     val memberModel = BlockMember(
                         null,
+                        DayTimeStamp(false),
                         itBlock.databaseId!!,
                         AppUtils.currentUser!!.databaseId!!,
-                        AppUtils.currentTimeString(),
                         false
                     )
                     database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
@@ -119,5 +124,10 @@ class NotificationsActivity : AppCompatActivity() {
 
             // done
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppUtils.homeScreenActivity.loadNotificationNumber()
     }
 }
