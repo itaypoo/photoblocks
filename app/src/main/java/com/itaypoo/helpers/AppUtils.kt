@@ -69,4 +69,11 @@ object AppUtils {
         return Color.argb(alpha, red, green, blue)
     }
 
+    fun getOrdinalNumberAddon(num: Int): String{
+        if(num == 1) return "st"
+        if(num == 2) return "nd"
+        if(num == 3) return "rd"
+        else return "th"
+    }
+
 }

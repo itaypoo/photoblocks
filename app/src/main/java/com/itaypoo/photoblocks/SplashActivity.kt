@@ -1,7 +1,10 @@
 package com.itaypoo.photoblocks
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.Animation
@@ -10,6 +13,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
@@ -19,6 +23,8 @@ import com.itaypoo.photoblocks.databinding.ActivitySplashBinding
 
 
 class SplashActivity : AppCompatActivity() {
+    val DEBUG_REMOVE_USER_ON_STARTUP = false
+
     private lateinit var binding: ActivitySplashBinding
     private lateinit var nextIntent: Intent
 
@@ -39,7 +45,6 @@ class SplashActivity : AppCompatActivity() {
         val sharedPref: SharedPreferences = getSharedPreferences(Consts.SharedPrefs.PATH, MODE_PRIVATE)
 
         ////// Remove saved user -- TRUE FOR DEBUGGING PURPOSES ONLY //////
-        val DEBUG_REMOVE_USER_ON_STARTUP = false
         if(DEBUG_REMOVE_USER_ON_STARTUP){
             val editor = sharedPref.edit()
             editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
@@ -92,6 +97,8 @@ class SplashActivity : AppCompatActivity() {
         })
 
         // done
+
+        Times
     }
 
     private fun wl(text: String){

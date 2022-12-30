@@ -103,6 +103,29 @@ object FirebaseUtils {
             )
         }
 
+        fun BlockPost(doc: DocumentSnapshot): BlockPost{
+            return BlockPost(
+                doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
+                doc.get("imageUrl") as String,
+                doc.get("blockId") as String,
+                doc.get("creatorId") as String,
+                doc.get("description") as String
+            )
+        }
+
+        fun PendingBlockInvitation(doc: DocumentSnapshot): PendingBlockInvitation{
+            return PendingBlockInvitation(
+                doc.id,
+                DayTimeStamp(doc.get("creationDayTime") as String),
+
+                doc.get("inviterId") as String,
+                doc.get("phoneNumber") as String,
+                doc.get("blockId") as String
+            )
+        }
+
     }
 
 }

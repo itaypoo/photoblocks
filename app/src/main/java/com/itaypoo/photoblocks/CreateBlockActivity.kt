@@ -48,6 +48,7 @@ class CreateBlockActivity : AppCompatActivity() {
     private lateinit var storageRef: StorageReference
 
     private val membersList: MutableList<User> = mutableListOf()
+    private val pendingMembersList: MutableList<String> = mutableListOf()
 
     private var uploadImageFileName: String? = null
     private lateinit var newBlock: Block
@@ -76,7 +77,9 @@ class CreateBlockActivity : AppCompatActivity() {
             prepareBlock()
         }
         binding.addContactButton.setOnClickListener {
-            startActivityForResult(Intent(this, ChooseContactActivity::class.java), Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY)
+            val contactIntent = Intent(this, ChooseContactActivity::class.java)
+            contactIntent.putExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE, Consts.ChooseType.CHOOSE_BLOCK_INVITE)
+            startActivityForResult(contactIntent, Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY)
         }
         binding.createBlockCancelButton.setOnClickListener {
             finish()
@@ -194,6 +197,7 @@ class CreateBlockActivity : AppCompatActivity() {
                 }
 
             }
+            //
         }
         else if(requestCode == Consts.RequestCode.CROP_IMAGE_ACTIVITY){
             //
@@ -208,55 +212,68 @@ class CreateBlockActivity : AppCompatActivity() {
                 val bitmap = AppUtils.getBitmapFromPrivateInternal(path, this)
                 updateCoverImage(bitmap)
             }
+            //
         }
         else if(requestCode == Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY){
             //
-            // User chosen from contacts
+            // User / Contact chosen from contacts
             //
             if(resultCode == RESULT_OK && data != null){
-                val chosenUser = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
 
-                // Check if that user is already a member of the block
-                if(membersList.contains(chosenUser)){
-                    Snackbar.make(binding.root, getString(R.string.user_already_member_of_block), Snackbar.LENGTH_SHORT).show()
-                    return
+                // Check if what was chosen is a user or a contact
+                if(data.hasExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER)){
+                    val user = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
+                    addChosenUser(user)
                 }
-
-                membersList.add(chosenUser)
-
-                // Load the pfp recycler view
-                val memberAdapter = UserPhotoAdapter(membersList, this)
-                binding.memberRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-                binding.memberRecycler.adapter = memberAdapter
-
-                memberAdapter.onItemClickListener = {
-                    val itUser = it
-                    val d = CustomDialogMaker.makeUserProfileDialog(
-                        this,
-                        itUser,
-                        false,
-                        false,
-                        getString(R.string.remove_member),
-                        getString(R.string.back_button)
-                    )
-
-                    d.dialog.show()
-                    d.noButton.setOnClickListener {
-                        d.dialog.dismiss()
-                    }
-                    d.yesButton.setOnClickListener {
-                        val position = membersList.indexOf(itUser)
-
-                        membersList.removeAt(position)
-                        memberAdapter.notifyItemRemoved(position)
-                        memberAdapter.notifyItemRangeChanged(position, membersList.size)
-
-                        d.dialog.dismiss()
-                    }
+                else if(data.hasExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_CONTACT)){
+                    val contact = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_CONTACT) as ContactModel
+                    pendingMembersList.add(contact.phoneNumber)
                 }
             }
+            //
         }
 
+    }
+
+    private fun addChosenUser(user: User){
+        // Check if that user is already a member of the block
+        if(membersList.contains(user)){
+            Snackbar.make(binding.root, getString(R.string.user_already_member_of_block), Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        membersList.add(user)
+
+        // Load the pfp recycler view
+        val memberAdapter = UserPhotoAdapter(membersList, this)
+        binding.memberRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.memberRecycler.adapter = memberAdapter
+
+        memberAdapter.onItemClickListener = {
+            val itUser = it
+            val d = CustomDialogMaker.makeUserProfileDialog(
+                this,
+                itUser,
+                false,
+                false,
+                getString(R.string.remove_member),
+                getString(R.string.back_button)
+            )
+
+            d.dialog.show()
+            d.noButton.setOnClickListener {
+                d.dialog.dismiss()
+            }
+            d.yesButton.setOnClickListener {
+                val position = membersList.indexOf(itUser)
+
+                membersList.removeAt(position)
+                memberAdapter.notifyItemRemoved(position)
+                memberAdapter.notifyItemRangeChanged(position, membersList.size)
+
+                d.dialog.dismiss()
+            }
+        }
     }
 
     private fun updateCoverImage(bitmap: Bitmap) {
@@ -375,18 +392,16 @@ class CreateBlockActivity : AppCompatActivity() {
                 true
             )
             database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
-                // The current user was added as a member. Now, add more members if there are any.
+                // The current user was added as a member. Now, add the chosen members from the list
                 newBlock.databaseId = blockId
-                if(membersList.size > 0){
-                    inviteUserBlockMembers(blockId)
-                }
-                else gotoBlock(newBlock)
+                inviteUserBlockMembers(blockId)
             }
         }
     }
 
     private fun inviteUserBlockMembers(blockId: String) {
-        // Last step of creating the block - Sending a notification inviting each member in the list
+        // Almost the last step of creating the block - Sending a notification inviting each member in the list
+        if(membersList.size == 0) createPendingInvitations(blockId) // If there are no members, go to the next step.
 
         val taskCount = membersList.size
         var tasksDone = 0
@@ -405,12 +420,39 @@ class CreateBlockActivity : AppCompatActivity() {
             collection.add(newNotif.toHashMap()).addOnCompleteListener {
                 tasksDone += 1
                 if(tasksDone == taskCount){
+                    // Done inviting all members - go to the next step
+                    createPendingInvitations(blockId)
+                }
+            }
+        }
+
+    }
+
+    private fun createPendingInvitations(blockId: String){
+        // Last step! Create a pending invitations for all the contacts without a user that have been invited
+        if(pendingMembersList.size == 0) gotoBlock(newBlock) // If there are pending invites, the block upload is completed.
+
+        val taskCount = pendingMembersList.size
+        var tasksDone = 0
+
+        val collection = database.collection("pendingBlockInvitations")
+
+        for(contact in pendingMembersList){
+            val pInvite = PendingBlockInvitation(
+                null,
+                DayTimeStamp(false),
+                AppUtils.currentUser!!.databaseId!!,
+                contact,
+                blockId
+            )
+            collection.add(pInvite.toHashMap()).addOnCompleteListener {
+                tasksDone += 1
+                if(tasksDone == taskCount){
                     // Done inviting all members!
                     gotoBlock(newBlock)
                 }
             }
         }
-
     }
 
     private fun gotoBlock(passedBlock: Block){

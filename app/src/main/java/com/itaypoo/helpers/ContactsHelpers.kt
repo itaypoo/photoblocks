@@ -10,7 +10,7 @@ data class ContactModel(
     // A model class for holding a contacts data
     val displayName: String,
     val phoneNumber: String
-)
+) : java.io.Serializable
 
 object ContactsUtils {
     private var contactList: MutableList<ContactModel>? = null

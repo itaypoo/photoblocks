@@ -73,8 +73,21 @@ class HomeScreenActivity : AppCompatActivity() {
                 // New user login
                 val text = getString(R.string.welcome_message) + AppUtils.currentUser!!.name
                 Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
+
+                // Check if this user has any pending invites
+                database.collection("pendingBlockInvitations").whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
+                    val pendingInviteList = mutableListOf<PendingBlockInvitation>()
+                    for(doc in it){
+                        val pInvite = FirebaseUtils.ObjectFromDoc.PendingBlockInvitation(doc)
+                        pendingInviteList.add(pInvite)
+                    }
+                    if(pendingInviteList.size > 0){
+                        // Convert the pending invites to real invites
+                        loadPendingInvitations(pendingInviteList)
+                    }
+                }
             }
-            else{
+            else if(type == Consts.LoginType.EXISTING_USER){
                 // Existing user login
                 val text = getString(R.string.welcome_back_message) + AppUtils.currentUser!!.name
                 Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
@@ -263,12 +276,59 @@ class HomeScreenActivity : AppCompatActivity() {
             binding.notificationDotOutline.visibility = View.INVISIBLE
         }
 
-        database.collection("userNotifications").count().get(AggregateSource.SERVER).addOnSuccessListener {
+        val q =database.collection("userNotifications").whereEqualTo("recipientId", AppUtils.currentUser?.databaseId).count()
+        q.get(AggregateSource.SERVER).addOnSuccessListener {
             notifAmount = it.count.toInt()
             if(notifAmount > 0) {
                 binding.notificationDot.visibility = View.VISIBLE
                 binding.notificationDotOutline.visibility = View.VISIBLE
                 binding.notificationAmountText.text = it.count.toString()
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun loadPendingInvitations(pendingInviteList: MutableList<PendingBlockInvitation>) {
+        val tasksDoneList = mutableListOf<Boolean>()
+        for(p in pendingInviteList){
+            tasksDoneList.add(false)
+        }
+
+        // Loop through all pending invites
+        for(i in 0 until pendingInviteList.size){
+            // First, delete this pending invite
+            val pInvite = pendingInviteList[i]
+            database.collection("pendingBlockInvitations").document(pInvite.databaseId!!).delete().addOnSuccessListener {
+                // Now, upload a real invite
+                val inviteNotif = Notification(
+                    null,
+                    DayTimeStamp(false),
+                    AppUtils.currentUser!!.databaseId!!, // the recipient for this notif is the current user
+                    pInvite.inviterId, // the sender of this notif is the sender of the pending invite
+                    NotificationType.BLOCK_INVITATION,
+                    pInvite.blockId
+                )
+                database.collection("userNotifications").add(inviteNotif.toHashMap()).addOnSuccessListener {
+                    // This pending invite is complete!
+                    tasksDoneList[i] = true
+
+                    if(!tasksDoneList.contains(false)){
+                        // Reload notification amount display
+                        loadNotificationNumber()
+                        // All invites are complete! alert the user of this
+                        val d = CustomDialogMaker.makeYesNoDialog(
+                            this,
+                            getString(R.string.pending_invites_converted_title),
+                            getString(R.string.pending_invites_converted_message),
+                            true,
+                            false,
+                            getString(R.string.okay)
+                        )
+                        d.yesButton.setOnClickListener { d.dialog.dismiss() }
+                        d.dialog.show()
+                    }
+                }
             }
         }
     }

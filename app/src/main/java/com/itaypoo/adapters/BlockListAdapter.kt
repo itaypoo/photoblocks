@@ -69,6 +69,13 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
         viewHolder.dateText.setTextColor( AppUtils.invertColor(block.secondaryColor.toInt(), 200) )
         viewHolder.imageGradient.imageTintList = ColorStateList.valueOf( block.secondaryColor.toInt() )
 
+        viewHolder.dateText.text = buildString {
+            append(block.creationDayTime.month_name)
+            append(" ")
+            append(block.creationDayTime.dayOfMonth.toString())
+            append(AppUtils.getOrdinalNumberAddon(block.creationDayTime.dayOfMonth)) // st, rd, th...
+        }
+
         // Load image to imageView using Glide
         // Fade in view after image is loaded
         val photoUrl = block.coverImageUrl

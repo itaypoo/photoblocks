@@ -36,4 +36,17 @@ object inputCheck {
         else return BLOCK_NAME_TOO_SHORT
     }
 
+    // Check post description
+    const val POST_DESCRIPTION_VALID = 0
+    const val POST_DESCRIPTION_TOO_LONG = 1
+
+    private val postDescriptionMaxLength = 30
+
+    fun validatePostDescription(text: String): Int{
+        if(text.length > postDescriptionMaxLength){
+            return POST_DESCRIPTION_TOO_LONG
+        }
+        return POST_DESCRIPTION_VALID
+    }
+
 }

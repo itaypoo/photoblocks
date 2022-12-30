@@ -3,6 +3,10 @@ package com.itaypoo.helpers
 import android.graphics.Color
 
 object Consts {
+    internal object Notifs{
+        const val FOREGROUND_SERVICE_CHANNEL_ID = "upload_images_service_channel_id"
+    }
+
     // Request Codes ( for startActivityForResult() )
     internal object RequestCode{
         const val GALLERY_PICKER_SINGLE = 10
@@ -48,13 +52,25 @@ object Consts {
 
         const val SIGNIN_TYPE = "signin_type"
 
+        const val CHOOSECONTECT_INPUT_CHOOSE_TYPE = "choose_type"
         const val CHOOSECONTACT_OUTPUT_USER = "chosen_user_id"
+        const val CHOOSECONTACT_OUTPUT_CONTACT = "chosen_contact"
 
-        const val RELOAD_BLOCK_LIST = "reload_block_list"
+        const val UPLOADPOST_INPUT_BLOCKID = "upload_block_id"
+
+        const val SERVICE_POSTS_TO_UPLOAD_URI_LIST = "posts_to_upload_uri_list"
+        const val SERVICE_POSTS_TO_UPLOAD_STRING_LIST = "posts_to_upload_string_list"
+        const val SERVICE_POSTS_BLOCK_ID = "block_id_to_upload_to"
 
         // Generic extra key for passing classes between activities.
         const val PASSED_BLOCK = "passed_block"
         const val PASSED_USER = "passed_user"
+    }
+
+    // Choose types for ChooseContactActivity
+    internal object ChooseType{
+        const val CHOOSE_ANY_USER = 1
+        const val CHOOSE_BLOCK_INVITE = 2
     }
 
     // Identify how a user logged in (used in home page extras)

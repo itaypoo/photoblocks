@@ -1,5 +1,6 @@
 package com.itaypoo.helpers
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 object ObjectViewAnimator {
+    public var timerDelay = 0f
 
     /*
         VIEW ANIMATOR
@@ -19,6 +21,23 @@ object ObjectViewAnimator {
         view to the screen size.)
 
      */
+
+    fun startTimer(animDuration: Long, delay: Long, onComplete: (() -> Unit)){
+        var f = 0f
+        ObjectAnimator.ofFloat(this, "timerDelay", 1f).apply {
+            duration = animDuration
+            startDelay = delay
+            start()
+        }.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animator: Animator) {}
+            override fun onAnimationCancel(animator: Animator) {}
+            override fun onAnimationRepeat(animator: Animator) {}
+            override fun onAnimationEnd(animator: Animator) {
+                // Animation end
+                onComplete.invoke()
+            }
+        })
+    }
 
     fun fadeView(view: View, startAlpha: Float, endAlpha: Float, animDuration: Long, animInterpolator: TimeInterpolator, delay: Long = 0L){
         view.alpha = startAlpha

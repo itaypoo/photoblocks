@@ -6,4 +6,23 @@
     <string name="uploading_comment">uploading comment...</string>
     <string name="uploading_comment_failed_network">uploading comment failed. please check your internet connection</string>
     <string name="uploading_comment_failed">uploading comment failed</string>
+    <string name="select_image_from">Select image from...</string>
+    <string name="post_decription_hint">post description</string>
+    <string name="upload_button">upload</string>
+    <string name="one_image_selected">1 image selected</string>
+    <string name="images_selected">images selected</string>
+    <string name="post_decription_too_long">description must not be longer than 30 characters</string>
+    <string name="upload_notif_channel_name">UPLOAD NOTIF CHANNEL NAME</string>
+    <string name="upload_notif_channel_description">UPLOAD NOTIF CHANNEL DESCRIPTION</string>
+    <string name="uploading_images_started">uploading images started.</string>
+    <string name="uploading_image_failed_network">uploading image failed, please check your internet connetion.</string>
+    <string name="uploading_images_complete">images have been uploaded.</string>
+    <string name="too_many_images_selected">you can only select up to 30 images at a time.</string>
+    <string name="pending_invite_desc">once they will download the app, they will get the invitation.</string>
+    <string name="invite_and_send_text">invite and send a text</string>
+    <string name="pending_invite_sms">I\'ve invited you to join my block! Download the photoblocks app so we can share our memories together: https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg</string>
+    <string name="sending_invite">sending invite...</string>
+    <string name="pending_invites_converted_message">to see all invites, check your notification list.</string>
+    <string name="pending_invites_converted_title">you\'ve been invited to a block!</string>
+    <string name="okay">okay</string>
 </resources>

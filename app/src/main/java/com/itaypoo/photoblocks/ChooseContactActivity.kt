@@ -15,19 +15,27 @@ import com.google.firebase.ktx.Firebase
 import com.itaypoo.adapters.UserContactAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
+import com.itaypoo.photoblockslib.Block
+import com.itaypoo.photoblockslib.DayTimeStamp
+import com.itaypoo.photoblockslib.PendingBlockInvitation
 import com.itaypoo.photoblockslib.User
 
 class ChooseContactActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseContactBinding
 
     private lateinit var database: FirebaseFirestore
+    private var chooseType: Int = 0
     private var resIntent = Intent()
     /*
 
      --- Activity for selecting a user from the contact list ---
 
-     OUTPUT EXTRAS: Chosen user class (photoblocksLib.User)
-     the output is a Serialized user.
+     INPUT EXTRAS:
+        Choose type [Optional. Default: ANY] (Consts.ChooseType.*)
+
+     OUTPUT EXTRAS:
+        Chosen user class [Optional] (only when choosing a user)
+        Chosen contact class [Optional] (only when ChooseType == BLOCK_INVITE and a contact was chosen)
 
     */
 
@@ -35,6 +43,11 @@ class ChooseContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChooseContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Get choose type
+        if(intent.hasExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE)){
+            chooseType = intent.getIntExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE, 0)
+        }
 
         database = Firebase.firestore
 
@@ -170,27 +183,64 @@ class ChooseContactActivity : AppCompatActivity() {
             else{
                 // The pair does not have a user. Open an invitation dialog
                 val itContact = it
-                val d = CustomDialogMaker.makeYesNoDialog(
-                    this,
-                    itContact.first.displayName + getString(R.string.is_not_on_photoblocks),
-                    getString(R.string.not_on_photoblocks_desc)
-                )
-                d.dialog.show()
-
-                d.noButton.setOnClickListener {
-                    d.dialog.dismiss()
+                if(chooseType == Consts.ChooseType.CHOOSE_BLOCK_INVITE){
+                    // Create a pending block invitation for this user
+                    openPendingInviteDialog(itContact)
                 }
-                d.yesButton.setOnClickListener {
-                    // Send an invitation SMS message to the contact
-                    val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", itContact.first.phoneNumber, null))
-                    smsIntent.putExtra("sms_body", getString(R.string.join_photoblocks_sms))
-                    startActivity(smsIntent)
+                else{
+                    // Show SMS message dialog for this user
+                    val d = CustomDialogMaker.makeYesNoDialog(
+                        this,
+                        itContact.first.displayName + getString(R.string.is_not_on_photoblocks),
+                        getString(R.string.not_on_photoblocks_desc)
+                    )
+                    d.dialog.show()
 
-                    d.dialog.dismiss()
+                    d.noButton.setOnClickListener {
+                        d.dialog.dismiss()
+                    }
+                    d.yesButton.setOnClickListener {
+                        // Send an invitation SMS message to the contact
+                        val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", itContact.first.phoneNumber, null))
+                        smsIntent.putExtra("sms_body", getString(R.string.join_photoblocks_sms))
+                        startActivity(smsIntent)
+
+                        d.dialog.dismiss()
+                    }
                 }
 
             }
         }
+    }
+
+    private fun openPendingInviteDialog(contact: Pair<ContactModel, User?>) {
+        // Show confirmation dialog
+        val d = CustomDialogMaker.makeYesNoDialog(
+            this,
+            contact.first.displayName + getString(R.string.is_not_on_photoblocks),
+            getString(R.string.pending_invite_desc),
+            false,
+            false,
+            getString(R.string.invite_and_send_text),
+            getString(R.string.cancel)
+        )
+        d.dialog.show()
+
+        d.noButton.setOnClickListener {
+            d.dialog.dismiss()
+        }
+        d.yesButton.setOnClickListener {
+            // Send a SMS message telling the contact that they've been invited
+            val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", contact.first.phoneNumber, null))
+            smsIntent.putExtra("sms_body", getString(R.string.pending_invite_sms))
+            startActivity(smsIntent)
+
+            resIntent.putExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_CONTACT, contact.first)
+            setResult(RESULT_OK, resIntent)
+            finish()
+
+        }
+
     }
 
 }
