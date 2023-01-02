@@ -25,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.adapters.BlockCommentsAdapter
+import com.itaypoo.adapters.BlockMembersAdapter
 import com.itaypoo.adapters.PostListAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityViewBlockBinding
@@ -41,7 +42,7 @@ class ViewBlockActivity : AppCompatActivity() {
     private lateinit var postCreatorList: MutableList<Pair<BlockPost, User>>
 
     private var commentsList = mutableListOf<Pair<BlockComment, User>>()
-    private var membersList = mutableListOf<BlockMember>()
+    private var memberUserList = mutableListOf<Pair<BlockMember, User?>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,17 +183,29 @@ class ViewBlockActivity : AppCompatActivity() {
 
     private fun loadMembersList(){
         database.collection("blockMembers").whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
-            val tempList = mutableListOf<BlockMember>()
+            val memberList = mutableListOf<BlockMember>()
             for(doc in it){
                 val member = FirebaseUtils.ObjectFromDoc.BlockMember(doc)
-                tempList.add(member)
+                memberList.add(member)
             }
-            for(member in tempList){
-                if(member.isAdmin){
-                    membersList.add(0, member)
-                }
-                else{
-                    membersList.add(member)
+            // We have all the BlockMember classes. Now load the member's User classes.
+            loadMembersUsers(memberList)
+        }
+    }
+    private fun loadMembersUsers(memberList: MutableList<BlockMember>){
+        val queriesAmount = memberList.size
+        var queriesComplete = 0
+
+        for(member in memberList){
+            database.collection("users").document(member.memberId).get().addOnSuccessListener {
+                val user = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
+                memberUserList.add(Pair(member, user))
+                queriesComplete += 1
+
+                // Check if all users were loaded
+                if(queriesComplete == queriesAmount){
+                    // Done loading members and users
+
                 }
             }
         }

@@ -23,7 +23,7 @@ import com.itaypoo.photoblocks.databinding.ActivitySplashBinding
 
 
 class SplashActivity : AppCompatActivity() {
-    val DEBUG_REMOVE_USER_ON_STARTUP = false
+    val DEBUG_REMOVE_USER_ON_STARTUP = true
 
     private lateinit var binding: ActivitySplashBinding
     private lateinit var nextIntent: Intent

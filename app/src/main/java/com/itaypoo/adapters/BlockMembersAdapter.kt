@@ -17,8 +17,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.BlockMember
+import com.itaypoo.photoblockslib.User
 
-class BlockMembersAdapter(private val membersList: MutableList<BlockMember>, private val context: Context) :
+class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMember, User>>, private val context: Context) :
     RecyclerView.Adapter<BlockMembersAdapter.ViewHolder>() {
 
     // Listener for item click
@@ -50,13 +51,14 @@ class BlockMembersAdapter(private val membersList: MutableList<BlockMember>, pri
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val member = membersList[position]
+        val member = memberUserList[position].first
+        val user = memberUserList[position].second
 
-        viewHolder.nameText.text = member.
+        viewHolder.nameText.text = user.name
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = pairList.size
+    override fun getItemCount() = memberUserList.size
 
 }
