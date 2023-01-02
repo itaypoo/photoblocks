@@ -1,8 +1,10 @@
 package com.itaypoo.helpers
 
 import android.content.ContentResolver
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.itaypoo.photoblockslib.*
+import java.util.Date
 
 object FirebaseUtils {
 
@@ -12,7 +14,7 @@ object FirebaseUtils {
         fun User(phoneNum: String): User{
             return com.itaypoo.photoblockslib.User(
                 null,
-                DayTimeStamp(false),
+                Timestamp.now().toDate(),
 
                 Consts.Defaults.USER_NAME,
                 phoneNum,
@@ -25,7 +27,7 @@ object FirebaseUtils {
         fun Block(creator: User): Block{
             return Block(
                 null,
-                DayTimeStamp(false),
+                Timestamp.now().toDate(),
 
                 Consts.Defaults.BLOCK_NAME,
                 creator.databaseId!!,
@@ -46,7 +48,7 @@ object FirebaseUtils {
         fun User(doc: DocumentSnapshot, contentResolver: ContentResolver): User {
             val res = User(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("name") as String,
                 doc.get("phoneNumber") as String,
@@ -67,7 +69,7 @@ object FirebaseUtils {
         fun Block(doc: DocumentSnapshot): Block {
             return Block(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("title") as String,
                 doc.get("creatorId") as String,
@@ -83,7 +85,7 @@ object FirebaseUtils {
         fun Notification(doc: DocumentSnapshot): Notification {
             return Notification(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("recipientId") as String,
                 doc.get("senderId") as String,
@@ -95,7 +97,7 @@ object FirebaseUtils {
         fun BlockComment(doc: DocumentSnapshot): BlockComment {
             return BlockComment(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("authorId") as String,
                 doc.get("blockId") as String,
@@ -106,7 +108,7 @@ object FirebaseUtils {
         fun BlockPost(doc: DocumentSnapshot): BlockPost{
             return BlockPost(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("imageUrl") as String,
                 doc.get("blockId") as String,
@@ -118,11 +120,22 @@ object FirebaseUtils {
         fun PendingBlockInvitation(doc: DocumentSnapshot): PendingBlockInvitation{
             return PendingBlockInvitation(
                 doc.id,
-                DayTimeStamp(doc.get("creationDayTime") as String),
+                (doc.get("creationTime") as Timestamp).toDate(),
 
                 doc.get("inviterId") as String,
                 doc.get("phoneNumber") as String,
                 doc.get("blockId") as String
+            )
+        }
+
+        fun BlockMember(doc: DocumentSnapshot): BlockMember{
+            return BlockMember(
+                doc.id,
+                (doc.get("creationTime") as Timestamp).toDate(),
+
+                doc.get("blockId") as String,
+                doc.get("memberId") as String,
+                doc.get("isAdmin") as Boolean
             )
         }
 

@@ -4,17 +4,21 @@ import android.animation.TimeInterpolator
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
+import android.util.DisplayMetrics
+import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -37,6 +41,7 @@ class ViewBlockActivity : AppCompatActivity() {
     private lateinit var postCreatorList: MutableList<Pair<BlockPost, User>>
 
     private var commentsList = mutableListOf<Pair<BlockComment, User>>()
+    private var membersList = mutableListOf<BlockMember>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,13 +69,10 @@ class ViewBlockActivity : AppCompatActivity() {
 
         loadBlockPosts()
         loadCommentsList()
+        registerForContextMenu(binding.moreButton)
 
         binding.backButton.setOnClickListener {
             finish()
-        }
-        binding.commentsButton.setOnClickListener {
-            val d = createCommentsBottomSheetDialog()
-            d.show()
         }
 
         binding.uploadPostFAB.setOnClickListener {
@@ -82,12 +84,33 @@ class ViewBlockActivity : AppCompatActivity() {
         binding.postRecycler.setOnScrollChangeListener { view, i, i2, i3, dy ->
             // I have no idea what i,i2,i3 are but i know i4 is delta y
 
-            if(dy > 30){
+            if(dy > 60){
                 topBarAnimator.openTopBar(binding, false)
             }
             else if(dy < -30){
                 topBarAnimator.closeTopBar(binding)
             }
+        }
+
+        // Create popup menu
+        val popupMenu = PopupMenu(this, binding.moreButton)
+        popupMenu.menuInflater.inflate(R.menu.menu_block, popupMenu.menu)
+        // On menu item clicked
+        popupMenu.setOnMenuItemClickListener {
+            if(it.itemId == R.id.blockMenuItem_comments){
+                // Comments item clicked
+                val d = createCommentsBottomSheetDialog()
+                d.show()
+            }
+            else if(it.itemId == R.id.blockMenuItem_members){
+                // Members item clicked
+                Toast.makeText(this, "Members", Toast.LENGTH_SHORT).show()
+            }
+            return@setOnMenuItemClickListener true
+        }
+        // Show menu
+        binding.moreButton.setOnClickListener {
+            popupMenu.show()
         }
     }
 
@@ -119,7 +142,7 @@ class ViewBlockActivity : AppCompatActivity() {
             adapter.onLikeButtonClicked = { post: BlockPost, creator: User ->
                 // Upload a like for this post
                 val newLike = postLike(
-                    null, DayTimeStamp(false),
+                    null, Timestamp.now().toDate(),
                     AppUtils.currentUser!!.databaseId!!, post.databaseId!!)
 
                 database.collection("postLikes").add(newLike.toHashMap())
@@ -157,6 +180,24 @@ class ViewBlockActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadMembersList(){
+        database.collection("blockMembers").whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
+            val tempList = mutableListOf<BlockMember>()
+            for(doc in it){
+                val member = FirebaseUtils.ObjectFromDoc.BlockMember(doc)
+                tempList.add(member)
+            }
+            for(member in tempList){
+                if(member.isAdmin){
+                    membersList.add(0, member)
+                }
+                else{
+                    membersList.add(member)
+                }
+            }
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -176,7 +217,6 @@ class ViewBlockActivity : AppCompatActivity() {
 
         binding.backButton.imageTintList = ColorStateList.valueOf( bgInvertedColor )
         binding.moreButton.imageTintList = ColorStateList.valueOf( bgInvertedColor )
-        binding.commentsButton.imageTintList = ColorStateList.valueOf( bgInvertedColor )
         binding.titleTextBig.setTextColor( bgInvertedColor )
         binding.titleTextSmall.setTextColor( bgInvertedColor )
 
@@ -289,7 +329,7 @@ class ViewBlockActivity : AppCompatActivity() {
         // Upload comment
         val commentModel = BlockComment(
             null,
-            DayTimeStamp(true),
+            Timestamp.now().toDate(),
             AppUtils.currentUser!!.databaseId!!,
             currentBlock.databaseId!!,
             commentText,
@@ -324,7 +364,7 @@ class ViewBlockActivity : AppCompatActivity() {
             // last i elements are already in place
             for(h in 0 until list.size-i-1){
                 // if list[h+1] < list[h]
-                if(earlierDate(list[h].first.creationDayTime, list[h+1].first.creationDayTime) == list[h+1].first.creationDayTime){
+                if(list[h+1].first.creationTime.before(list[h].first.creationTime)){
                     // swap list[h+1] and list[h]
                     val swapped = list[h+1]
                     list[h+1] = list[h]
@@ -335,10 +375,6 @@ class ViewBlockActivity : AppCompatActivity() {
 
         list.reverse()
 
-        Log.d("SIZE", entityList.size.toString())
-        for(a in list){
-            Log.d("List", a.first.creationDayTime.secondOfDay.toString())
-        }
         return list
 
     }

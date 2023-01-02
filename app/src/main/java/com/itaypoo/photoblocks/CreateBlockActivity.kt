@@ -28,6 +28,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -386,7 +387,7 @@ class CreateBlockActivity : AppCompatActivity() {
             val blockId = it.id
             val memberModel = BlockMember(
                 null,
-                DayTimeStamp(false),
+                Timestamp.now().toDate(),
                 blockId,
                 AppUtils.currentUser!!.databaseId!!,
                 true
@@ -411,7 +412,7 @@ class CreateBlockActivity : AppCompatActivity() {
         for(member in membersList){
             val newNotif = Notification(
                 null,
-                DayTimeStamp(false),
+                Timestamp.now().toDate(),
                 member.databaseId!!,                 // Recipient ID
                 AppUtils.currentUser!!.databaseId!!, // Sender ID
                 NotificationType.BLOCK_INVITATION,   // Notif type
@@ -440,7 +441,7 @@ class CreateBlockActivity : AppCompatActivity() {
         for(contact in pendingMembersList){
             val pInvite = PendingBlockInvitation(
                 null,
-                DayTimeStamp(false),
+                Timestamp.now().toDate(),
                 AppUtils.currentUser!!.databaseId!!,
                 contact,
                 blockId

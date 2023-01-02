@@ -76,4 +76,49 @@ object AppUtils {
         else return "th"
     }
 
+    class DateString(date: Date){
+        val dayOfWeekName: String
+        val monthName: String
+        val dayOfMonth: Int
+        val hour: Int
+        val hourAMPM: Int
+        val AMPM: String
+        val minute: Int
+        val second: Int
+        val timeZoneName: String
+        val year: Int
+
+        init {
+            val stringList = date.toString().split(" ")
+            val timeList = stringList[3].split(":")
+            dayOfWeekName = stringList[0].lowercase()
+            monthName = stringList[1].lowercase()
+            dayOfMonth = stringList[2].toInt()
+            timeZoneName = stringList[4].lowercase()
+            year = stringList[5].toInt()
+
+            hour = timeList[0].toInt()
+            minute = timeList[1].toInt()
+            second = timeList[2].toInt()
+
+            if(hour > 12){
+                hourAMPM = hour - 12
+                AMPM = "pm"
+            }
+            else{
+                hourAMPM = hour
+                AMPM = "am"
+            }
+        }
+
+        fun dayMonthText(): String{
+            // Example result: dec. 3rd
+            return buildString {
+                append(monthName)
+                append(". ")
+                append(dayOfMonth)
+                append(getOrdinalNumberAddon(dayOfMonth))
+            }
+        }
+    }
 }

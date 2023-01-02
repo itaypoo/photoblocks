@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,7 +19,6 @@ import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityNotificationsBinding
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.BlockMember
-import com.itaypoo.photoblockslib.DayTimeStamp
 import com.itaypoo.photoblockslib.Notification
 
 class NotificationsActivity : AppCompatActivity() {
@@ -110,7 +110,7 @@ class NotificationsActivity : AppCompatActivity() {
                     // Add the current user as a member to this block
                     val memberModel = BlockMember(
                         null,
-                        DayTimeStamp(false),
+                        Timestamp.now().toDate(),
                         itBlock.databaseId!!,
                         AppUtils.currentUser!!.databaseId!!,
                         false

@@ -1,8 +1,10 @@
 package com.itaypoo.photoblockslib
 
+import java.util.Date
+
 class BlockPost(
     databaseId: String?,
-    creationTime: DayTimeStamp,
+    creationTime: Date,
 
     val imageUrl: String,
     val blockId: String,

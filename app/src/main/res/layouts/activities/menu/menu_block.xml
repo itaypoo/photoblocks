@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/blockMenuItem_comments"
+        android:title="@string/comments"/>
+    <item
+        android:id="@+id/blockMenuItem_members"
+        android:title="@string/block_members"/>
+</menu>

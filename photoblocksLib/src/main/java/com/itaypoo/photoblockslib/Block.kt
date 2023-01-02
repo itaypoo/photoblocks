@@ -1,12 +1,12 @@
 package com.itaypoo.photoblockslib
 
 import java.io.Serializable
-
+import java.util.Date
 
 class Block(
 
     databaseId: String?,
-    creationDayTime: DayTimeStamp,
+    creationTime: Date,
 
     var title: String,
     var creatorId: String,
@@ -19,7 +19,7 @@ class Block(
     var collageOrderedByLikes: Boolean,
     var collageImageTime: Int
 
-    ) : Serializable, DBEntity(databaseId, creationDayTime) {
+    ) : Serializable, DBEntity(databaseId, creationTime) {
 
     override fun toHashMap(): HashMap<String, Any>{
         var res = hashMapOf<String, Any>(

@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,7 +21,6 @@ import com.google.firebase.storage.StorageReference
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
 import com.itaypoo.photoblockslib.BlockPost
-import com.itaypoo.photoblockslib.DayTimeStamp
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -132,7 +132,7 @@ class UploadImagesService : Service() {
                     // Now we can upload the post itself
                     val newPost = BlockPost(
                         null,
-                        DayTimeStamp(false),
+                        Timestamp.now().toDate(),
                         imageUrl,
                         uploadToBlockId,
                         AppUtils.currentUser!!.databaseId!!,

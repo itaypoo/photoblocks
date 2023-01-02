@@ -1,12 +1,15 @@
 package com.itaypoo.photoblockslib
 
+import java.util.Date
+
+
 class postLike(
     documentId: String?,
-    creationDayTime: DayTimeStamp,
+    creationTime: Date,
 
     val userId: String, // Who liked the post
     val postId: String  // What post they liked
-): DBEntity(documentId, creationDayTime) {
+): DBEntity(documentId, creationTime) {
 
     override fun toHashMap(): HashMap<String, Any> {
         val res = hashMapOf<String, Any>(

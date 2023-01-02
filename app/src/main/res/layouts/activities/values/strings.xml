@@ -25,4 +25,7 @@
     <string name="pending_invites_converted_message">to see all invites, check your notification list.</string>
     <string name="pending_invites_converted_title">you\'ve been invited to a block!</string>
     <string name="okay">okay</string>
+    <string name="edit_description">edit description</string>
+    <string name="block_members">members</string>
+    <string name="comments">comments</string>
 </resources>

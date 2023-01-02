@@ -97,8 +97,6 @@ class SplashActivity : AppCompatActivity() {
         })
 
         // done
-
-        Times
     }
 
     private fun wl(text: String){

@@ -1,5 +1,7 @@
 package com.itaypoo.photoblockslib
 
+import java.util.Date
+
 object NotificationType{
     // Invitation to a block
     // Content: Comment ID
@@ -19,14 +21,14 @@ object NotificationType{
 class Notification(
 
     databaseId: String?,
-    creationDayTime: DayTimeStamp,
+    creationTime: Date,
 
     val recipientId: String,
     val senderId: String,
     val type: Int,
     val content: String
 
-) : DBEntity(databaseId, creationDayTime) {
+) : DBEntity(databaseId, creationTime) {
 
     override fun toHashMap(): HashMap<String, Any>{
         val res = hashMapOf(

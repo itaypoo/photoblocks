@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -21,7 +22,6 @@ import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.CustomDialogMaker
 import com.itaypoo.photoblocks.databinding.ActivityUploadPostBinding
 import com.itaypoo.photoblockslib.BlockPost
-import com.itaypoo.photoblockslib.DayTimeStamp
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.min
@@ -103,18 +103,18 @@ class UploadPostActivity : AppCompatActivity() {
 
         // Upload posts on upload button click
         binding.postUploadButton.setOnClickListener {
-            uploadPosts(adapter.getImagesAndDescriptions())
+            uploadPosts(adapter.getImageTextList())
         }
     }
 
-    private fun uploadPosts(pairList: MutableList<UriStringPair>){
+    private fun uploadPosts(pairList: MutableList<Pair<Uri, String>>){
         if(pairList.size == 1){
             // Only one post, no need to open a service
             // Upload this post
             val uuid = UUID.randomUUID().toString()
             val pair = pairList[0]
             // First upload the image to storage
-            val uploadTask = storageRef.child("blockPostImages/post$uuid").putFile(pair.uri)
+            val uploadTask = storageRef.child("blockPostImages/post$uuid").putFile(pair.first)
 
             // Show loading dialog
             val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.uploading_image))
@@ -134,11 +134,11 @@ class UploadPostActivity : AppCompatActivity() {
                     // Now we can finally upload this post.
                     val post = BlockPost(
                         null,
-                        DayTimeStamp(false),
+                        Timestamp.now().toDate(),
                         url,
                         uploadToBlockId,
                         AppUtils.currentUser!!.databaseId!!,
-                        pair.string
+                        pair.second
                     )
                     // Upload the post
                     database.collection("blockPosts").add(post.toHashMap()).addOnFailureListener {
@@ -164,8 +164,8 @@ class UploadPostActivity : AppCompatActivity() {
             val uriList: ArrayList<Uri> = arrayListOf()
             val stringList: ArrayList<String> = arrayListOf()
             for(pair in pairList){
-                uriList.add(pair.uri)
-                stringList.add(pair.string)
+                uriList.add(pair.first)
+                stringList.add(pair.second)
             }
 
             val bundle = Bundle()
@@ -188,7 +188,5 @@ class UploadPostActivity : AppCompatActivity() {
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(notifChannel)
     }
-
-    public class UriStringPair(val uri: Uri, val string: String): java.io.Serializable
 
 }

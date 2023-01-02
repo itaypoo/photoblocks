@@ -1,18 +1,19 @@
 package com.itaypoo.photoblockslib
 
 import java.io.Serializable
+import java.util.Date
 
 class User(
 
     databaseId: String?,
-    creationDayTime: DayTimeStamp,
+    creationTime: Date,
 
     var name: String,
     var phoneNumber: String,
     var profilePhotoUrl: String,
     var isPrivate: Boolean
 
-) : Serializable, DBEntity(databaseId, creationDayTime) {
+) : Serializable, DBEntity(databaseId, creationTime) {
 
     override fun toHashMap(): HashMap<String, Any> {
         val res = hashMapOf(

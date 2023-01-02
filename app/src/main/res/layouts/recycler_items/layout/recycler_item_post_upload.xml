@@ -16,19 +16,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/default_block_image" />
 
-    <EditText
-        android:id="@+id/uploadPostItem_descEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:fontFamily="@font/manrope_medium"
-        android:hint="@string/post_decription_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_previewImage"
-        tools:ignore="TouchTargetSizeCheck" />
-
     <Space
+        android:id="@+id/space4"
         android:layout_width="0dp"
         android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,5 +38,43 @@
         android:textColor="@color/on_error"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_descEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_descriptionText" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/uploadPostItem_profilePicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="3dp"
+        android:src="@drawable/default_profile_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/uploadPostItem_descriptionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/uploadPostItem_descriptionText" />
+
+    <TextView
+        android:id="@+id/uploadPostItem_descriptionText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="left|center_vertical"
+        android:text="this is a post"
+        android:textColor="@color/on_background"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/uploadPostItem_renameButton"
+        app:layout_constraintStart_toEndOf="@+id/uploadPostItem_profilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_previewImage" />
+
+    <Button
+        android:id="@+id/uploadPostItem_renameButton"
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        app:icon="@drawable/icon_rename"
+        app:iconSize="20dp"
+        app:iconTint="@color/on_background"
+        app:layout_constraintBottom_toBottomOf="@+id/uploadPostItem_descriptionText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/uploadPostItem_descriptionText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

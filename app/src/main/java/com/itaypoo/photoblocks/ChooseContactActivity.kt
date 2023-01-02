@@ -16,7 +16,6 @@ import com.itaypoo.adapters.UserContactAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
 import com.itaypoo.photoblockslib.Block
-import com.itaypoo.photoblockslib.DayTimeStamp
 import com.itaypoo.photoblockslib.PendingBlockInvitation
 import com.itaypoo.photoblockslib.User
 

@@ -29,13 +29,11 @@ class BlockCommentsAdapter(private val commentsList: MutableList<Pair<BlockComme
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val profilePicture: ImageView
         val contentText: TextView
-        val nameText: TextView
 
         init {
             // Get views
             profilePicture = view.findViewById(R.id.commentItem_profilePictureImage)
             contentText = view.findViewById(R.id.commentItem_contentText)
-            nameText = view.findViewById(R.id.commentItem_nameText)
         }
     }
 
@@ -55,8 +53,11 @@ class BlockCommentsAdapter(private val commentsList: MutableList<Pair<BlockComme
 
         // Load the profile photo
         Glide.with(context).load(comment.second.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(holder.profilePicture)
-        holder.contentText.text = comment.first.content
-        holder.nameText.text = comment.second.name
+        holder.contentText.text = buildString {
+        append(comment.second.name)
+        append(": ")
+        append(comment.first.content)
+    }
 
     }
 

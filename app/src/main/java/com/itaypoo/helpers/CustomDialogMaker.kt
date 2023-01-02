@@ -117,7 +117,8 @@ object CustomDialogMaker {
         hideCancelButton: Boolean = false,
         isCancelable: Boolean = true,
         overrideDoneText: String? = null,
-        overrideCancelText: String? = null
+        overrideCancelText: String? = null,
+        editTextStartText: String = "",
     ): TextInputDialog {
 
         val dialog = Dialog(context)
@@ -142,6 +143,7 @@ object CustomDialogMaker {
         dialog.findViewById<TextView>(R.id.inputDialog_titleText).text = titleText
         errorTextView.visibility = View.GONE
         editText.hint = hint
+        editText.setText(editTextStartText)
         if(hideCancelButton) cancelButton.visibility = View.GONE
         if(overrideDoneText != null) doneButton.text = overrideDoneText
         if(overrideCancelText != null) cancelButton.text = overrideCancelText

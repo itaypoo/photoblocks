@@ -1,15 +1,18 @@
 package com.itaypoo.photoblockslib
 
+import java.util.Date
+
+
 class PendingBlockInvitation(
 
     databaseId: String?,
-    creationDayTime: DayTimeStamp,
+    creationTime: Date,
 
     val inviterId: String,
     val phoneNumber: String,
     val blockId: String
 
-): DBEntity(databaseId, creationDayTime) {
+): DBEntity(databaseId, creationTime) {
 
     override fun toHashMap(): HashMap<String, Any> {
         val res = hashMapOf(

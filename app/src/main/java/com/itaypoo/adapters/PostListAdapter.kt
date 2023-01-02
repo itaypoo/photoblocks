@@ -74,18 +74,19 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
         val post = postCreatorList[position].first
         val creator = postCreatorList[position].second
 
+        val dateString = AppUtils.DateString(post.creationTime)
         val nameDateString = buildString {
+            // Example string: creator | 6:30am | dec. 3rd 2022
             append(creator.name)
             append(" | ")
-            append(post.creationDayTime.hourOfDay_AMPM.toString())
-            append(post.creationDayTime.AMPM)
-            append(" , ")
-            append(post.creationDayTime.dayOfMonth)
-            append("/")
-            append(post.creationDayTime.month_number)
-            append("/")
-            append(post.creationDayTime.year.toString()[2])
-            append(post.creationDayTime.year.toString()[3])
+            append(dateString.hourAMPM)
+            append(":")
+            append(dateString.minute)
+            append(dateString.AMPM)
+            append(" | ")
+            append(dateString.dayMonthText())
+            append(" ")
+            append(dateString.year.toString())
         }
 
         if(post.description == ""){

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -303,7 +304,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 // Now, upload a real invite
                 val inviteNotif = Notification(
                     null,
-                    DayTimeStamp(false),
+                    Timestamp.now().toDate(),
                     AppUtils.currentUser!!.databaseId!!, // the recipient for this notif is the current user
                     pInvite.inviterId, // the sender of this notif is the sender of the pending invite
                     NotificationType.BLOCK_INVITATION,
@@ -345,7 +346,7 @@ class HomeScreenActivity : AppCompatActivity() {
             // last i elements are already in place
             for(h in 0 until list.size-i-1){
                 // if list[h+1] < list[h]
-                if(earlierDate(list[h].creationDayTime, list[h+1].creationDayTime) == list[h+1].creationDayTime){
+                if(list[h+1].creationTime.before(list[h].creationTime)){
                     // swap list[h+1] and list[h]
                     val swapped = list[h+1]
                     list[h+1] = list[h]
