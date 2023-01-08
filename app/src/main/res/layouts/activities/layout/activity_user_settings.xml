@@ -90,16 +90,46 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/privateButton"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:backgroundTint="@color/tertiary"
-            app:icon="@drawable/icon_lock_open"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconTint="@color/on_tertiary" />
+            android:layout_weight="3">
+
+            <Button
+                android:id="@+id/privateButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:backgroundTint="@color/tertiary"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/on_tertiary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/lockOpenIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_lock_open"
+                app:tint="@color/on_tertiary" />
+
+            <ImageView
+                android:id="@+id/lockClosedIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_search"
+                app:tint="@color/on_tertiary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

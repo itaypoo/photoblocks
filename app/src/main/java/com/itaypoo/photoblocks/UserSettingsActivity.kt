@@ -10,6 +10,7 @@ import android.transition.ChangeImageTransform
 import android.view.View
 import android.view.Window
 import android.view.animation.DecelerateInterpolator
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
@@ -51,9 +52,20 @@ class UserSettingsActivity : AppCompatActivity() {
         // Get user statistics
         getStats()
 
+        val isP = AppUtils.currentUser!!.isPrivate
+        if(!isP){ // Update UI
+            binding.lockClosedIcon.visibility = View.INVISIBLE
+            binding.lockOpenIcon.visibility = View.VISIBLE
+        }
+        else{
+            binding.lockClosedIcon.visibility = View.VISIBLE
+            binding.lockOpenIcon.visibility = View.INVISIBLE
+        }
+
         // Set on click listeners for buttons
         binding.cardChangeName.setOnClickListener { openChangeNameDialog() }
         binding.cardChangeImage.setOnClickListener { changeProfilePhoto() }
+        binding.privateButton.setOnClickListener { togglePrivateMode() }
         binding.logOutButton.setOnClickListener {
 
             // Show confirmation dialog before logging out
@@ -74,6 +86,35 @@ class UserSettingsActivity : AppCompatActivity() {
         // back button
         binding.usetSettingsBackButton.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun togglePrivateMode() {
+        var isP = AppUtils.currentUser!!.isPrivate
+
+        val d = CustomDialogMaker.makeYesNoDialog(this,
+        getString(R.string.change_private_title), getString(R.string.change_private_desc))
+        d.dialog.show()
+
+        d.noButton.setOnClickListener { d.dialog.dismiss() }
+        d.yesButton.setOnClickListener {
+            // Flip isPrivate value
+            d.dialog.dismiss()
+            isP = !isP
+
+            database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("isPrivate", isP).addOnSuccessListener {
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.private_updated))
+                AppUtils.currentUser!!.isPrivate = isP
+                // Update UI
+                if(!isP){
+                    binding.lockClosedIcon.visibility = View.INVISIBLE
+                    binding.lockOpenIcon.visibility = View.VISIBLE
+                }
+                else{
+                    binding.lockClosedIcon.visibility = View.VISIBLE
+                    binding.lockOpenIcon.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
@@ -183,22 +224,22 @@ class UserSettingsActivity : AppCompatActivity() {
         if(AppUtils.currentUser != null && AppUtils.currentUser!!.databaseId != null){
             database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
                 // Name update success, update UI
-                Snackbar.make(binding.root, getString(R.string.name_changed_alert), Snackbar.LENGTH_SHORT).show()
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.name_changed_alert))
                 AppUtils.currentUser!!.name = newName
                 binding.namePreview.text = newName
             }.addOnFailureListener {
                 // Name update failed
                 if(it is FirebaseNetworkException){
-                    Snackbar.make(binding.root, getString(R.string.name_change_failed_network_error), Snackbar.LENGTH_SHORT).show()
+                    AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.name_change_failed_network_error))
                 }
                 else{
-                    Snackbar.make(binding.root, getString(R.string.name_change_failed_unknown), Snackbar.LENGTH_SHORT).show()
+                    AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.name_change_failed_unknown))
                 }
             }
         }
         else{
             // No logged in user?? Error
-            Snackbar.make(binding.root, getString(R.string.unexpected_error_relog), Snackbar.LENGTH_LONG).show()
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.unexpected_error_relog))
         }
     }
 
@@ -211,7 +252,7 @@ class UserSettingsActivity : AppCompatActivity() {
         }
         else{
             // No logged in user?? Error
-            Snackbar.make(binding.root, getString(R.string.unexpected_error_relog), Snackbar.LENGTH_LONG).show()
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.unexpected_error_relog))
         }
     }
 
@@ -221,7 +262,7 @@ class UserSettingsActivity : AppCompatActivity() {
         if(requestCode == Consts.RequestCode.CROP_IMAGE_ACTIVITY && resultCode == RESULT_OK && data != null){
             // User chose an image and cropped it. Now get the image and update upload it to storage.
             val path = data.getStringExtra(Consts.Extras.CROP_OUTPUT_CROPPEDFILENAME).toString()
-            Snackbar.make(binding.root, getString(R.string.uploading_image), Snackbar.LENGTH_SHORT).show()
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.uploading_image))
 
             // Delete previous profile photo from storage
             // Current user cannot be null - checked before
@@ -241,7 +282,7 @@ class UserSettingsActivity : AppCompatActivity() {
 
             uploadTask.addOnFailureListener{
                 // Uploading image failed, reset chosen image
-                Snackbar.make(binding.root, getString(R.string.uploading_image_failed), Snackbar.LENGTH_SHORT).show()
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.uploading_image_failed))
 
             }.addOnSuccessListener {
                 // Uploading image success, get its url, finish uploading room data to firestore
@@ -251,14 +292,14 @@ class UserSettingsActivity : AppCompatActivity() {
                     AppUtils.currentUser?.profilePhotoUrl = it.toString()
                     val bitmap = AppUtils.getBitmapFromPrivateInternal(path, this)
                     binding.profilePhotoPreviewImage.setImageBitmap(bitmap)
-                    Snackbar.make(binding.root, getString(R.string.pfp_changed_alert), Snackbar.LENGTH_SHORT).show()
+                    AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.pfp_changed_alert))
 
                     // Update firestore user with the new image url
                     database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
                 }.
                 addOnFailureListener{
                     // Unknown error when getting photo url
-                    Snackbar.make(binding.root, getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show()
+                    AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.unexpected_error))
                 }
             }
         }

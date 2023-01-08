@@ -58,4 +58,10 @@
     <string name="comments_written">comments written</string>
     <string name="person_liked_this_post">person liked this photo</string>
     <string name="people_liked_this_post">people liked this post</string>
+    <string name="happy_block_day">happy block day!</string>
+    <string name="joined_today">joined today</string>
+    <string name="years_ago">years ago</string>
+    <string name="change_private_title">change profile visibility?</string>
+    <string name="change_private_desc">if your profile is private, other people can not see what blocks you joined.</string>
+    <string name="private_updated">profile visibility updated.</string>
 </resources>

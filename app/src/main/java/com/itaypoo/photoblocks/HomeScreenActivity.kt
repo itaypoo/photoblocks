@@ -30,6 +30,7 @@ import com.itaypoo.photoblockslib.*
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.core.models.Size
 import java.util.concurrent.TimeUnit
 
 
@@ -74,18 +75,30 @@ class HomeScreenActivity : AppCompatActivity() {
         val creationDate = AppUtils.DateString(AppUtils.currentUser!!.creationTime)
         val nowDate = AppUtils.DateString(Timestamp.now().toDate())
         if(creationDate.dayOfMonth == nowDate.dayOfMonth && creationDate.monthName == nowDate.monthName){
+            // Today is block day!
+            binding.blockDayCard.visibility = View.VISIBLE
 
-            Toast.makeText(this, "Happy cake dayy!", Toast.LENGTH_SHORT).show()
+            val age = nowDate.year - creationDate.year
+            binding.blockDayText.text = getString(R.string.joined_today) + ", " + age + " " + getString(R.string.years_ago)
+
+            // Show confetti
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.happy_block_day))
             val p = Party(
+                angle = 90,
+                size = listOf(Size.LARGE, Size.MEDIUM),
                 speed = 0f,
                 maxSpeed = 30f,
                 damping = 0.9f,
-                spread = 360,
+                spread = 165,
                 colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
-                position = Position.Relative(0.5, 0.3),
-                emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100)
+                position = Position.Relative(0.5, 0.0),
+                emitter = Emitter(duration = 3, TimeUnit.SECONDS).max(200)
             )
             binding.cakeDayKonfetti.start(p)
+        }
+        else{
+            // Block day is not today
+            binding.blockDayCard.visibility = View.GONE
         }
 
         // Show welcome or welcome back message
