@@ -138,7 +138,7 @@ class UploadImagesService : Service() {
                         AppUtils.currentUser!!.databaseId!!,
                         imageString
                     )
-                    database.collection("blockPosts").add(newPost.toHashMap()).addOnFailureListener {
+                    database.collection(Consts.BDPath.blockPosts).add(newPost.toHashMap()).addOnFailureListener {
 
                         // Something went wrong, stop this service
                         if(it is FirebaseNetworkException) Toast.makeText(this, R.string.uploading_image_failed_network, Toast.LENGTH_SHORT).show()

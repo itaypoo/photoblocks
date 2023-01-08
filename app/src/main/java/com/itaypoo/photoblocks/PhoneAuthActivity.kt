@@ -209,7 +209,7 @@ class PhoneAuthActivity : AppCompatActivity() {
 
     private fun signInComplete() {
         // Find if a user with that phone number exists. if it does - login, if it does not - go to user creation screen
-        database.collection("users").whereEqualTo("phoneNumber", phoneNumber).get().addOnSuccessListener {
+        database.collection(Consts.BDPath.users).whereEqualTo("phoneNumber", phoneNumber).get().addOnSuccessListener {
             if(it.isEmpty){
                 // A user with this phone number does not exist
                 val setupIntent = Intent(this, SetupUserActivity::class.java)

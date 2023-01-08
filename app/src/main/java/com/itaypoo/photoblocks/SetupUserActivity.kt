@@ -93,6 +93,7 @@ class SetupUserActivity : AppCompatActivity() {
 
             // Disable button for duplicate requests
             binding.completeButton.isEnabled = false
+            binding.uploadPhotoButton.isEnabled = false
             binding.loadingCircle.visibility = View.VISIBLE
 
             // If user uploaded a pfp from gallery, upload it and continue
@@ -139,7 +140,7 @@ class SetupUserActivity : AppCompatActivity() {
 
     private fun uploadUserToFirestore() {
         val userHashMap = user.toHashMap()
-        database.collection("users").add(userHashMap).addOnFailureListener{
+        database.collection(Consts.BDPath.users).add(userHashMap).addOnFailureListener{
             // Uploading user failed. Check if it is caused by user not having an internet connection
             if(it is FirebaseNetworkException){
                 enableButtonWithMessage("Uploading failed. Please check your internet connection.")

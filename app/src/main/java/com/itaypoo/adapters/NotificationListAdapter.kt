@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +12,16 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
+import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.R
-import com.itaypoo.photoblockslib.Block
-import com.itaypoo.photoblockslib.Notification
-import com.itaypoo.photoblockslib.NotificationType
-import com.itaypoo.photoblockslib.User
+import com.itaypoo.photoblocks.ViewBlockActivity
+import com.itaypoo.photoblockslib.*
+import javax.microedition.khronos.opengles.GL
 
 class NotificationListAdapter(private val notifList: MutableList<Notification>,
                               private val context: Context, private val database: FirebaseFirestore,
@@ -104,7 +106,7 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             NotificationType.POST_LIKE -> {
                 // Notif is post like
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recycler_item_notification_blockinvite, parent, false)
+                    .inflate(R.layout.recycler_item_notification_postlike, parent, false)
                 return PostLikeViewHolder(view)
             }
             else -> {
@@ -140,23 +142,38 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     //region BindViewHolder
 
     private fun bindViewHolderBlockComment(holder: BlockCommentViewHolder, notif: Notification){
-        val commenterQuery = database.collection("users").document(notif.senderId).get()
-        // start queries
-
+        // Get comment
+        database.collection(Consts.BDPath.blockComments).document(notif.content).get().addOnSuccessListener {
+            val comment = FirebaseUtils.ObjectFromDoc.BlockComment(it)
+            // Get sender
+            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
+                val sender = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
+                blockCommentQueriesComplete(holder, comment, sender)
+            }
+        }
     }
 
-    private fun blockCommentQueriesComplete(){
+    private fun blockCommentQueriesComplete(holder: BlockCommentViewHolder, comment: BlockComment, sender: User){
         // change the xml text and images
+        holder.commentText.text = comment.content
+        holder.titleText.text = buildString {
+            append(sender.name)
+            append(" ")
+            append(context.getString(R.string.commented_on_your_block))
+        }
+        Glide.with(context).load(sender.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(holder.commenterPicture)
+
+        fadeInView(holder.itemView)
     }
 
 
 
     private fun bindViewHolderBlockInvitation(holder: BlockInviteViewHolder, notif: Notification){
         // Get block
-        database.collection("blocks").document(notif.content).get().addOnSuccessListener {
+        database.collection(Consts.BDPath.blocks).document(notif.content).get().addOnSuccessListener {
             val block = FirebaseUtils.ObjectFromDoc.Block(it)
             // Get inviter user
-            database.collection("users").document(notif.senderId).get().addOnSuccessListener {
+            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
                 val inviter = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 // Bind viewHolder
                 blockInvitationQueriesComplete(holder, notif, block, inviter)
@@ -165,6 +182,7 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private fun blockInvitationQueriesComplete(holder: BlockInviteViewHolder, notif: Notification, block: Block, inviter: User){
+        // change xml text and images
         holder.titleText.text = buildString {
             append(inviter.name)
             append(" ")
@@ -173,7 +191,7 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         holder.blockTitleText.text = block.title
         holder.blockGradient.imageTintList = ColorStateList.valueOf( block.secondaryColor.toInt() )
-        Glide.with(context).load(block.coverImageUrl).placeholder(R.drawable.default_block_image).into(holder.blockImageView)
+        Glide.with(context).load(block.coverImageUrl).placeholder(R.drawable.default_block_cover).into(holder.blockImageView)
 
         fadeInView(holder.itemView)
 
@@ -186,11 +204,28 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private fun bindViewHolderPostLike(holder: PostLikeViewHolder, notif: Notification){
-        // start queries
+        // Get post
+        database.collection(Consts.BDPath.blockPosts).document(notif.content).get().addOnSuccessListener {
+            val post = FirebaseUtils.ObjectFromDoc.BlockPost(it)
+            // Get sender user
+            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
+                val sender = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
+                postLikeQueriesComplete(holder, post, sender)
+            }
+        }
     }
 
-    private fun postLikeQueriesComplete(){
+    private fun postLikeQueriesComplete(holder: PostLikeViewHolder, post: BlockPost, sender: User){
         // change xml text and images
+        holder.titleText.text = buildString {
+            append(sender.name)
+            append(" ")
+            append(context.getString(R.string.liked_your_post))
+        }
+        Glide.with(context).load(sender.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(holder.likerPicture)
+        Glide.with(context).load(post.imageUrl).placeholder(R.drawable.default_block_cover).into(holder.postImageView)
+
+        fadeInView(holder.itemView)
     }
 
     //endregion

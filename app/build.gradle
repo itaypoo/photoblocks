@@ -11,6 +11,9 @@ android {
     viewBinding{
         enabled = true
     }
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId "com.itaypoo.photoblocks"

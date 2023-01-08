@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -104,13 +105,39 @@ class UserSettingsActivity : AppCompatActivity() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun getStats(){
+        // Init views
+        binding.joinDateText.text = ""
+        binding.blockCountText.text = ""
+        binding.imageCountText.text = ""
+        binding.commentCountText.text = ""
 
-        // Count blocks the user is in
-        val query = database.collection("blockMembers").whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
-        query.addOnSuccessListener {
-            binding.blockCountText.text = it.size().toString() + " " + getString(R.string.stats_blocks_joined)
+        // Show when the user joined the app
+        val dateString = AppUtils.DateString(AppUtils.currentUser!!.creationTime)
+        binding.joinDateText.text = buildString {
+            append(getString(R.string.joined))
+            append(" ")
+            append(dateString.dayMonthText())
+            append(", ")
+            append(dateString.year)
         }
 
+        // Count blocks the user is in
+        val query = database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        query.addOnSuccessListener {
+            binding.blockCountText.text = it.count.toString() + " " + getString(R.string.stats_blocks_joined)
+        }
+
+        // Count posts uploaded
+        val query2 = database.collection(Consts.BDPath.blockPosts).whereEqualTo("creatorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        query2.addOnSuccessListener {
+            binding.imageCountText.text = it.count.toString() + " " + getString(R.string.images_uploaded)
+        }
+
+        // Count comments written
+        val query3 = database.collection(Consts.BDPath.blockComments).whereEqualTo("authorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        query3.addOnSuccessListener {
+            binding.commentCountText.text = it.count.toString() + " " + getString(R.string.comments_written)
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +181,7 @@ class UserSettingsActivity : AppCompatActivity() {
 
     private fun changeUserName(newName: String){
         if(AppUtils.currentUser != null && AppUtils.currentUser!!.databaseId != null){
-            database.collection("users").document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
+            database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
                 // Name update success, update UI
                 Snackbar.make(binding.root, getString(R.string.name_changed_alert), Snackbar.LENGTH_SHORT).show()
                 AppUtils.currentUser!!.name = newName
@@ -227,7 +254,7 @@ class UserSettingsActivity : AppCompatActivity() {
                     Snackbar.make(binding.root, getString(R.string.pfp_changed_alert), Snackbar.LENGTH_SHORT).show()
 
                     // Update firestore user with the new image url
-                    database.collection("users").document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
+                    database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
                 }.
                 addOnFailureListener{
                     // Unknown error when getting photo url

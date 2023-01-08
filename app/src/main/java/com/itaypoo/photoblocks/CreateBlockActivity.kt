@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.transition.Explode
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +79,7 @@ class CreateBlockActivity : AppCompatActivity() {
         binding.addContactButton.setOnClickListener {
             val contactIntent = Intent(this, ChooseContactActivity::class.java)
             contactIntent.putExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE, Consts.ChooseType.CHOOSE_BLOCK_INVITE)
-            startActivityForResult(contactIntent, Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY)
+            startActivityForResult(contactIntent, Consts.RequestCode.CHOOSE_CONTACT_ACTIVITY)
         }
         binding.createBlockCancelButton.setOnClickListener {
             finish()
@@ -89,6 +88,9 @@ class CreateBlockActivity : AppCompatActivity() {
         // Init block
         newBlock = FirebaseUtils.DefaultObjects.Block(AppUtils.currentUser!!)
 
+        // Update UI
+        binding.blockColorGradient.imageTintList = ColorStateList.valueOf(newBlock.secondaryColor as Int)
+        binding.blockChangePhotoButton.backgroundTintList = ColorStateList.valueOf(newBlock.primaryColor as Int)
     }
 
     private fun setupTransitions(){
@@ -171,12 +173,12 @@ class CreateBlockActivity : AppCompatActivity() {
                 val photoId : String = data.getStringExtra(Consts.Extras.CURATED_OUTPUT_DATABASEID)!!
 
                 // Get the photo from database and its bitmap
-                database.collection("curatedPhotos").document(photoId).get().addOnSuccessListener {
+                database.collection(Consts.BDPath.curatedPhotos).document(photoId).get().addOnSuccessListener {
                     val photoUrl = it.get("photoUrl") as String
                     newBlock.coverImageUrl = photoUrl
                     // Change photos downloaded times in database
                     val newDownloads: Long = (it.get("downloads") as Long) + 1
-                    database.collection("curatedPhotos").document(photoId).update("downloads", newDownloads)
+                    database.collection(Consts.BDPath.curatedPhotos).document(photoId).update("downloads", newDownloads)
 
                     // Get photo bitmap
                     Glide.with(this@CreateBlockActivity).asBitmap().load(photoUrl).into(object: CustomTarget<Bitmap>(){
@@ -215,7 +217,7 @@ class CreateBlockActivity : AppCompatActivity() {
             }
             //
         }
-        else if(requestCode == Consts.RequestCode.CHOOSE_CONTACT_USER_ACTIVITY){
+        else if(requestCode == Consts.RequestCode.CHOOSE_CONTACT_ACTIVITY){
             //
             // User / Contact chosen from contacts
             //
@@ -372,7 +374,7 @@ class CreateBlockActivity : AppCompatActivity() {
 
     private fun uploadBlock(){
         // Block is ready for upload it, lets do it!
-        database.collection("blocks").add(newBlock.toHashMap()).addOnFailureListener {
+        database.collection(Consts.BDPath.blocks).add(newBlock.toHashMap()).addOnFailureListener {
             // Block failed uploading
             if(it is FirebaseNetworkException){
                 Snackbar.make(this, binding.root, getString(R.string.block_upload_failed_no_connection), Snackbar.LENGTH_SHORT).show()
@@ -392,7 +394,7 @@ class CreateBlockActivity : AppCompatActivity() {
                 AppUtils.currentUser!!.databaseId!!,
                 true
             )
-            database.collection("blockMembers").add(memberModel.toHashMap()).addOnSuccessListener {
+            database.collection(Consts.BDPath.blockMembers).add(memberModel.toHashMap()).addOnSuccessListener {
                 // The current user was added as a member. Now, add the chosen members from the list
                 newBlock.databaseId = blockId
                 inviteUserBlockMembers(blockId)
@@ -407,7 +409,7 @@ class CreateBlockActivity : AppCompatActivity() {
         val taskCount = membersList.size
         var tasksDone = 0
 
-        val collection = database.collection("userNotifications")
+        val collection = database.collection(Consts.BDPath.userNotifications)
 
         for(member in membersList){
             val newNotif = Notification(
@@ -436,7 +438,7 @@ class CreateBlockActivity : AppCompatActivity() {
         val taskCount = pendingMembersList.size
         var tasksDone = 0
 
-        val collection = database.collection("pendingBlockInvitations")
+        val collection = database.collection(Consts.BDPath.pendingBlockInvitations)
 
         for(contact in pendingMembersList){
             val pInvite = PendingBlockInvitation(

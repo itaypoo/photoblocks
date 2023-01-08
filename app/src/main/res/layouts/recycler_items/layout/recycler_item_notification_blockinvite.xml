@@ -59,7 +59,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/default_block_image" />
+                app:srcCompat="@drawable/default_block_cover" />
 
             <ImageView
                 android:id="@+id/notifInviteItem_blockGradient"
@@ -79,7 +79,7 @@
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/shrikhand"
                 android:text="this is a block title"
-                android:textColor="@color/on_background"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

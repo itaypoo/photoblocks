@@ -4,12 +4,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.toColor
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.itaypoo.photoblocks.HomeScreenActivity
+import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.Block
 import com.itaypoo.photoblockslib.User
 import java.io.ByteArrayOutputStream
@@ -74,6 +77,13 @@ object AppUtils {
         if(num == 2) return "nd"
         if(num == 3) return "rd"
         else return "th"
+    }
+
+    fun makeCancelableSnackbar(view: View, text: String, isLong: Boolean = false){
+        val duration = if(isLong) {Snackbar.LENGTH_LONG} else{Snackbar.LENGTH_SHORT}
+        val s = Snackbar.make(view, text, duration)
+        s.setAction(R.string.ok) { s.dismiss() }
+        s.show()
     }
 
     class DateString(date: Date){

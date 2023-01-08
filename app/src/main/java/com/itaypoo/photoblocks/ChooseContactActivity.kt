@@ -122,7 +122,7 @@ class ChooseContactActivity : AppCompatActivity() {
         // Get all users that have their phone number in contactList
         val resList: MutableList<Pair<ContactModel, User?>> = mutableListOf()
 
-        database.collection("users").get().addOnFailureListener{
+        database.collection(Consts.BDPath.users).get().addOnFailureListener{
 
             // Getting users failed
             if(it is FirebaseNetworkException)

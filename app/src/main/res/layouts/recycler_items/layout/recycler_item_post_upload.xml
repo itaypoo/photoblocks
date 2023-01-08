@@ -3,18 +3,87 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/background_variant">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_previewImage">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/uploadPostItem_removeButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_delete"
+                app:iconSize="20dp"
+                app:iconTint="@color/on_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/uploadPostItem_descriptionText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/manrope_medium"
+                android:gravity="left|center_vertical"
+                android:text="post description..."
+                android:textColor="@color/on_background_variant"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/uploadPostItem_removeButton"
+                app:layout_constraintStart_toEndOf="@+id/uploadPostItem_profilePicture"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/uploadPostItem_profilePicture"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/default_profile_photo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/uploadPostItem_descriptionText"
+                app:layout_constraintEnd_toEndOf="@+id/uploadPostItem_descriptionText"
+                app:layout_constraintStart_toStartOf="@+id/uploadPostItem_descriptionText"
+                app:srcCompat="@drawable/rounded_rectangle"
+                app:tint="@color/on_background_variant" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:id="@+id/uploadPostItem_previewImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/default_block_image" />
+        app:srcCompat="@drawable/default_block_cover" />
 
     <Space
         android:id="@+id/space4"
@@ -40,41 +109,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_descriptionText" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/uploadPostItem_profilePicture"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="3dp"
-        android:src="@drawable/default_profile_photo"
-        app:layout_constraintBottom_toBottomOf="@+id/uploadPostItem_descriptionText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/uploadPostItem_descriptionText" />
-
-    <TextView
-        android:id="@+id/uploadPostItem_descriptionText"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/manrope_medium"
-        android:gravity="left|center_vertical"
-        android:text="this is a post"
-        android:textColor="@color/on_background"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/uploadPostItem_renameButton"
-        app:layout_constraintStart_toEndOf="@+id/uploadPostItem_profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPostItem_previewImage" />
-
-    <Button
-        android:id="@+id/uploadPostItem_renameButton"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        app:icon="@drawable/icon_rename"
-        app:iconSize="20dp"
-        app:iconTint="@color/on_background"
-        app:layout_constraintBottom_toBottomOf="@+id/uploadPostItem_descriptionText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/uploadPostItem_descriptionText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

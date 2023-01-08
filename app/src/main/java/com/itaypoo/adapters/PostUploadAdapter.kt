@@ -32,7 +32,8 @@ import kotlin.coroutines.coroutineContext
 class PostUploadAdapter(private val imageUriList: MutableList<Uri>, private val context: Context) :
     RecyclerView.Adapter<PostUploadAdapter.ViewHolder>() {
 
-    private lateinit var profilePictureBitmap: Bitmap
+    var onRemoveButtonClicked: ((Uri) -> Unit)? = null
+
     val uriStringList = mutableListOf<UriString>()
 
     data class UriString(val uri: Uri, var string: String)
@@ -44,21 +45,6 @@ class PostUploadAdapter(private val imageUriList: MutableList<Uri>, private val 
         for(i in 0 until imageUriList.size){
             uriStringList.add(UriString(imageUriList[i], ""))
         }
-
-        // Load user profile picture to be used in all viewHolders
-        Glide.with(context)
-            .asBitmap().load(AppUtils.currentUser!!.profilePhotoUrl).placeholder(R.drawable.default_profile_photo)
-            .listener(object : RequestListener<Bitmap>{
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean
-                ): Boolean {return false}
-
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean
-                ): Boolean {
-                    profilePictureBitmap = resource!!
-                    return false
-                }
-
-            }).submit()
     }
 
     // Class for a viewHolder in the recyclerView
@@ -66,15 +52,14 @@ class PostUploadAdapter(private val imageUriList: MutableList<Uri>, private val 
         val descriptionText: TextView
         val profilePicture: ImageView
         val imagePreview: ImageView
-        val renameButton: Button
+        val removeButton: Button
 
         init {
             // Define click listener for the ViewHolder's View.
             descriptionText = view.findViewById(R.id.uploadPostItem_descriptionText)
             profilePicture = view.findViewById(R.id.uploadPostItem_profilePicture)
             imagePreview = view.findViewById(R.id.uploadPostItem_previewImage)
-            renameButton = view.findViewById(R.id.uploadPostItem_renameButton)
-
+            removeButton = view.findViewById(R.id.uploadPostItem_removeButton)
         }
     }
 
@@ -92,10 +77,10 @@ class PostUploadAdapter(private val imageUriList: MutableList<Uri>, private val 
         var us = uriStringList[position]
 
         viewHolder.imagePreview.setImageURI(us.uri)
-        viewHolder.profilePicture.setImageBitmap(profilePictureBitmap)
-        viewHolder.descriptionText.text = us.string
+        setDescriptionText(viewHolder, us.string)
+        Glide.with(context).load(AppUtils.currentUser!!.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(viewHolder.profilePicture)
 
-        viewHolder.renameButton.setOnClickListener {
+        viewHolder.descriptionText.setOnClickListener {
             // Open change text dialog
             val d = CustomDialogMaker.makeTextInputDialog(
                 context, context.getString(R.string.edit_description), context.getString(R.string.post_decription_hint),
@@ -108,8 +93,27 @@ class PostUploadAdapter(private val imageUriList: MutableList<Uri>, private val 
                 d.dialog.dismiss()
                 uriStringList[position].string = d.editText.text.toString()
                 us = uriStringList[position]
-                viewHolder.descriptionText.text = us.string
+                setDescriptionText(viewHolder, us.string)
             }
+        }
+
+        viewHolder.removeButton.setOnClickListener {
+            onRemoveButtonClicked?.invoke(us.uri)
+
+            val index = uriStringList.indexOf(us)
+            uriStringList.remove(us)
+            notifyItemRemoved(index)
+        }
+    }
+
+    private fun setDescriptionText(holder: ViewHolder, text: String){
+        if(text == ""){
+            holder.descriptionText.setTextColor(context.getColor(R.color.on_background_variant))
+            holder.descriptionText.text = context.getString(R.string.post_decription_hint)
+        }
+        else{
+            holder.descriptionText.setTextColor(context.getColor(R.color.on_background))
+            holder.descriptionText.text = text
         }
     }
 

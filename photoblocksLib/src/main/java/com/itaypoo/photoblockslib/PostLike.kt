@@ -3,7 +3,7 @@ package com.itaypoo.photoblockslib
 import java.util.Date
 
 
-class postLike(
+class PostLike(
     documentId: String?,
     creationTime: Date,
 

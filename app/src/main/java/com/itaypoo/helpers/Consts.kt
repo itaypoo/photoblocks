@@ -7,13 +7,29 @@ object Consts {
         const val FOREGROUND_SERVICE_CHANNEL_ID = "upload_images_service_channel_id"
     }
 
+    // Paths for collection in Firestore
+    internal object BDPath {
+        const val users = "users"
+        const val userNotifications = "userNotifications"
+
+        const val blocks = "blocks"
+        const val blockPosts = "blockPosts"
+        const val blockComments = "blockComments"
+        const val blockMembers = "blockMembers"
+        const val pendingBlockInvitations = "pendingBlockInvitations"
+
+        const val postLikes = "postLikes"
+
+        const val curatedPhotos = "curatedPhotos"
+    }
+
     // Request Codes ( for startActivityForResult() )
     internal object RequestCode{
         const val GALLERY_PICKER_SINGLE = 10
         const val GALLERY_PICKER_MULTIPLE = 20
         const val CROP_IMAGE_ACTIVITY = 30
         const val CURATED_PHOTOS_ACTIVITY = 40
-        const val CHOOSE_CONTACT_USER_ACTIVITY = 50
+        const val CHOOSE_CONTACT_ACTIVITY = 50
         const val VIEW_BLOCK_NO_RETURN = 60
     }
 
@@ -24,9 +40,9 @@ object Consts {
         const val USER_PRIVACY_MODE = false
 
         const val BLOCK_NAME = "new block"
-        const val BLOCK_COVER_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/photoblocks-1a69c.appspot.com/o/defaults%2FdefaultCoverImage.png?alt=media&token=83dd2244-2c86-49c5-a3f6-5d9cae5c0751"
-        val BLOCK_PRIMARY_COLOR = Color.parseColor("#6E7478")
-        val BLOCK_SECONDARY_COLOR = Color.parseColor("#51708A")
+        const val BLOCK_COVER_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/photoblocks-1a69c.appspot.com/o/defaults%2FdefaultCoverImage.png?alt=media&token=c036f38a-f424-4acc-8d33-38f8d0511395"
+        val BLOCK_PRIMARY_COLOR = Color.parseColor("#487C3A")
+        val BLOCK_SECONDARY_COLOR = -9914120
         const val BLOCK_COLLAGE_ENABLED = true
         const val BLOCK_COLLAGE_ORDERED_BY_LIKES = true
         const val BLOCK_COLLAGE_IMAGE_TIME = 5000

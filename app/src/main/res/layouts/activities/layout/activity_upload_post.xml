@@ -11,15 +11,15 @@
         android:id="@+id/uploadPostTitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/manrope_medium"
         android:text="5 images selected"
+        android:textColor="@color/on_background"
         android:textSize="20sp"
-        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/postRecycler"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/postBackButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,31 +28,49 @@
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:background="@color/background_variant"
+        android:backgroundTint="@color/background_variant"
         app:layout_constraintBottom_toTopOf="@+id/postUploadButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPostTitleText" />
+        app:layout_constraintTop_toBottomOf="@+id/postBackButton" />
 
     <Button
         android:id="@+id/postUploadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
+        android:fontFamily="@font/manrope_medium"
         android:text="@string/upload_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/postCancelButton"
+        android:id="@+id/postAddImagesButton"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/cancel"
+        android:fontFamily="@font/manrope_medium"
+        android:text="@string/add_more_images"
         android:textColor="@color/on_background"
+        app:icon="@drawable/icon_add_photo"
+        app:iconTint="@color/on_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:strokeColor="@color/primary" />
+
+    <Button
+        android:id="@+id/postBackButton"
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:icon="@drawable/icon_back"
+        app:iconTint="@color/on_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -76,7 +76,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
 
                 // Check if this user has any pending invites
-                database.collection("pendingBlockInvitations").whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
+                database.collection(Consts.BDPath.pendingBlockInvitations).whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
                     val pendingInviteList = mutableListOf<PendingBlockInvitation>()
                     for(doc in it){
                         val pInvite = FirebaseUtils.ObjectFromDoc.PendingBlockInvitation(doc)
@@ -198,7 +198,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
      fun loadBlocksJoined() {
         // Get all blocks that the current user is a member of
-        database.collection("blockMembers").whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
+        database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
         .addOnFailureListener {
 
             // Loading members list failed
@@ -225,7 +225,7 @@ class HomeScreenActivity : AppCompatActivity() {
         blockList = mutableListOf()
 
         // Load all blocks that were found to contain the user as a member
-        database.collection("blocks").get().addOnFailureListener {
+        database.collection(Consts.BDPath.blocks).get().addOnFailureListener {
 
             // Loading blocks list failed
             if(it is FirebaseNetworkException)
@@ -277,7 +277,7 @@ class HomeScreenActivity : AppCompatActivity() {
             binding.notificationDotOutline.visibility = View.INVISIBLE
         }
 
-        val q =database.collection("userNotifications").whereEqualTo("recipientId", AppUtils.currentUser?.databaseId).count()
+        val q =database.collection(Consts.BDPath.userNotifications).whereEqualTo("recipientId", AppUtils.currentUser?.databaseId).count()
         q.get(AggregateSource.SERVER).addOnSuccessListener {
             notifAmount = it.count.toInt()
             if(notifAmount > 0) {
@@ -300,7 +300,7 @@ class HomeScreenActivity : AppCompatActivity() {
         for(i in 0 until pendingInviteList.size){
             // First, delete this pending invite
             val pInvite = pendingInviteList[i]
-            database.collection("pendingBlockInvitations").document(pInvite.databaseId!!).delete().addOnSuccessListener {
+            database.collection(Consts.BDPath.pendingBlockInvitations).document(pInvite.databaseId!!).delete().addOnSuccessListener {
                 // Now, upload a real invite
                 val inviteNotif = Notification(
                     null,
@@ -310,7 +310,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     NotificationType.BLOCK_INVITATION,
                     pInvite.blockId
                 )
-                database.collection("userNotifications").add(inviteNotif.toHashMap()).addOnSuccessListener {
+                database.collection(Consts.BDPath.userNotifications).add(inviteNotif.toHashMap()).addOnSuccessListener {
                     // This pending invite is complete!
                     tasksDoneList[i] = true
 

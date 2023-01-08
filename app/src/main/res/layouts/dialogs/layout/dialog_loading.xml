@@ -21,6 +21,16 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <ProgressBar
+                android:id="@+id/dialogLoading_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:min="0"
+                android:progress="50"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -28,11 +38,12 @@
                 android:orientation="horizontal">
 
                 <ProgressBar
-                    android:id="@+id/progressBar"
+                    android:id="@+id/dialogLoading_loadingCircle"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:progressTint="#FF0000" />
+                    android:layout_weight="1"
+                    android:visibility="visible" />
             </LinearLayout>
 
             <Space

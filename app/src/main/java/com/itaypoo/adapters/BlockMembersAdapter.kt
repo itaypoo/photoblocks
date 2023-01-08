@@ -1,42 +1,36 @@
 package com.itaypoo.adapters
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.BlockMember
 import com.itaypoo.photoblockslib.User
 
-class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMember, User>>, private val context: Context) :
+class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMember, User?>>, private val blockCreatorId: String, private val context: Context) :
     RecyclerView.Adapter<BlockMembersAdapter.ViewHolder>() {
 
     // Listener for item click
-    var onRemoveButtonClicked: ((BlockMember) -> Unit)? = null
+    var onItemClicked: ((Pair<BlockMember, User>) -> Unit)? = null
+    var onItemLongClicked: ((Pair<BlockMember, User>) -> Unit)? = null
 
     // Class for a viewHolder in the recyclerView
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameText: TextView
         val roleText: TextView
         val profilePicture: ImageView
-        val removeButton: Button
 
         init {
             nameText = view.findViewById(R.id.blockMemberItem_nameText)
             roleText = view.findViewById(R.id.blockMemberItem_roleText)
             profilePicture = view.findViewById(R.id.blockMemberItem_profilePicture)
-            removeButton = view.findViewById(R.id.blockMemberItem_removeButton)
         }
     }
 
@@ -54,7 +48,20 @@ class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMemb
         val member = memberUserList[position].first
         val user = memberUserList[position].second
 
-        viewHolder.nameText.text = user.name
+        viewHolder.nameText.text = user?.name
+        viewHolder.roleText.visibility = if(member.isAdmin) { View.VISIBLE } else { View.GONE }
+        if(user?.databaseId == blockCreatorId){ viewHolder.roleText.text = context.getString(R.string.block_creator) }
+        else{ viewHolder.roleText.text = context.getString(R.string.block_admin) }
+
+        Glide.with(context).load(user?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(viewHolder.profilePicture)
+
+        viewHolder.itemView.setOnClickListener {
+            onItemClicked?.invoke(Pair(member, user!!))
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            onItemLongClicked?.invoke(Pair(member, user!!))
+            true
+        }
 
     }
 

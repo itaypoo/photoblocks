@@ -3,60 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/blockMemberItem_profilePicture"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/default_profile_photo" />
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/blockMemberItem_profilePicture"
-        app:layout_constraintEnd_toStartOf="@+id/blockMemberItem_removeButton"
-        app:layout_constraintStart_toEndOf="@+id/blockMemberItem_profilePicture"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/blockMemberItem_profilePicture"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/default_profile_photo" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/blockMemberItem_nameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:fontFamily="@font/manrope_medium"
+            android:gravity="center_vertical"
             android:text="member name"
             android:textColor="@color/on_background"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/blockMemberItem_roleText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_rectangle"
+            android:backgroundTint="@color/tertiary"
             android:fontFamily="@font/manrope_medium"
-            android:text="admin"
-            android:textColor="@color/primary"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:padding="5dp"
+            android:paddingEnd="15dp"
+            android:text="@string/block_admin"
+            android:textColor="@color/on_tertiary"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/blockMemberItem_removeButton"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/icon_remove_person"
-        app:iconTint="@color/on_background"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Space
         android:layout_width="0dp"
-        android:layout_height="15dp"
+        android:layout_height="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />

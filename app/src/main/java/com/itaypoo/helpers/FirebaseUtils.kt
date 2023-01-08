@@ -1,6 +1,7 @@
 package com.itaypoo.helpers
 
 import android.content.ContentResolver
+import android.graphics.Color
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.itaypoo.photoblockslib.*

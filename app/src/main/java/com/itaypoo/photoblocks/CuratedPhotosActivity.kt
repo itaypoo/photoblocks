@@ -61,7 +61,7 @@ class CuratedPhotosActivity : AppCompatActivity() {
 
     private fun loadPhotosList() {
         // Get photos from database, ordered by download amount
-        database.collection("curatedPhotos").orderBy("downloads", Query.Direction.DESCENDING).get().addOnSuccessListener {
+        database.collection(Consts.BDPath.curatedPhotos).orderBy("downloads", Query.Direction.DESCENDING).get().addOnSuccessListener {
             // Construct a list from the data gotten
             for(doc in it){
                 val photo = listOf<Any>(

@@ -44,7 +44,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/default_block_image" />
+                        app:srcCompat="@drawable/default_block_cover" />
 
                     <ImageView
                         android:id="@+id/blockViewDialog_blockGradient"
@@ -68,6 +68,7 @@
                         android:fontFamily="@font/shrikhand"
                         android:gravity="center"
                         android:text="block title"
+                        android:textColor="#FFFFFF"
                         android:textSize="22sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

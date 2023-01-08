@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,8 @@ class UploadPostActivity : AppCompatActivity() {
 
     private lateinit var uploadToBlockId: String
 
+    private val uriList = mutableListOf<Uri>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUploadPostBinding.inflate(layoutInflater)
@@ -55,6 +58,17 @@ class UploadPostActivity : AppCompatActivity() {
             finish()
         }
 
+        openImagePicker()
+        binding.postAddImagesButton.setOnClickListener {
+            openImagePicker()
+        }
+
+        binding.postBackButton.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun openImagePicker(){
         // Open image selection screen, Allow multiple images
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -65,39 +79,58 @@ class UploadPostActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, dataIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, dataIntent)
 
-        val imageUriList = mutableListOf<Uri>()
-
+        var pickedTooMany = false
+        var pickedTheSame = false
         var itemCount = 0
         if(dataIntent?.clipData != null){
             // Multiple images picked
             itemCount = dataIntent.clipData!!.itemCount
-            for(i in 0 until min(itemCount, 30)){
-                // Get item at position i
-                imageUriList.add(dataIntent.clipData!!.getItemAt(i).uri)
+            for(i in 0 until itemCount){
+                if(uriList.size < 30){
+                    if(!uriList.contains(dataIntent.clipData!!.getItemAt(i).uri)){
+                        // Add item at position i
+                        uriList.add(dataIntent.clipData!!.getItemAt(i).uri)
+                    }
+                    else pickedTheSame = true
+                }
+                else pickedTooMany = true
             }
         }
         else if(dataIntent != null && dataIntent.data != null){
             // Single image picked
-            imageUriList.add(dataIntent.data!!)
+            if(uriList.size < 30){
+                if(!uriList.contains(dataIntent.data!!)){
+                    uriList.add(dataIntent.data!!)
+                }
+                else pickedTheSame = true
+            }
+            else pickedTooMany = true
         }
 
         // Set up title text
-        if(imageUriList.size == 1){
+        if(uriList.size == 1){
             binding.uploadPostTitleText.text = getString(R.string.one_image_selected)
         }
         else{
             binding.uploadPostTitleText.text = buildString {
-                append(imageUriList.size.toString())
+                append(uriList.size.toString())
                 append(" ")
                 append(getString(R.string.images_selected))
             }
-            if(itemCount > 30){
-                Snackbar.make(binding.postRecycler, getString(R.string.too_many_images_selected), Snackbar.LENGTH_SHORT).show()
+            if(pickedTooMany){
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.too_many_images_selected))
             }
         }
+        if(pickedTheSame){
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.same_image_picked))
+        }
 
+        setUpRecycler()
+    }
+
+    private fun setUpRecycler(){
         // Set up post recycler
-        val adapter = PostUploadAdapter(imageUriList, this)
+        val adapter = PostUploadAdapter(uriList, this)
         binding.postRecycler.layoutManager = LinearLayoutManager(this)
         binding.postRecycler.adapter = adapter
 
@@ -105,7 +138,20 @@ class UploadPostActivity : AppCompatActivity() {
         binding.postUploadButton.setOnClickListener {
             uploadPosts(adapter.getImageTextList())
         }
+
+        adapter.onRemoveButtonClicked = {
+            // Remove image from upload list
+            uriList.remove(it)
+
+            binding.uploadPostTitleText.text = buildString {
+                append(uriList.size.toString())
+                append(" ")
+                append(getString(R.string.images_selected))
+            }
+        }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun uploadPosts(pairList: MutableList<Pair<Uri, String>>){
         if(pairList.size == 1){
@@ -141,7 +187,7 @@ class UploadPostActivity : AppCompatActivity() {
                         pair.second
                     )
                     // Upload the post
-                    database.collection("blockPosts").add(post.toHashMap()).addOnFailureListener {
+                    database.collection(Consts.BDPath.blockPosts).add(post.toHashMap()).addOnFailureListener {
                         // Upload failed
                         if(it is FirebaseNetworkException){ Snackbar.make(binding.root, getString(R.string.generic_network_error), Snackbar.LENGTH_LONG).show() }
                         else Snackbar.make(binding.root, getString(R.string.generic_unknown_error), Snackbar.LENGTH_LONG).show()

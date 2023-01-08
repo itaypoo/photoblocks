@@ -73,9 +73,9 @@
             android:fontFamily="@font/manrope_medium"
             android:gravity="left|center_vertical"
             android:paddingStart="30dp"
-            android:paddingLeft="0dp"
+            android:paddingLeft="30dp"
             android:paddingTop="0dp"
-            android:paddingRight="0dp"
+            android:paddingRight="30dp"
             android:paddingBottom="0dp"
             android:text="@string/log_out"
             android:textColor="@color/on_background"
@@ -140,6 +140,7 @@
                     app:tint="@color/on_background" />
 
                 <TextView
+                    android:id="@+id/joinDateText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -193,6 +194,7 @@
                     app:tint="@color/on_background" />
 
                 <TextView
+                    android:id="@+id/imageCountText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -221,6 +223,7 @@
                     app:tint="@color/on_background" />
 
                 <TextView
+                    android:id="@+id/commentCountText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"

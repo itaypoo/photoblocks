@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itaypoo.helpers.AppUtils
+import com.itaypoo.helpers.Consts
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.BlockPost
 import com.itaypoo.photoblockslib.User
@@ -119,7 +120,7 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
         val post = postCreatorList[position].first
         val creator = postCreatorList[position].second
 
-        val q = database.collection("postLikes").whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
+        val q = database.collection(Consts.BDPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
         q.whereEqualTo("postId", post.databaseId!!).get().addOnSuccessListener {
             var liked = false
             if(it.size() == 0){

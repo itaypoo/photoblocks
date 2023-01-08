@@ -23,7 +23,7 @@ import com.itaypoo.photoblocks.databinding.ActivitySplashBinding
 
 
 class SplashActivity : AppCompatActivity() {
-    val DEBUG_REMOVE_USER_ON_STARTUP = true
+    val DEBUG_REMOVE_USER_ON_STARTUP = false
 
     private lateinit var binding: ActivitySplashBinding
     private lateinit var nextIntent: Intent
@@ -57,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
         if(savedUserId != null){
             // Auto login saved user
             val database = Firebase.firestore
-            database.collection("users").document(savedUserId).get().addOnSuccessListener {
+            database.collection(Consts.BDPath.users).document(savedUserId).get().addOnSuccessListener {
                 // Getting user success
                 val user = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 AppUtils.currentUser = user

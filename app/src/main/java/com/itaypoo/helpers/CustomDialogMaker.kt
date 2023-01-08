@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.itaypoo.photoblocks.R
@@ -24,10 +25,23 @@ object CustomDialogMaker {
     // LoadingDialog - A dialog with a loading spinner and a message. Cannot be dismissed (!!).
     //region LoadingDialog
 
+    class LoadingDialog(dialog: Dialog, private val progressBar: ProgressBar): CustomDialog(dialog){
+        fun setProgressMin(value: Int){
+            progressBar.min = value
+        }
+        fun setProgressMax(value: Int){
+            progressBar.max = value
+        }
+        fun setProgress(value: Int){
+            progressBar.progress = value
+        }
+    }
+
     fun makeLoadingDialog(
         context: Context,
-        messageText: String
-    ): CustomDialog {
+        messageText: String,
+        progressBarEnabled: Boolean = false
+    ): LoadingDialog {
 
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_loading)
@@ -44,8 +58,15 @@ object CustomDialogMaker {
         // Init views
         dialog.findViewById<TextView>(R.id.dialogLoading_text).text = messageText
 
+        // Progress bar
+        val progressBar = dialog.findViewById<ProgressBar>(R.id.dialogLoading_progressBar)
+        val loadingCircle = dialog.findViewById<ProgressBar>(R.id.dialogLoading_loadingCircle)
+
+        progressBar.visibility = if(progressBarEnabled) { View.VISIBLE } else { View.GONE }
+        loadingCircle.visibility = if(!progressBarEnabled) { View.VISIBLE } else { View.GONE }
+
         // return the dialog with its buttons
-        return CustomDialog(dialog)
+        return LoadingDialog(dialog, progressBar)
     }
 
     //endregion
@@ -240,7 +261,7 @@ object CustomDialogMaker {
         blockGradient.imageTintList = ColorStateList.valueOf( block.secondaryColor.toInt() )
 
         // Load block image
-        Glide.with(context).load(block.coverImageUrl).placeholder(R.drawable.default_block_image).into(blockImage)
+        Glide.with(context).load(block.coverImageUrl).placeholder(R.drawable.default_block_cover).into(blockImage)
 
         if (hideYesButton) yesButton.visibility = View.GONE
         if (hideNoButton) noButton.visibility = View.GONE
