@@ -27,6 +27,10 @@ import com.itaypoo.adapters.BlockListAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityHomeScreenBinding
 import com.itaypoo.photoblockslib.*
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.concurrent.TimeUnit
 
 
 class HomeScreenActivity : AppCompatActivity() {
@@ -67,6 +71,23 @@ class HomeScreenActivity : AppCompatActivity() {
         // Load user pfp with Glide
         Glide.with(this).load(AppUtils.currentUser?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(binding.profilePicture)
 
+        val creationDate = AppUtils.DateString(AppUtils.currentUser!!.creationTime)
+        val nowDate = AppUtils.DateString(Timestamp.now().toDate())
+        if(creationDate.dayOfMonth == nowDate.dayOfMonth && creationDate.monthName == nowDate.monthName){
+
+            Toast.makeText(this, "Happy cake dayy!", Toast.LENGTH_SHORT).show()
+            val p = Party(
+                speed = 0f,
+                maxSpeed = 30f,
+                damping = 0.9f,
+                spread = 360,
+                colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+                position = Position.Relative(0.5, 0.3),
+                emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100)
+            )
+            binding.cakeDayKonfetti.start(p)
+        }
+
         // Show welcome or welcome back message
         val type = intent.getIntExtra(Consts.Extras.SIGNIN_TYPE, Consts.LoginType.NO_LOGIN)
         if(type != Consts.LoginType.NO_LOGIN){
@@ -93,6 +114,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 val text = getString(R.string.welcome_back_message) + AppUtils.currentUser!!.name
                 Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
             }
+
         }
 
         // Load block list

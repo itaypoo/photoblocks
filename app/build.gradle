@@ -80,4 +80,7 @@ dependencies {
 
     // Palette API
     implementation "androidx.palette:palette:1.0.0"
+
+    // Konfetti
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
 }

@@ -47,6 +47,7 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
         val likeButton: Button
         val unlikeButton: Button
         val likeAnimImage: ImageView
+        val likeAmountText: TextView
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -57,6 +58,7 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
             likeButton = view.findViewById(R.id.postItem_likeButton)
             unlikeButton = view.findViewById(R.id.postItem_unlikeButton)
             likeAnimImage = view.findViewById(R.id.postItem_likeAnimImage)
+            likeAmountText = view.findViewById(R.id.postItem_likeAmountText)
         }
     }
 
@@ -123,6 +125,11 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
         val q = database.collection(Consts.BDPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
         q.whereEqualTo("postId", post.databaseId!!).get().addOnSuccessListener {
             var liked = false
+
+            if(it.size() == 0) viewHolder.likeAmountText.visibility = View.GONE
+            else if(it.size() == 1) viewHolder.likeAmountText.text = it.size().toString() + " " + context.getString(R.string.person_liked_this_post)
+            else viewHolder.likeAmountText.text = it.size().toString() + " " + context.getString(R.string.people_liked_this_post)
+
             if(it.size() == 0){
                 // User has not liked this post
                 liked = false
