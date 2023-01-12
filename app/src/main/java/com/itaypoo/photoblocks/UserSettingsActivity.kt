@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.transition.ChangeImageTransform
 import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -53,13 +54,15 @@ class UserSettingsActivity : AppCompatActivity() {
         getStats()
 
         val isP = AppUtils.currentUser!!.isPrivate
-        if(!isP){ // Update UI
+        if(!isP){
             binding.lockClosedIcon.visibility = View.INVISIBLE
             binding.lockOpenIcon.visibility = View.VISIBLE
+            binding.privateButton.setBackgroundColor(getColor(R.color.tertiary))
         }
         else{
             binding.lockClosedIcon.visibility = View.VISIBLE
             binding.lockOpenIcon.visibility = View.INVISIBLE
+            binding.privateButton.setBackgroundColor(getColor(R.color.error))
         }
 
         // Set on click listeners for buttons
@@ -102,17 +105,22 @@ class UserSettingsActivity : AppCompatActivity() {
             d.dialog.dismiss()
             isP = !isP
 
+            // Play bounce anim
+            val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.bounce_down)
+            binding.privateCard.startAnimation(bounceAnim)
+
             database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("isPrivate", isP).addOnSuccessListener {
-                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.private_updated))
                 AppUtils.currentUser!!.isPrivate = isP
                 // Update UI
                 if(!isP){
                     binding.lockClosedIcon.visibility = View.INVISIBLE
                     binding.lockOpenIcon.visibility = View.VISIBLE
+                    binding.privateButton.setBackgroundColor(getColor(R.color.tertiary))
                 }
                 else{
                     binding.lockClosedIcon.visibility = View.VISIBLE
                     binding.lockOpenIcon.visibility = View.INVISIBLE
+                    binding.privateButton.setBackgroundColor(getColor(R.color.error))
                 }
             }
         }

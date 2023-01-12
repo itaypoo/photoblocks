@@ -41,4 +41,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notifsBackButton" />
+
+    <TextView
+        android:id="@+id/notifsEmptyText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_medium"
+        android:text="@string/no_notifications"
+        android:textColor="@color/on_background_variant"
+        app:layout_constraintEnd_toEndOf="@+id/notificationsRecycler"
+        app:layout_constraintStart_toStartOf="@+id/notificationsRecycler"
+        app:layout_constraintTop_toTopOf="@+id/notificationsRecycler" />
 </androidx.constraintlayout.widget.ConstraintLayout>

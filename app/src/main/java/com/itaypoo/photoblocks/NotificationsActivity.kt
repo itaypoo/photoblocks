@@ -2,6 +2,7 @@ package com.itaypoo.photoblocks
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,6 +87,12 @@ class NotificationsActivity : AppCompatActivity() {
         val adapter = NotificationListAdapter(notificationList, this@NotificationsActivity, database, contentResolver)
         binding.notificationsRecycler.layoutManager = LinearLayoutManager(this)
         binding.notificationsRecycler.adapter = adapter
+
+        // Empty list indicator
+        if(notificationList.size == 0){
+            binding.notificationsRecycler.visibility = View.VISIBLE
+        }
+        else binding.notificationsRecycler.visibility = View.GONE
 
         // Horizontal swipe functionality
         val swipeDeleteCallback = object : HorizontalSwipeCallback(){

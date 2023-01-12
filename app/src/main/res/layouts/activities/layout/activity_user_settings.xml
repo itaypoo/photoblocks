@@ -91,6 +91,7 @@
             android:layout_height="wrap_content" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/privateCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3">
@@ -126,7 +127,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_search"
+                app:srcCompat="@drawable/icon_lock_person"
                 app:tint="@color/on_tertiary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

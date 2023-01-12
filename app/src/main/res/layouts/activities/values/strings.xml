@@ -64,4 +64,7 @@
     <string name="change_private_title">change profile visibility?</string>
     <string name="change_private_desc">if your profile is private, other people can not see what blocks you joined.</string>
     <string name="private_updated">profile visibility updated.</string>
+    <string name="no_blocks">looks like you aren\'t a member of any blocks.... yet!</string>
+    <string name="no_notifications">no notifications yet, maybe come back tomorrow?</string>
+    <string name="no_posts">no member has uploaded any images in this block. care to be the first?</string>
 </resources>

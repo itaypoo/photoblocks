@@ -74,31 +74,27 @@ class HomeScreenActivity : AppCompatActivity() {
 
         val creationDate = AppUtils.DateString(AppUtils.currentUser!!.creationTime)
         val nowDate = AppUtils.DateString(Timestamp.now().toDate())
-        if(creationDate.dayOfMonth == nowDate.dayOfMonth && creationDate.monthName == nowDate.monthName){
+        // Check if block day is today
+        if(creationDate.dayOfMonth == nowDate.dayOfMonth && creationDate.monthName == nowDate.monthName && creationDate.year != nowDate.year){
             // Today is block day!
             binding.blockDayCard.visibility = View.VISIBLE
 
             val age = nowDate.year - creationDate.year
             binding.blockDayText.text = getString(R.string.joined_today) + ", " + age + " " + getString(R.string.years_ago)
 
-            // Show confetti
             AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.happy_block_day))
-            val p = Party(
-                angle = 90,
-                size = listOf(Size.LARGE, Size.MEDIUM),
-                speed = 0f,
-                maxSpeed = 30f,
-                damping = 0.9f,
-                spread = 165,
-                colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
-                position = Position.Relative(0.5, 0.0),
-                emitter = Emitter(duration = 3, TimeUnit.SECONDS).max(200)
-            )
-            binding.cakeDayKonfetti.start(p)
+            showKonfetti()
         }
         else{
-            // Block day is not today
-            binding.blockDayCard.visibility = View.GONE
+            // Check if user joined today
+            if(creationDate.dayOfMonth == nowDate.dayOfMonth && creationDate.monthName == nowDate.monthName){
+                binding.blockDayCard.visibility = View.VISIBLE
+                binding.blockDayText.text = getString(R.string.joined_today)
+            }
+            else{
+                // Block day is not today
+                binding.blockDayCard.visibility = View.GONE
+            }
         }
 
         // Show welcome or welcome back message
@@ -108,6 +104,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 // New user login
                 val text = getString(R.string.welcome_message) + AppUtils.currentUser!!.name
                 Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
+                showKonfetti()
 
                 // Check if this user has any pending invites
                 database.collection(Consts.BDPath.pendingBlockInvitations).whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
@@ -196,6 +193,21 @@ class HomeScreenActivity : AppCompatActivity() {
             // set an exit transition
             exitTransition = Fade()
         }
+    }
+
+    private fun showKonfetti(){
+        val p = Party(
+            angle = 90,
+            size = listOf(Size.LARGE, Size.MEDIUM),
+            speed = 10f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 165,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            position = Position.Relative(0.5, 0.0),
+            emitter = Emitter(duration = 1, TimeUnit.SECONDS).max(50)
+        )
+        binding.cakeDayKonfetti.start(p)
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,6 +305,12 @@ class HomeScreenActivity : AppCompatActivity() {
         val adapter = BlockListAdapter(blockList, this)
         binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blockRecyclerView.adapter = adapter
+
+        // Empty list indicator
+        if(blockList.size == 0){
+            binding.blockListEmptyText.visibility = View.VISIBLE
+        }
+        else binding.blockListEmptyText.visibility = View.VISIBLE
 
         adapter.onItemClickListener = {
             // On block clicked

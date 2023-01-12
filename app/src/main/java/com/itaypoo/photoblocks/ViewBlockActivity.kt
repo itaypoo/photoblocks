@@ -206,6 +206,12 @@ class ViewBlockActivity : AppCompatActivity() {
 
                     // Update recycler
                     adapter.notifyDataSetChanged()
+
+                    // Empty list indicator
+                    if(postCreatorList.size == 0){
+                        binding.postListEmptyText.visibility = View.VISIBLE
+                    }
+                    else binding.postListEmptyText.visibility = View.GONE
                 }
             }
 
