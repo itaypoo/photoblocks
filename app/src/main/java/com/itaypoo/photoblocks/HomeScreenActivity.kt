@@ -230,6 +230,9 @@ class HomeScreenActivity : AppCompatActivity() {
         // Button on click listeners
         buttonContacts.setOnClickListener {
             menuDialog.dismiss()
+            val contactIntent = Intent(this, ChooseContactActivity::class.java)
+            contactIntent.putExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE, Consts.ChooseType.CHOOSE_ANY_USER)
+            startActivityForResult(contactIntent, Consts.RequestCode.CHOOSE_CONTACT_ACTIVITY)
         }
         buttonJoinWithCode.setOnClickListener {
             menuDialog.dismiss()
@@ -310,7 +313,7 @@ class HomeScreenActivity : AppCompatActivity() {
         if(blockList.size == 0){
             binding.blockListEmptyText.visibility = View.VISIBLE
         }
-        else binding.blockListEmptyText.visibility = View.VISIBLE
+        else binding.blockListEmptyText.visibility = View.GONE
 
         adapter.onItemClickListener = {
             // On block clicked

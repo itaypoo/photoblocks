@@ -67,4 +67,9 @@
     <string name="no_blocks">looks like you aren\'t a member of any blocks.... yet!</string>
     <string name="no_notifications">no notifications yet, maybe come back tomorrow?</string>
     <string name="no_posts">no member has uploaded any images in this block. care to be the first?</string>
+    <string name="select_via_number">select via phone number</string>
+    <string name="enter_phone_number">enter a number.</string>
+    <string name="unknown_number">unknown number</string>
+    <string name="this_person_is_not_on_photoblocks">this person is not on photoblocks!</string>
+    <string name="select_yourself">you cannot select yourself!</string>
 </resources>

@@ -76,6 +76,7 @@ class NotificationsActivity : AppCompatActivity() {
                 // Add all notifications to the list
                 val docNotif = FirebaseUtils.ObjectFromDoc.Notification(doc)
                 notificationList.add(docNotif)
+                Toast.makeText(this, docNotif.type.toString(), Toast.LENGTH_SHORT).show()
             }
 
             setUpNotifRecycler()
@@ -90,9 +91,9 @@ class NotificationsActivity : AppCompatActivity() {
 
         // Empty list indicator
         if(notificationList.size == 0){
-            binding.notificationsRecycler.visibility = View.VISIBLE
+            binding.notifsEmptyText.visibility = View.VISIBLE
         }
-        else binding.notificationsRecycler.visibility = View.GONE
+        else binding.notifsEmptyText.visibility = View.GONE
 
         // Horizontal swipe functionality
         val swipeDeleteCallback = object : HorizontalSwipeCallback(){

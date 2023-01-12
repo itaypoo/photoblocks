@@ -37,7 +37,8 @@
                 android:scaleType="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_add_person" />
+                app:srcCompat="@drawable/icon_add_person"
+                app:tint="@color/on_background" />
 
             <ImageView
                 android:id="@+id/contactItem_messageIcon"
@@ -46,7 +47,8 @@
                 android:scaleType="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_message" />
+                app:srcCompat="@drawable/icon_message"
+                app:tint="@color/on_background" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/contactItem_profilePhoto"

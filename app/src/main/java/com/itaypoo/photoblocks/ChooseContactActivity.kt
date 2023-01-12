@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -15,8 +16,6 @@ import com.google.firebase.ktx.Firebase
 import com.itaypoo.adapters.UserContactAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityChooseContactBinding
-import com.itaypoo.photoblockslib.Block
-import com.itaypoo.photoblockslib.PendingBlockInvitation
 import com.itaypoo.photoblockslib.User
 
 class ChooseContactActivity : AppCompatActivity() {
@@ -25,6 +24,7 @@ class ChooseContactActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private var chooseType: Int = 0
     private var resIntent = Intent()
+
     /*
 
      --- Activity for selecting a user from the contact list ---
@@ -43,12 +43,15 @@ class ChooseContactActivity : AppCompatActivity() {
         binding = ActivityChooseContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Get permission from the user to read phone contacts
+        requestPermissions(arrayOf("android.permission.READ_CONTACTS"), 80)
+
+        database = Firebase.firestore
+
         // Get choose type
         if(intent.hasExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE)){
             chooseType = intent.getIntExtra(Consts.Extras.CHOOSECONTECT_INPUT_CHOOSE_TYPE, 0)
         }
-
-        database = Firebase.firestore
 
         // back button
         binding.chooseContactBackButton.setOnClickListener {
@@ -56,9 +59,9 @@ class ChooseContactActivity : AppCompatActivity() {
             finish()
         }
 
-        // Get permission from the user to read phone contacts
-        requestPermissions(arrayOf("android.permission.READ_CONTACTS"), 80)
-
+        binding.choosePhoneNumberButton.setOnClickListener {
+            openPhoneNumberDialog()
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +109,46 @@ class ChooseContactActivity : AppCompatActivity() {
         }
         d.dialog.show()
 
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun openPhoneNumberDialog() {
+        val d = CustomDialogMaker.makeTextInputDialog(this, getString(R.string.select_via_number), getString(R.string.phone_number))
+        d.dialog.show()
+        d.cancelButton.setOnClickListener { d.dialog.dismiss() }
+
+        d.doneButton.setOnClickListener {
+            d.dialog.dismiss()
+            var num: String? = d.editText.text.toString()
+
+            if(num.isNullOrBlank()) {
+                d.setError(getString(R.string.enter_phone_number))
+                return@setOnClickListener
+            }
+            num = ContactsUtils.validatedPhoneNumber(num)
+            if(num.isNullOrBlank()) {
+                d.setError(getString(R.string.invalid_phone_number))
+                return@setOnClickListener
+            }
+
+            // Get user with that phone number
+            database.collection(Consts.BDPath.users).whereEqualTo("phoneNumber", num).get().addOnSuccessListener {
+                if(it.isEmpty){
+                    // This number does not have a user
+                    val contact = ContactModel(getString(R.string.unknown_number), num)
+                    val pair: Pair<ContactModel, User?> = Pair(contact, null)
+                    selectContactPair(pair, false)
+                }
+                else{
+                    // This number does! have a user
+                    val user = FirebaseUtils.ObjectFromDoc.User(it.documents[0], contentResolver)
+                    val contact = ContactModel(getString(R.string.unknown_number), num)
+                    val pair: Pair<ContactModel, User?> = Pair(contact, user)
+                    selectContactPair(pair, false)
+                }
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,50 +216,63 @@ class ChooseContactActivity : AppCompatActivity() {
         binding.contactUserRecycler.adapter = adapter
         
         adapter.onItemClickListener = {
-            // Check if the chosen pair has a user
-            if(it.second != null){
-                resIntent.putExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER, it.second)
-                setResult(RESULT_OK, resIntent)
-                finish()
-            }
-            else{
-                // The pair does not have a user. Open an invitation dialog
-                val itContact = it
-                if(chooseType == Consts.ChooseType.CHOOSE_BLOCK_INVITE){
-                    // Create a pending block invitation for this user
-                    openPendingInviteDialog(itContact)
-                }
-                else{
-                    // Show SMS message dialog for this user
-                    val d = CustomDialogMaker.makeYesNoDialog(
-                        this,
-                        itContact.first.displayName + getString(R.string.is_not_on_photoblocks),
-                        getString(R.string.not_on_photoblocks_desc)
-                    )
-                    d.dialog.show()
-
-                    d.noButton.setOnClickListener {
-                        d.dialog.dismiss()
-                    }
-                    d.yesButton.setOnClickListener {
-                        // Send an invitation SMS message to the contact
-                        val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", itContact.first.phoneNumber, null))
-                        smsIntent.putExtra("sms_body", getString(R.string.join_photoblocks_sms))
-                        startActivity(smsIntent)
-
-                        d.dialog.dismiss()
-                    }
-                }
-
-            }
+            selectContactPair(it, true)
         }
     }
 
-    private fun openPendingInviteDialog(contact: Pair<ContactModel, User?>) {
+    private fun selectContactPair(pair: Pair<ContactModel, User?>, hasName: Boolean) {
+        // Check if the user has not selected himself
+        if(pair.first.phoneNumber == AppUtils.currentUser!!.phoneNumber){
+            AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.select_yourself))
+            return
+        }
+
+        // Check if the chosen pair has a user
+        if(pair.second != null){
+            resIntent.putExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER, pair.second)
+            setResult(RESULT_OK, resIntent)
+            finish()
+        }
+        else{
+            // The pair does not have a user. Open an invitation dialog
+            if(chooseType == Consts.ChooseType.CHOOSE_BLOCK_INVITE){
+                // Create a pending block invitation for this user
+                openPendingInviteDialog(pair, hasName)
+            }
+            else{
+                // Show SMS message dialog for this user
+                var title = pair.first.displayName + getString(R.string.is_not_on_photoblocks)
+                if(!hasName) title = getString(R.string.this_person_is_not_on_photoblocks)
+                val d = CustomDialogMaker.makeYesNoDialog(
+                    this,
+                    title,
+                    getString(R.string.not_on_photoblocks_desc)
+                )
+                d.dialog.show()
+
+                d.noButton.setOnClickListener {
+                    d.dialog.dismiss()
+                }
+                d.yesButton.setOnClickListener {
+                    // Send an invitation SMS message to the contact
+                    val smsIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", pair.first.phoneNumber, null))
+                    smsIntent.putExtra("sms_body", getString(R.string.join_photoblocks_sms))
+                    startActivity(smsIntent)
+
+                    d.dialog.dismiss()
+                }
+            }
+
+        }
+    }
+
+    private fun openPendingInviteDialog(contact: Pair<ContactModel, User?>, hasName: Boolean) {
         // Show confirmation dialog
+        var title = contact.first.displayName + getString(R.string.is_not_on_photoblocks)
+        if(!hasName) title = getString(R.string.this_person_is_not_on_photoblocks)
         val d = CustomDialogMaker.makeYesNoDialog(
             this,
-            contact.first.displayName + getString(R.string.is_not_on_photoblocks),
+            title,
             getString(R.string.pending_invite_desc),
             false,
             false,
