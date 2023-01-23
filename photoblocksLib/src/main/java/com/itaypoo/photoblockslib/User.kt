@@ -11,7 +11,8 @@ class User(
     var name: String,
     var phoneNumber: String,
     var profilePhotoUrl: String,
-    var isPrivate: Boolean
+    var isPrivate: Boolean,
+    var bannerImageUrl: String?
 
 ) : Serializable, DBEntity(databaseId, creationTime) {
 
@@ -20,7 +21,8 @@ class User(
             "name" to name,
             "phoneNumber" to phoneNumber,
             "profilePhotoUrl" to profilePhotoUrl,
-            "isPrivate" to isPrivate
+            "isPrivate" to isPrivate,
+            "bannerImageUrl" to bannerImageUrl
         ) + super.toHashMap()
         res as HashMap<String, Any>
         return res

@@ -72,4 +72,7 @@
     <string name="unknown_number">unknown number</string>
     <string name="this_person_is_not_on_photoblocks">this person is not on photoblocks!</string>
     <string name="select_yourself">you cannot select yourself!</string>
+    <string name="remove_banner">remove banner image</string>
+    <string name="banner_updated">banner image updated.</string>
+    <string name="private_profile_desc">this profile is private.</string>
 </resources>

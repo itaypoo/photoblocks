@@ -246,6 +246,24 @@ class HomeScreenActivity : AppCompatActivity() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == RESULT_OK && data != null){
+            if(requestCode == Consts.RequestCode.CHOOSE_CONTACT_ACTIVITY){
+                // User to view has been chosen. Move to ViewUserActivity
+                val userToView = data.getSerializableExtra(Consts.Extras.CHOOSECONTACT_OUTPUT_USER) as User
+                val viewUserIntent = Intent(this, ViewUserActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable(Consts.Extras.PASSED_USER, userToView)
+                viewUserIntent.putExtras(bundle)
+                startActivity(viewUserIntent)
+            }
+        }
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
      fun loadBlocksJoined() {
         // Get all blocks that the current user is a member of
         database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()

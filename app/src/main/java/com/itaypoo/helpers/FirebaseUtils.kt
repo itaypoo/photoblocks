@@ -20,7 +20,8 @@ object FirebaseUtils {
                 Consts.Defaults.USER_NAME,
                 phoneNum,
                 Consts.Defaults.USER_PFP_URL,
-                Consts.Defaults.USER_PRIVACY_MODE
+                Consts.Defaults.USER_PRIVACY_MODE,
+                null
             )
         }
 
@@ -54,7 +55,8 @@ object FirebaseUtils {
                 doc.get("name") as String,
                 doc.get("phoneNumber") as String,
                 doc.get("profilePhotoUrl") as String,
-                doc.get("isPrivate") as Boolean
+                doc.get("isPrivate") as Boolean,
+                doc.get("bannerImageUrl") as String?
             )
 
             // If this user exists in contacts, replace its database name with its name in the contact list

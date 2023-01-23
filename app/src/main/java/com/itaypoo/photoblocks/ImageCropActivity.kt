@@ -22,10 +22,10 @@ class ImageCropActivity : AppCompatActivity() {
      --- Activity for selecting an image from gallery and cropping it ---
 
      INPUT EXTRAS: Crop ratio type (Consts.Extras.RATIO_XXX)
-
-     RATIO_NORMAL = usees the aspect ratio of the original image
-     RATIO_ONE_TO_ONE = crops at a 1:1 ratio - Square crop
-     RATIO_BLOCK_COVER = crops at the ratio of a Block cover image
+         RATIO_NORMAL = usees the aspect ratio of the original image
+         RATIO_ONE_TO_ONE = crops at a 1:1 ratio - Square crop
+         RATIO_BANNER = crops at the ratio of a user banner image
+         RATIO_BLOCK_COVER = crops at the ratio of a Block cover image
 
      OUTPUT EXTRAS: Cropped file name (String)
 
@@ -127,6 +127,9 @@ class ImageCropActivity : AppCompatActivity() {
         }
         else if(ratioType == Consts.Extras.RATIO_BLOCK_COVER){
             v = (0.45 * u).toInt()
+        }
+        else if(ratioType == Consts.Extras.RATIO_BANNER_IMAGE){
+            v = (0.54 * u).toInt()
         }
 
         // Calculate result base point based on scroll percentage

@@ -65,6 +65,7 @@ object Consts {
         const val RATIO_NORMAL = 0
         const val RATIO_ONE_TO_ONE = 1
         const val RATIO_BLOCK_COVER = 2
+        const val RATIO_BANNER_IMAGE = 3
 
         const val SIGNIN_TYPE = "signin_type"
 

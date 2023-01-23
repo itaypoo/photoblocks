@@ -91,7 +91,7 @@ class UserContactAdapter(private val userContactList: MutableList<Pair<ContactMo
         ObjectViewAnimator.fadeView(holder.itemView, 0.0F, 1.0F, 100, DecelerateInterpolator())
 
         // Invoke listener when view is clicked, pass the current photo pair
-        holder.cardView.setOnClickListener {
+        holder.itemView.setOnClickListener {
             onItemClickListener?.invoke(pair)
         }
 

@@ -192,7 +192,7 @@ class ViewBlockActivity : AppCompatActivity() {
             postCreatorList = mutableListOf()
 
             // Init recycler
-            val adapter = PostListAdapter(postCreatorList, this, database)
+            val adapter = PostListAdapter(postCreatorList, currentUserIsMember, this, database)
             binding.postRecycler.layoutManager = LinearLayoutManager(this)
             binding.postRecycler.adapter = adapter
 
@@ -520,10 +520,19 @@ class ViewBlockActivity : AppCompatActivity() {
                 else{
                     dialog.dismiss()
                     // If the current user is not an admin OR both selected and current are admins
+                    val itUser = it.second
                     val d = CustomDialogMaker.makeUserProfileDialog(
-                        this, it.second, false, false, getString(R.string.view_profile), getString(R.string.back_button))
+                        this, itUser, false, false, getString(R.string.view_profile), getString(R.string.back_button))
                     d.dialog.show()
                     d.noButton.setOnClickListener { d.dialog.dismiss() }
+                    d.yesButton.setOnClickListener {
+                        // Go to this users profile
+                        val viewUserIntent = Intent(this, ViewUserActivity::class.java)
+                        val bundle = Bundle()
+                        bundle.putSerializable(Consts.Extras.PASSED_USER, itUser)
+                        viewUserIntent.putExtras(bundle)
+                        startActivity(viewUserIntent)
+                    }
                 }
             }
         }

@@ -30,7 +30,7 @@ import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.BlockPost
 import com.itaypoo.photoblockslib.User
 
-class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, User>>, private val context: Context, val database: FirebaseFirestore) :
+class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, User>>, private val userIsMember: Boolean, private val context: Context, val database: FirebaseFirestore) :
     RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
 
     // Listener for item click
@@ -129,6 +129,12 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
             if(it.size() == 0) viewHolder.likeAmountText.visibility = View.GONE
             else if(it.size() == 1) viewHolder.likeAmountText.text = it.size().toString() + " " + context.getString(R.string.person_liked_this_post)
             else viewHolder.likeAmountText.text = it.size().toString() + " " + context.getString(R.string.people_liked_this_post)
+
+            if(!userIsMember){
+                viewHolder.likeButton.visibility = View.GONE
+                viewHolder.unlikeButton.visibility = View.GONE
+                return@addOnSuccessListener
+            }
 
             if(it.size() == 0){
                 // User has not liked this post

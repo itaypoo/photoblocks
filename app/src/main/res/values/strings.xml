@@ -28,7 +28,9 @@
     <string name="change_name">change name</string>
     <string name="dark_theme">dark theme</string>
     <string name="log_out">log out</string>
-    <string name="change_pfp">change photo</string>
+    <string name="change_photo">change photo</string>
+    <string name="change_pfp">change profile photo</string>
+    <string name="change_banner">change banner image</string>
     <string name="done">done</string>
     <string name="new_name">new name</string>
     <string name="name_changed_alert">user name changed successfully.</string>
