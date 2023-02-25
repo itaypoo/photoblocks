@@ -5,8 +5,6 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -25,7 +23,6 @@ import com.itaypoo.photoblocks.databinding.ActivityUploadPostBinding
 import com.itaypoo.photoblockslib.BlockPost
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 
 class UploadPostActivity : AppCompatActivity() {
@@ -187,7 +184,7 @@ class UploadPostActivity : AppCompatActivity() {
                         pair.second
                     )
                     // Upload the post
-                    database.collection(Consts.BDPath.blockPosts).add(post.toHashMap()).addOnFailureListener {
+                    database.collection(Consts.DBPath.blockPosts).add(post.toHashMap()).addOnFailureListener {
                         // Upload failed
                         if(it is FirebaseNetworkException){ Snackbar.make(binding.root, getString(R.string.generic_network_error), Snackbar.LENGTH_LONG).show() }
                         else Snackbar.make(binding.root, getString(R.string.generic_unknown_error), Snackbar.LENGTH_LONG).show()

@@ -60,7 +60,7 @@ class NotificationsActivity : AppCompatActivity() {
 
     private fun getNotifList() {
         notificationList = mutableListOf()
-        val q = database.collection(Consts.BDPath.userNotifications).whereEqualTo("recipientId", AppUtils.currentUser!!.databaseId!!).get()
+        val q = database.collection(Consts.DBPath.userNotifications).whereEqualTo("recipientId", AppUtils.currentUser!!.databaseId!!).get()
 
         q.addOnFailureListener {
         // Failed getting data.
@@ -146,7 +146,7 @@ class NotificationsActivity : AppCompatActivity() {
                 loadingD.dialog.show()
 
                 // First, delete this notification (to ensure no duplicate block members)
-                database.collection(Consts.BDPath.userNotifications).document(itNotification.databaseId!!).delete().addOnSuccessListener {
+                database.collection(Consts.DBPath.userNotifications).document(itNotification.databaseId!!).delete().addOnSuccessListener {
 
                     // Add the current user as a member to this block
                     val memberModel = BlockMember(
@@ -156,7 +156,7 @@ class NotificationsActivity : AppCompatActivity() {
                         AppUtils.currentUser!!.databaseId!!,
                         false
                     )
-                    database.collection(Consts.BDPath.blockMembers).add(memberModel.toHashMap()).addOnSuccessListener {
+                    database.collection(Consts.DBPath.blockMembers).add(memberModel.toHashMap()).addOnSuccessListener {
                         finish()
                     }
 
@@ -167,7 +167,7 @@ class NotificationsActivity : AppCompatActivity() {
                 d.dialog.dismiss()
                 val loadingD = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.doing_stuff))
                 loadingD.dialog.show()
-                database.collection(Consts.BDPath.userNotifications).document(itNotification.databaseId!!).delete().addOnSuccessListener {
+                database.collection(Consts.DBPath.userNotifications).document(itNotification.databaseId!!).delete().addOnSuccessListener {
                     loadingD.dialog.dismiss()
                     // Remove the invite client side
                     notificationList.remove(itNotification)
@@ -182,7 +182,7 @@ class NotificationsActivity : AppCompatActivity() {
 
     private fun removeNotif(position: Int, adapter: NotificationListAdapter){
         // Remove notif server side
-        database.collection(Consts.BDPath.userNotifications).document(notificationList[position].databaseId!!).delete().addOnSuccessListener {
+        database.collection(Consts.DBPath.userNotifications).document(notificationList[position].databaseId!!).delete().addOnSuccessListener {
             AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.notification_removed))
         }
         // Remove notif client side

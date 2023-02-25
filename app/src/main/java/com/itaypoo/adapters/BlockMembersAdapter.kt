@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.itaypoo.helpers.AppUtils
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.BlockMember
 import com.itaypoo.photoblockslib.User
@@ -19,18 +20,19 @@ class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMemb
 
     // Listener for item click
     var onItemClicked: ((Pair<BlockMember, User>) -> Unit)? = null
-    var onItemLongClicked: ((Pair<BlockMember, User>) -> Unit)? = null
 
     // Class for a viewHolder in the recyclerView
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameText: TextView
         val roleText: TextView
         val profilePicture: ImageView
+        val leaveIcon: ImageView
 
         init {
             nameText = view.findViewById(R.id.blockMemberItem_nameText)
             roleText = view.findViewById(R.id.blockMemberItem_roleText)
             profilePicture = view.findViewById(R.id.blockMemberItem_profilePicture)
+            leaveIcon = view.findViewById(R.id.blockMemberItem_leaveIcon)
         }
     }
 
@@ -53,14 +55,15 @@ class BlockMembersAdapter(private val memberUserList: MutableList<Pair<BlockMemb
         if(user?.databaseId == blockCreatorId){ viewHolder.roleText.text = context.getString(R.string.block_creator) }
         else{ viewHolder.roleText.text = context.getString(R.string.block_admin) }
 
+        if(user?.databaseId == AppUtils.currentUser?.databaseId) {
+            if(user?.databaseId != blockCreatorId) viewHolder.leaveIcon.visibility = View.VISIBLE
+        }
+        else { viewHolder.leaveIcon.visibility = View.GONE }
+
         Glide.with(context).load(user?.profilePhotoUrl).placeholder(R.drawable.default_profile_photo).into(viewHolder.profilePicture)
 
         viewHolder.itemView.setOnClickListener {
             onItemClicked?.invoke(Pair(member, user!!))
-        }
-        viewHolder.itemView.setOnLongClickListener {
-            onItemLongClicked?.invoke(Pair(member, user!!))
-            true
         }
 
     }

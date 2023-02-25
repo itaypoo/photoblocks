@@ -1,10 +1,7 @@
 package com.itaypoo.photoblocks
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.Animation
@@ -13,7 +10,6 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.itaypoo.helpers.AppUtils
@@ -48,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
         if(DEBUG_REMOVE_USER_ON_STARTUP){
             val editor = sharedPref.edit()
             editor.remove(Consts.SharedPrefs.SAVED_USER_ID_KEY)
-            editor.commit()
+            editor.apply()
         }
 
         // Check if user login is saved on device
@@ -57,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
         if(savedUserId != null){
             // Auto login saved user
             val database = Firebase.firestore
-            database.collection(Consts.BDPath.users).document(savedUserId).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(savedUserId).get().addOnSuccessListener {
                 // Getting user success
                 val user = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 AppUtils.currentUser = user
@@ -83,7 +79,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         // Start title text bounce anim
-        var bounceAnim = AnimationUtils.loadAnimation(this, R.anim.splash_screen_bounce)
+        val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.splash_screen_bounce)
         binding.titleText.startAnimation(bounceAnim)
 
         // Set animation end listener
@@ -106,5 +102,9 @@ class SplashActivity : AppCompatActivity() {
     private fun startNextActivity(){
         // Start next activity only if animations AND queries are done.
         if(queriesDone && animationDone) { startActivity(nextIntent) }
+    }
+
+    override fun onBackPressed() {
+        // Disable back button
     }
 }

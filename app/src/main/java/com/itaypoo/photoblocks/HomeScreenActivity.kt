@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.Fade
-import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.Toast
@@ -44,6 +43,8 @@ class HomeScreenActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
 
     private var notifAmount: Int = 0
+
+    var x: Int? = null
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +108,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 showKonfetti()
 
                 // Check if this user has any pending invites
-                database.collection(Consts.BDPath.pendingBlockInvitations).whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
+                database.collection(Consts.DBPath.pendingBlockInvitations).whereEqualTo("phoneNumber", AppUtils.currentUser!!.phoneNumber).get().addOnSuccessListener {
                     val pendingInviteList = mutableListOf<PendingBlockInvitation>()
                     for(doc in it){
                         val pInvite = FirebaseUtils.ObjectFromDoc.PendingBlockInvitation(doc)
@@ -235,12 +236,68 @@ class HomeScreenActivity : AppCompatActivity() {
             startActivityForResult(contactIntent, Consts.RequestCode.CHOOSE_CONTACT_ACTIVITY)
         }
         buttonJoinWithCode.setOnClickListener {
+            // enter code dialog
             menuDialog.dismiss()
+            val d = CustomDialogMaker.makeTextInputDialog(this, getString(R.string.enter_code), "xxxxxx")
+            d.dialog.show()
+            d.cancelButton.setOnClickListener { d.dialog.dismiss() }
+            d.doneButton.setOnClickListener {
+                val text = d.editText.text.toString()
+                if(text.isBlank()){
+                    d.setError(getString(R.string.no_code_entered))
+                }
+                else if(text.length != 6){
+                    d.setError(getString(R.string.invalid_code_length))
+                }
+                else{
+                    d.dialog.dismiss()
+                    joinBlockWithCode(text.uppercase())
+                }
+            }
         }
         buttonOptions.setOnClickListener {
             menuDialog.dismiss()
             val intent = Intent(this@HomeScreenActivity, UserSettingsActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun joinBlockWithCode(codeString: String){
+        // check if this code exists
+        val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.joining_block))
+        d.dialog.show()
+        database.collection(Consts.DBPath.blockInviteCodes).whereEqualTo("code", codeString).get().addOnSuccessListener {
+            if(it.isEmpty){
+                // this code does not exist
+                d.dialog.dismiss()
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.code_doesnt_exist))
+            }
+            else{
+                val codeModel = FirebaseUtils.ObjectFromDoc.BlockInviteCode(it.documents[0])
+                database.collection(Consts.DBPath.blocks).document(codeModel.blockId).get().addOnSuccessListener {
+                    // open a block view dialog
+                    val block = FirebaseUtils.ObjectFromDoc.Block(it)
+                    val d2 = CustomDialogMaker.makeBlockViewDialog(this, block, false, false, getString(R.string.join_block), getString(R.string.cancel))
+                    d2.dialog.show()
+                    d2.noButton.setOnClickListener { d2.dialog.dismiss() }
+
+                    d2.yesButton.setOnClickListener {
+                        // join the current user to this block
+                        d2.dialog.dismiss()
+                        val blockMember = BlockMember(null, Timestamp.now().toDate(), codeModel.blockId, AppUtils.currentUser!!.databaseId!!, false)
+                        database.collection(Consts.DBPath.blockMembers).add(blockMember.toHashMap()).addOnSuccessListener {
+                            d.dialog.dismiss()
+                            loadBlocksJoined()
+                            // go to viewBlockActivity
+                            val viewBlockIntent = Intent(this, ViewBlockActivity::class.java)
+                            val bundle = Bundle()
+                            bundle.putSerializable(Consts.Extras.PASSED_BLOCK, block)
+                            viewBlockIntent.putExtras(bundle)
+                            startActivity(viewBlockIntent)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -266,7 +323,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
      fun loadBlocksJoined() {
         // Get all blocks that the current user is a member of
-        database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
+        database.collection(Consts.DBPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).get()
         .addOnFailureListener {
 
             // Loading members list failed
@@ -293,7 +350,7 @@ class HomeScreenActivity : AppCompatActivity() {
         blockList = mutableListOf()
 
         // Load all blocks that were found to contain the user as a member
-        database.collection(Consts.BDPath.blocks).get().addOnFailureListener {
+        database.collection(Consts.DBPath.blocks).get().addOnFailureListener {
 
             // Loading blocks list failed
             if(it is FirebaseNetworkException)
@@ -323,7 +380,7 @@ class HomeScreenActivity : AppCompatActivity() {
     }
 
     private fun setUpBlockRecycler(blockList: MutableList<Block>){
-        val adapter = BlockListAdapter(blockList, this)
+        val adapter = BlockListAdapter(blockList, database, this)
         binding.blockRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.blockRecyclerView.adapter = adapter
 
@@ -351,7 +408,7 @@ class HomeScreenActivity : AppCompatActivity() {
             binding.notificationDotOutline.visibility = View.INVISIBLE
         }
 
-        val q =database.collection(Consts.BDPath.userNotifications).whereEqualTo("recipientId", AppUtils.currentUser?.databaseId).count()
+        val q =database.collection(Consts.DBPath.userNotifications).whereEqualTo("recipientId", AppUtils.currentUser?.databaseId).count()
         q.get(AggregateSource.SERVER).addOnSuccessListener {
             notifAmount = it.count.toInt()
             if(notifAmount > 0) {
@@ -374,7 +431,7 @@ class HomeScreenActivity : AppCompatActivity() {
         for(i in 0 until pendingInviteList.size){
             // First, delete this pending invite
             val pInvite = pendingInviteList[i]
-            database.collection(Consts.BDPath.pendingBlockInvitations).document(pInvite.databaseId!!).delete().addOnSuccessListener {
+            database.collection(Consts.DBPath.pendingBlockInvitations).document(pInvite.databaseId!!).delete().addOnSuccessListener {
                 // Now, upload a real invite
                 val inviteNotif = Notification(
                     null,
@@ -384,7 +441,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     NotificationType.BLOCK_INVITATION,
                     pInvite.blockId
                 )
-                database.collection(Consts.BDPath.userNotifications).add(inviteNotif.toHashMap()).addOnSuccessListener {
+                database.collection(Consts.DBPath.userNotifications).add(inviteNotif.toHashMap()).addOnSuccessListener {
                     // This pending invite is complete!
                     tasksDoneList[i] = true
 
@@ -432,6 +489,10 @@ class HomeScreenActivity : AppCompatActivity() {
         list.reverse()
         return list
 
+    }
+
+    override fun onBackPressed() {
+        // Disable back button
     }
 
 }

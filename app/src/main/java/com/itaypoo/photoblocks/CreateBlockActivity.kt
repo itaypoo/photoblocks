@@ -173,12 +173,12 @@ class CreateBlockActivity : AppCompatActivity() {
                 val photoId : String = data.getStringExtra(Consts.Extras.CURATED_OUTPUT_DATABASEID)!!
 
                 // Get the photo from database and its bitmap
-                database.collection(Consts.BDPath.curatedPhotos).document(photoId).get().addOnSuccessListener {
+                database.collection(Consts.DBPath.curatedPhotos).document(photoId).get().addOnSuccessListener {
                     val photoUrl = it.get("photoUrl") as String
                     newBlock.coverImageUrl = photoUrl
                     // Change photos downloaded times in database
                     val newDownloads: Long = (it.get("downloads") as Long) + 1
-                    database.collection(Consts.BDPath.curatedPhotos).document(photoId).update("downloads", newDownloads)
+                    database.collection(Consts.DBPath.curatedPhotos).document(photoId).update("downloads", newDownloads)
 
                     // Get photo bitmap
                     Glide.with(this@CreateBlockActivity).asBitmap().load(photoUrl).into(object: CustomTarget<Bitmap>(){
@@ -374,7 +374,7 @@ class CreateBlockActivity : AppCompatActivity() {
 
     private fun uploadBlock(){
         // Block is ready for upload it, lets do it!
-        database.collection(Consts.BDPath.blocks).add(newBlock.toHashMap()).addOnFailureListener {
+        database.collection(Consts.DBPath.blocks).add(newBlock.toHashMap()).addOnFailureListener {
             // Block failed uploading
             if(it is FirebaseNetworkException){
                 Snackbar.make(this, binding.root, getString(R.string.block_upload_failed_no_connection), Snackbar.LENGTH_SHORT).show()
@@ -394,7 +394,7 @@ class CreateBlockActivity : AppCompatActivity() {
                 AppUtils.currentUser!!.databaseId!!,
                 true
             )
-            database.collection(Consts.BDPath.blockMembers).add(memberModel.toHashMap()).addOnSuccessListener {
+            database.collection(Consts.DBPath.blockMembers).add(memberModel.toHashMap()).addOnSuccessListener {
                 // The current user was added as a member. Now, add the chosen members from the list
                 newBlock.databaseId = blockId
                 inviteUserBlockMembers(blockId)
@@ -409,7 +409,7 @@ class CreateBlockActivity : AppCompatActivity() {
         val taskCount = membersList.size
         var tasksDone = 0
 
-        val collection = database.collection(Consts.BDPath.userNotifications)
+        val collection = database.collection(Consts.DBPath.userNotifications)
 
         for(member in membersList){
             val newNotif = Notification(
@@ -438,7 +438,7 @@ class CreateBlockActivity : AppCompatActivity() {
         val taskCount = pendingMembersList.size
         var tasksDone = 0
 
-        val collection = database.collection(Consts.BDPath.pendingBlockInvitations)
+        val collection = database.collection(Consts.DBPath.pendingBlockInvitations)
 
         for(contact in pendingMembersList){
             val pInvite = PendingBlockInvitation(

@@ -35,8 +35,8 @@ object ContactsUtils {
     }
 
     @SuppressLint("Range")
-    fun getList(resolver: ContentResolver): MutableList<ContactModel>{
-        if(contactList != null) return contactList!!
+    fun getList(resolver: ContentResolver): MutableList<ContactModel> {
+        if (contactList != null) return contactList!!
         // If contact list was not yet generated
         contactList = mutableListOf()
 
@@ -46,21 +46,23 @@ object ContactsUtils {
             arrayOf(
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
-                ), null, null,
+            ), null, null,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
-            )
+        )
 
         // Loop trough all the contacts in the cursor and generate a
         // ContactModel for each contact
-        while(cursor!!.moveToNext()){
-            val contactName = cursor.getString( cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME) )
-            val contactNumber = cursor.getString( cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER) )
+        while (cursor!!.moveToNext()) {
+            val contactName =
+                cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+            val contactNumber =
+                cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
 
             val validatedNum = validatedPhoneNumber(contactNumber)
-            if(validatedNum != null && validatedNum != AppUtils.currentUser?.phoneNumber){
+            if (validatedNum != null && validatedNum != AppUtils.currentUser?.phoneNumber) {
                 // Phone number is valid
                 val model = ContactModel(contactName, validatedNum)
-                if(!contactList!!.contains(model)){
+                if (!contactList!!.contains(model)) {
                     // Add to list if it doesn't contain this contact
                     contactList!!.add(model)
                 }

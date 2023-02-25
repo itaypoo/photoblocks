@@ -10,9 +10,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
-import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.CustomDialogMaker
 import com.itaypoo.helpers.FirebaseUtils
@@ -111,7 +108,7 @@ class DeleteBlockActivity : AppCompatActivity() {
             Toast.makeText(this, "deletion complete", Toast.LENGTH_SHORT).show()
 
             // Now all steps are complete - delete the block itself
-            database.collection(Consts.BDPath.blocks).document(block.databaseId!!).delete().addOnSuccessListener {
+            database.collection(Consts.DBPath.blocks).document(block.databaseId!!).delete().addOnSuccessListener {
                 loadingDialog.dialog.dismiss()
                 startActivity(Intent(this, HomeScreenActivity::class.java))
             }
@@ -122,7 +119,7 @@ class DeleteBlockActivity : AppCompatActivity() {
 
     private fun getAllPosts() {  // Step 1
         queriesStarted += 1
-        database.collection(Consts.BDPath.blockPosts).whereEqualTo("blockId", block.databaseId).get()
+        database.collection(Consts.DBPath.blockPosts).whereEqualTo("blockId", block.databaseId).get()
             .addOnSuccessListener {
                 val postsList = mutableListOf<BlockPost>()
                 for (doc in it) {
@@ -143,7 +140,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     }
 
     private fun deletePostLikeNotif(post: BlockPost) {  // Step 1a
-        database.collection(Consts.BDPath.userNotifications).whereEqualTo("content", post.databaseId).get()
+        database.collection(Consts.DBPath.userNotifications).whereEqualTo("content", post.databaseId).get()
             .addOnSuccessListener {
                 val notifIdList = mutableListOf<String>()
                 for (doc in it) {
@@ -155,7 +152,7 @@ class DeleteBlockActivity : AppCompatActivity() {
                     queryCompleted()
                 }
                 for (notifId in notifIdList) {
-                    database.collection(Consts.BDPath.userNotifications).document(notifId).delete()
+                    database.collection(Consts.DBPath.userNotifications).document(notifId).delete()
                         .addOnSuccessListener {
                             Log.d(tag, "Deleted post like notification (ID $notifId)")
                             notifIdList.remove(notifId)
@@ -170,7 +167,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     }
 
     private fun deletePostLikes(post: BlockPost) {  // Step 1b
-        database.collection(Consts.BDPath.postLikes).whereEqualTo("postId", post.databaseId).get()
+        database.collection(Consts.DBPath.postLikes).whereEqualTo("postId", post.databaseId).get()
             .addOnSuccessListener {
                 val likesIdList = mutableListOf<String>()
                 for (doc in it) {
@@ -182,7 +179,7 @@ class DeleteBlockActivity : AppCompatActivity() {
                     queryCompleted()
                 }
                 for (likeId in likesIdList) {
-                    database.collection(Consts.BDPath.postLikes).document(likeId).delete()
+                    database.collection(Consts.DBPath.postLikes).document(likeId).delete()
                         .addOnSuccessListener {
                             Log.d(tag, "Delteed post like (ID $likeId)")
                             likesIdList.remove(likeId)
@@ -206,7 +203,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     }
 
     private fun deletePost(post: BlockPost) { // Step 1d
-        database.collection(Consts.BDPath.blockPosts).document(post.databaseId!!).delete()
+        database.collection(Consts.DBPath.blockPosts).document(post.databaseId!!).delete()
             .addOnSuccessListener {
                 // Post deleted
                 Log.d(tag, "Deleted post (ID ${post.databaseId})")
@@ -218,7 +215,7 @@ class DeleteBlockActivity : AppCompatActivity() {
 
     private fun getAllComments() { // Step 2
         queriesStarted += 1
-        database.collection(Consts.BDPath.blockComments).whereEqualTo("blockId", block.databaseId).get()
+        database.collection(Consts.DBPath.blockComments).whereEqualTo("blockId", block.databaseId).get()
             .addOnSuccessListener {
                 val commentsList = mutableListOf<BlockComment>()
                 for (doc in it) {
@@ -237,7 +234,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     }
 
     private fun deleteCommentNotif(comment: BlockComment) {  // Step 2a
-        database.collection(Consts.BDPath.userNotifications).whereEqualTo("content", comment.databaseId).get()
+        database.collection(Consts.DBPath.userNotifications).whereEqualTo("content", comment.databaseId).get()
             .addOnSuccessListener {
                 val notifIdList = mutableListOf<String>()
                 for (doc in it) {
@@ -249,7 +246,7 @@ class DeleteBlockActivity : AppCompatActivity() {
                     queryCompleted()
                 }
                 for (notifId in notifIdList) {
-                    database.collection(Consts.BDPath.userNotifications).document(notifId).delete()
+                    database.collection(Consts.DBPath.userNotifications).document(notifId).delete()
                         .addOnSuccessListener {
                             Log.d(tag, "Deleted block comment notification (ID $notifId)")
                             notifIdList.remove(notifId)
@@ -264,7 +261,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     }
 
     private fun deleteComment(comment: BlockComment) {  // Step 2b
-        database.collection(Consts.BDPath.blockComments).document(comment.databaseId!!).delete()
+        database.collection(Consts.DBPath.blockComments).document(comment.databaseId!!).delete()
             .addOnSuccessListener {
                 // Comment deleted
                 Log.d(tag, "Deleted comment (ID ${comment.databaseId})")
@@ -276,7 +273,7 @@ class DeleteBlockActivity : AppCompatActivity() {
 
     private fun deleteBlockInvitations() {
         queriesStarted += 1
-        database.collection(Consts.BDPath.userNotifications)
+        database.collection(Consts.DBPath.userNotifications)
             .whereEqualTo("type", NotificationType.BLOCK_INVITATION)
             .whereEqualTo("content", block.databaseId).get().addOnSuccessListener {
             val notifIdList = mutableListOf<String>()
@@ -289,7 +286,7 @@ class DeleteBlockActivity : AppCompatActivity() {
                 queryCompleted()
             }
             for(notifId in notifIdList) {
-                database.collection(Consts.BDPath.userNotifications).document(notifId).delete()
+                database.collection(Consts.DBPath.userNotifications).document(notifId).delete()
                     .addOnSuccessListener {
                         Log.d(tag, "Deleted block invitation notification (ID $notifId)")
                         notifIdList.remove(notifId)
@@ -304,7 +301,7 @@ class DeleteBlockActivity : AppCompatActivity() {
 
     private fun deletePendingInvitations() {
         queriesStarted += 1
-        database.collection(Consts.BDPath.pendingBlockInvitations).whereEqualTo("blockId", block.databaseId).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.pendingBlockInvitations).whereEqualTo("blockId", block.databaseId).get().addOnSuccessListener {
             val inviteIdList = mutableListOf<String>()
             for (doc in it) {
                 inviteIdList.add(doc.id)
@@ -315,7 +312,7 @@ class DeleteBlockActivity : AppCompatActivity() {
                 queryCompleted()
             }
             for(inviteId in inviteIdList) {
-                database.collection(Consts.BDPath.pendingBlockInvitations).document(inviteId).delete()
+                database.collection(Consts.DBPath.pendingBlockInvitations).document(inviteId).delete()
                     .addOnSuccessListener {
                         Log.d(tag, "Deleted pending block invitation (ID $inviteId)")
                         inviteIdList.remove(inviteId)
@@ -330,14 +327,14 @@ class DeleteBlockActivity : AppCompatActivity() {
 
     private fun deleteBlockMembers() {
         queriesStarted += 1
-        database.collection(Consts.BDPath.blockMembers).whereEqualTo("blockId", block.databaseId).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockMembers).whereEqualTo("blockId", block.databaseId).get().addOnSuccessListener {
             val memberIdList = mutableListOf<String>()
             for(doc in it){
                 memberIdList.add(doc.id)
             }
 
             for(memberId in memberIdList){
-                database.collection(Consts.BDPath.blockMembers).document(memberId).delete().addOnSuccessListener {
+                database.collection(Consts.DBPath.blockMembers).document(memberId).delete().addOnSuccessListener {
                     Log.d(tag, "Deleted block member (ID $memberId)")
                     memberIdList.remove(memberId)
                     if(memberIdList.size == 0) {
@@ -352,7 +349,7 @@ class DeleteBlockActivity : AppCompatActivity() {
     private fun deleteCoverImage(){
         // Get all curated photos, to check if the cover image is not one of them.
         queriesStarted += 1
-        database.collection(Consts.BDPath.curatedPhotos).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.curatedPhotos).get().addOnSuccessListener {
             val curatedPhotosList = mutableListOf<String>()
             for(doc in it){
                 curatedPhotosList.add(doc.get("photoUrl") as String)

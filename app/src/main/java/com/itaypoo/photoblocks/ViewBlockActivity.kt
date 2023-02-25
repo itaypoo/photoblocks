@@ -1,24 +1,40 @@
 package com.itaypoo.photoblocks
 
 import android.animation.TimeInterpolator
+import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.*
+import android.graphics.Paint.Align
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.FutureTarget
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,6 +46,9 @@ import com.itaypoo.adapters.PostListAdapter
 import com.itaypoo.helpers.*
 import com.itaypoo.photoblocks.databinding.ActivityViewBlockBinding
 import com.itaypoo.photoblockslib.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
+import java.util.*
 
 
 class ViewBlockActivity : AppCompatActivity() {
@@ -87,6 +106,17 @@ class ViewBlockActivity : AppCompatActivity() {
                 startActivity(postIntent)
             }
             else Snackbar.make(binding.root, getString(R.string.not_block_member), Snackbar.LENGTH_SHORT).show()
+        }
+
+        binding.viewCollageButton.visibility = if(currentBlock.collageEnabled) { View.VISIBLE } else { View.GONE }
+        binding.viewCollageButton.setOnClickListener {
+            val collageIntent = Intent(this, BlockCollageActivity::class.java)
+            val bundle = Bundle()
+
+            bundle.putSerializable(Consts.Extras.PASSED_BLOCK, currentBlock)
+            collageIntent.putExtras(bundle)
+
+            startActivity(collageIntent)
         }
 
         binding.postRecycler.setOnScrollChangeListener { view, i, i2, i3, dy ->
@@ -149,7 +179,11 @@ class ViewBlockActivity : AppCompatActivity() {
             }
             else if(it.itemId == R.id.blockMenuItem_collage){
                 // Collage settings item clicked
-                Toast.makeText(this, "Todo", Toast.LENGTH_SHORT).show()
+                openCollageSettingsDialog()
+            }
+            else if(it.itemId == R.id.blockMenuItem_inviteCode){
+                // Invite via code item clicked
+                checkInviteCodeStatus()
             }
             else if(it.itemId == R.id.blockMenuItem_delete){
                 // Delete block item clicked
@@ -188,7 +222,7 @@ class ViewBlockActivity : AppCompatActivity() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
     private fun loadBlockPosts(){
-        database.collection(Consts.BDPath.blockPosts).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockPosts).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
             postCreatorList = mutableListOf()
 
             // Init recycler
@@ -200,7 +234,7 @@ class ViewBlockActivity : AppCompatActivity() {
             for(doc in it){
                 val post = FirebaseUtils.ObjectFromDoc.BlockPost(doc)
                 // Get the creator of this post
-                database.collection(Consts.BDPath.users).document(post.creatorId).get().addOnSuccessListener {
+                database.collection(Consts.DBPath.users).document(post.creatorId).get().addOnSuccessListener {
                     val creator = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                     postCreatorList.add(Pair(post, creator))
 
@@ -222,20 +256,20 @@ class ViewBlockActivity : AppCompatActivity() {
                     null, Timestamp.now().toDate(),
                     AppUtils.currentUser!!.databaseId!!, post.databaseId!!)
 
-                database.collection(Consts.BDPath.postLikes).add(newLike.toHashMap())
+                database.collection(Consts.DBPath.postLikes).add(newLike.toHashMap())
 
                 // Upload a post like notif
                 val likeNotif = Notification(null, Timestamp.now().toDate(),
                 post.creatorId, AppUtils.currentUser!!.databaseId!!, NotificationType.POST_LIKE, post.databaseId!!)
 
-                database.collection(Consts.BDPath.userNotifications).add(likeNotif.toHashMap())
+                database.collection(Consts.DBPath.userNotifications).add(likeNotif.toHashMap())
             }
             adapter.onUnlikeButtonClicked = { post: BlockPost, creator: User ->
                 // Delete all likes for this post (by this user)
-                val q = database.collection(Consts.BDPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
+                val q = database.collection(Consts.DBPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
                 q.whereEqualTo("postId", post.databaseId!!).get().addOnSuccessListener {
                     for(doc in it){
-                        database.collection(Consts.BDPath.postLikes).document(doc.id).delete()
+                        database.collection(Consts.DBPath.postLikes).document(doc.id).delete()
                     }
                 }
             }
@@ -245,13 +279,13 @@ class ViewBlockActivity : AppCompatActivity() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private fun loadCommentsList(){
-        database.collection(Consts.BDPath.blockComments).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockComments).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
             // add all comments to the list
             for(doc in it){
                 val comment = FirebaseUtils.ObjectFromDoc.BlockComment(doc)
                 // load the comments user
 
-                database.collection(Consts.BDPath.users).document(comment.authorId).get().addOnSuccessListener {
+                database.collection(Consts.DBPath.users).document(comment.authorId).get().addOnSuccessListener {
                     val author = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                     commentsList.add(Pair(comment, author))
 
@@ -264,7 +298,7 @@ class ViewBlockActivity : AppCompatActivity() {
     }
 
     private fun loadMembersList(){
-        database.collection(Consts.BDPath.blockMembers).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockMembers).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
             val memberList = mutableListOf<BlockMember>()
             for(doc in it){
                 val member = FirebaseUtils.ObjectFromDoc.BlockMember(doc)
@@ -286,7 +320,7 @@ class ViewBlockActivity : AppCompatActivity() {
         var queriesComplete = 0
 
         for(member in memberList){
-            database.collection(Consts.BDPath.users).document(member.memberId).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(member.memberId).get().addOnSuccessListener {
                 val user = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 memberUserList.add(Pair(member, user))
                 queriesComplete += 1
@@ -324,6 +358,7 @@ class ViewBlockActivity : AppCompatActivity() {
         binding.titleTextSmall.setTextColor( bgInvertedColor )
 
         binding.uploadPostFAB.backgroundTintList = ColorStateList.valueOf( btnColor )
+        binding.viewCollageButton.backgroundTintList = ColorStateList.valueOf( btnColor )
 
     }
 
@@ -444,7 +479,7 @@ class ViewBlockActivity : AppCompatActivity() {
             currentBlock.databaseId!!,
             commentText,
         )
-        database.collection(Consts.BDPath.blockComments).add(commentModel.toHashMap()).addOnFailureListener {
+        database.collection(Consts.DBPath.blockComments).add(commentModel.toHashMap()).addOnFailureListener {
             if(it is FirebaseNetworkException){
                 Snackbar.make(binding.root, getString(R.string.uploading_comment_failed_network), Snackbar.LENGTH_SHORT).show()
             }
@@ -465,7 +500,7 @@ class ViewBlockActivity : AppCompatActivity() {
             val notif = Notification(null, Timestamp.now().toDate(),
                 currentBlock.creatorId, AppUtils.currentUser!!.databaseId!!,
                 NotificationType.BLOCK_COMMENT, commentModel.databaseId!!)
-            database.collection(Consts.BDPath.userNotifications).add(notif.toHashMap())
+            database.collection(Consts.DBPath.userNotifications).add(notif.toHashMap())
         }
 
 
@@ -506,6 +541,7 @@ class ViewBlockActivity : AppCompatActivity() {
         dialog.show()
 
         adapter.onItemClicked = {
+            val pair = it
             if(it.first.memberId != AppUtils.currentUser?.databaseId){
                 if(currentUserIsAdmin && !it.first.isAdmin){
                     dialog.dismiss()
@@ -532,6 +568,24 @@ class ViewBlockActivity : AppCompatActivity() {
                         bundle.putSerializable(Consts.Extras.PASSED_USER, itUser)
                         viewUserIntent.putExtras(bundle)
                         startActivity(viewUserIntent)
+                    }
+                }
+            }
+            else{
+                if(currentBlock.creatorId != AppUtils.currentUser?.databaseId) { // blocks creators cannot leave
+                    // user clicked on themself
+                    val d = CustomDialogMaker.makeYesNoDialog(this, getString(R.string.leave_block_title), getString(R.string.leave_block_desc))
+                    d.dialog.show()
+                    d.noButton.setOnClickListener { d.dialog.dismiss() }
+                    d.yesButton.setOnClickListener {
+                        // leave this block
+                        d.dialog.dismiss()
+                        val d2 = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.leaving))
+                        d2.dialog.show()
+                        database.collection(Consts.DBPath.blockMembers).document(pair.first.databaseId!!).delete().addOnSuccessListener {
+                            d2.dialog.dismiss()
+                            startActivity(Intent(this, HomeScreenActivity::class.java))
+                        }
                     }
                 }
             }
@@ -579,7 +633,7 @@ class ViewBlockActivity : AppCompatActivity() {
         val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.removing_member))
         d.dialog.show()
         // Remove at server side
-        database.collection(Consts.BDPath.blockMembers).document(member.databaseId!!).delete().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockMembers).document(member.databaseId!!).delete().addOnSuccessListener {
             d.dialog.dismiss()
             openMembersBottomSheetDialog()
         }
@@ -594,7 +648,7 @@ class ViewBlockActivity : AppCompatActivity() {
         val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.doing_stuff))
         d.dialog.show()
         // Server side
-        database.collection(Consts.BDPath.blockMembers).document(member.databaseId!!).update("isAdmin", !member.isAdmin).addOnSuccessListener {
+        database.collection(Consts.DBPath.blockMembers).document(member.databaseId!!).update("isAdmin", !member.isAdmin).addOnSuccessListener {
             d.dialog.dismiss()
             openMembersBottomSheetDialog()
         }
@@ -602,6 +656,261 @@ class ViewBlockActivity : AppCompatActivity() {
         for(pair in memberUserList){
             if(pair.first == member) pair.first.isAdmin = !pair.first.isAdmin
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun checkInviteCodeStatus(){
+        // first, check if there is an active code
+        database.collection(Consts.DBPath.blockInviteCodes).whereEqualTo("blockId", currentBlock.databaseId).get().addOnSuccessListener {
+            if (it.isEmpty){
+                // no active code
+                openNoCodeDialog()
+            }
+            else{
+                // there is an active code
+                val code = FirebaseUtils.ObjectFromDoc.BlockInviteCode(it.first())
+                openActiveCodeDialog(code)
+            }
+        }
+    }
+
+    private data class CodeDialog(val diloag: Dialog, val titleText: TextView, val descriptionText: TextView, val codeText: TextView, val copyButton: ImageView, val yesButton: Button, val noButton: Button)
+    private fun createCodeDialog(): CodeDialog {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_block_join_code)
+
+        // Set dialog window width, height, background and position
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setGravity(Gravity.CENTER)
+
+        // get views
+        val titleText = dialog.findViewById<TextView>(R.id.codeDialog_title)
+        val descriptionText = dialog.findViewById<TextView>(R.id.codeDialog_description)
+        val codeText = dialog.findViewById<TextView>(R.id.codeDialog_codeText)
+        val copyButton = dialog.findViewById<ImageView>(R.id.codeDialog_copyButton)
+        val yesButton = dialog.findViewById<Button>(R.id.codeDialog_yesButton)
+        val noButton = dialog.findViewById<Button>(R.id.codeDialog_noButton)
+
+        return CodeDialog(dialog, titleText, descriptionText, codeText, copyButton, yesButton, noButton)
+    }
+
+    private fun openNoCodeDialog(){
+        // init dialog
+        val d = createCodeDialog()
+        d.titleText.text = getString(R.string.no_active_code)
+        d.descriptionText.text = getString(R.string.no_active_code_desc)
+        d.codeText.text = "xxxxxx"
+        d.yesButton.text = getString(R.string.create_code)
+        d.noButton.text = getString(R.string.back_button)
+        d.copyButton.visibility = View.INVISIBLE
+
+        d.diloag.show()
+
+        d.noButton.setOnClickListener { d.diloag.dismiss() }
+
+        d.yesButton.setOnClickListener {
+            d.diloag.dismiss()
+            createJoinCode()
+        }
+    }
+
+    private fun createJoinCode(){
+        val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.generating_code))
+        d.dialog.show()
+        // create a join code for this block
+        val codeString = UUID.randomUUID().toString().take(6).uppercase()
+        database.collection(Consts.DBPath.blockInviteCodes).whereEqualTo("code", codeString).count().get(AggregateSource.SERVER).addOnSuccessListener {
+            if(it.count > 0){
+                // this code is already in use
+                createJoinCode()
+                d.dialog.dismiss()
+                return@addOnSuccessListener
+            }
+            else{
+                // there is no BlockInviteCode with this code. we can use it
+                val codeModel = BlockInviteCode(null, Timestamp.now().toDate(), currentBlock.databaseId!!, codeString)
+                database.collection(Consts.DBPath.blockInviteCodes).add(codeModel.toHashMap()).addOnSuccessListener {
+                    // code creation complete
+                    AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.code_created))
+                    d.dialog.dismiss()
+                }
+            }
+        }
+    }
+
+    private fun openActiveCodeDialog(code: BlockInviteCode){
+        // init dialog
+        val d = createCodeDialog()
+        d.titleText.text = getString(R.string.active_code)
+        d.descriptionText.text = getString(R.string.active_code_desc)
+        d.codeText.text = code.code
+        d.yesButton.text = getString(R.string.share_code)
+        d.noButton.text = getString(R.string.deactivate)
+
+        d.diloag.show()
+
+        d.copyButton.setOnClickListener {
+            // copy the code
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("block invite code", code.code)
+            clipboard.setPrimaryClip(clip)
+            // Only show a toast for android 12 or lower.
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
+                Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
+        }
+
+        d.yesButton.setOnClickListener {
+            makeShareCodeImage(code) {
+                // On image generated
+
+                val bitmapPath: String = MediaStore.Images.Media.insertImage(contentResolver, it, "title", null);
+                val bitmapUri: Uri = Uri.parse(bitmapPath);
+                val msgText = buildString {
+                    append(getString(R.string.join_code_msg))
+                    append("\n\n")
+                    append(currentBlock.title)
+                    append("\n")
+                    append(code.code)
+                }
+
+                intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "image/png"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    putExtra(Intent.EXTRA_STREAM, bitmapUri)
+                    putExtra(Intent.EXTRA_TEXT, msgText)
+                }
+                startActivity(Intent.createChooser(shareIntent, "Share"))
+            }
+        }
+
+        d.noButton.setOnClickListener {
+            // Delete active join code
+            d.diloag.dismiss()
+            database.collection(Consts.DBPath.blockInviteCodes).document(code.databaseId!!).delete().addOnSuccessListener {
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.code_deactivated))
+            }
+        }
+    }
+
+    fun makeShareCodeImage(code: BlockInviteCode, onImageComplete: ((Bitmap) -> Unit?)) {
+        // Launching into coroutine scope.
+        GlobalScope.launch(Dispatchers.IO) {
+            // Get block cover image Url
+            val blockDoc = database.collection(Consts.DBPath.blocks).document(code.blockId).get().await()
+            val block = FirebaseUtils.ObjectFromDoc.Block(blockDoc)
+
+            // Load cover image as bitmap
+            val WIDTH = 700
+            val HEIGHT = (700*0.35).toInt()
+            val futureBitmap: FutureTarget<Bitmap> = Glide.with(this@ViewBlockActivity).asBitmap().override(WIDTH, HEIGHT).centerCrop().load(block.coverImageUrl).submit()
+            val coverBitmap = futureBitmap.get()
+
+            // Create color bitmap
+            val colorRect = Rect(0, 0, WIDTH, HEIGHT)
+            val colorBitmap = Bitmap.createBitmap(colorRect.width(), colorRect.height(), Bitmap.Config.ARGB_8888)
+            val colorCanvas = Canvas(colorBitmap)
+            val blockSecondary = Color.valueOf(block.secondaryColor.toInt())
+            val colorInt = Color.argb(0.5f, blockSecondary.red(), blockSecondary.green(), blockSecondary.blue())
+            val colorPaint = Paint()
+            colorPaint.setColor(colorInt)
+            colorCanvas.drawRect(colorRect, colorPaint)
+
+            // Overlay color bitmap and cover bitmap
+            val overlayBitmap = Bitmap.createBitmap(WIDTH, HEIGHT, coverBitmap.config);
+            val overlayCanvas = Canvas(overlayBitmap);
+            overlayCanvas.drawBitmap(coverBitmap, 0f, 0f, null);
+            overlayCanvas.drawBitmap(colorBitmap, 0f, 0f, null);
+
+            // Draw "photoblocks" text
+            val appnameCanvas = Canvas(overlayBitmap)
+            val appnamePaint = TextPaint().apply {
+                typeface = ResourcesCompat.getFont(this@ViewBlockActivity, R.font.shrikhand)
+                flags = Paint.ANTI_ALIAS_FLAG
+                textAlign = Align.CENTER
+                color = Color.WHITE
+                textSize = 40f
+            }
+            val appnameStaticLayout = StaticLayout( "photoblocks", appnamePaint,
+                overlayBitmap.width, Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true
+            )
+            val appnameY = ((appnameCanvas.height - appnameStaticLayout.height) / 2).toFloat() + 70
+            val appnameX = (appnameCanvas.width / 2).toFloat()
+            appnameCanvas.translate(appnameX, appnameY)
+            appnameStaticLayout.draw(appnameCanvas)
+
+            // Draw code text
+            val codeCanvas = Canvas(overlayBitmap)
+            val codePaint = TextPaint().apply {
+                typeface = ResourcesCompat.getFont(this@ViewBlockActivity, R.font.manrope_medium)
+                isFakeBoldText = true
+                flags = Paint.ANTI_ALIAS_FLAG
+                textAlign = Align.CENTER
+                color = Color.WHITE
+                textSize = 110f
+            }
+            val codeStaticLayout = StaticLayout( code.code, codePaint,
+                overlayBitmap.width, Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true
+            )
+            val codeY = ((codeCanvas.height - codeStaticLayout.height) / 2).toFloat() - 30
+            val codeX = (codeCanvas.width / 2).toFloat()
+            codeCanvas.translate(codeX, codeY)
+            codeStaticLayout.draw(codeCanvas)
+
+            withContext(Dispatchers.Main){
+                onImageComplete.invoke(overlayBitmap)
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private fun openCollageSettingsDialog() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_collage_settings)
+
+        // Set dialog window width, height, background and position
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setGravity(Gravity.CENTER)
+
+        // Get views
+        val enabledSwitch = dialog.findViewById<TextView>(R.id.dialogCollage_enabledSwitch)
+        val timeEditText = dialog.findViewById<TextView>(R.id.dialogCollage_timeInput)
+        val saveButton = dialog.findViewById<TextView>(R.id.dialogCollage_saveButton)
+        val cancelButton = dialog.findViewById<TextView>(R.id.dialogCollage_cancelButton)
+
+        // Set current values
+        enabledSwitch.isEnabled = currentBlock.collageEnabled
+        timeEditText.text = (currentBlock.collageImageTime / 1000).toString()
+
+        // Set listeners
+        cancelButton.setOnClickListener{
+            dialog.dismiss()
+        }
+        saveButton.setOnClickListener {
+            dialog.dismiss()
+            val isEnabled = enabledSwitch.isEnabled
+            val time = timeEditText.text.toString().toFloat() * 1000
+            // Show loading dialog and update block
+            val d = CustomDialogMaker.makeLoadingDialog(this, getString(R.string.doing_stuff))
+            d.dialog.show()
+            database.collection(Consts.DBPath.blocks).document(currentBlock.databaseId!!).update("collageEnabled", isEnabled, "collageImageTime", time).addOnSuccessListener {
+                d.dialog.dismiss()
+                AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.done))
+            }
+        }
+
+        dialog.show()
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -638,7 +947,7 @@ class ViewBlockActivity : AppCompatActivity() {
                     NotificationType.BLOCK_INVITATION,    // Notif type
                     currentBlock.databaseId!!             // Notif content - Block ID
                 )
-                database.collection(Consts.BDPath.userNotifications).add(inviteNotif).addOnSuccessListener {
+                database.collection(Consts.DBPath.userNotifications).add(inviteNotif).addOnSuccessListener {
                     d.dialog.dismiss()
                 }
             }

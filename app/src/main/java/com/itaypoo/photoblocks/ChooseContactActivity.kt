@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -133,7 +132,7 @@ class ChooseContactActivity : AppCompatActivity() {
             }
 
             // Get user with that phone number
-            database.collection(Consts.BDPath.users).whereEqualTo("phoneNumber", num).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).whereEqualTo("phoneNumber", num).get().addOnSuccessListener {
                 if(it.isEmpty){
                     // This number does not have a user
                     val contact = ContactModel(getString(R.string.unknown_number), num)
@@ -165,7 +164,7 @@ class ChooseContactActivity : AppCompatActivity() {
         // Get all users that have their phone number in contactList
         val resList: MutableList<Pair<ContactModel, User?>> = mutableListOf()
 
-        database.collection(Consts.BDPath.users).get().addOnFailureListener{
+        database.collection(Consts.DBPath.users).get().addOnFailureListener{
 
             // Getting users failed
             if(it is FirebaseNetworkException)

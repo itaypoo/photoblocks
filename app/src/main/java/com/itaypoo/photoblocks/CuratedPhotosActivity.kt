@@ -3,7 +3,6 @@ package com.itaypoo.photoblocks
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -61,7 +60,7 @@ class CuratedPhotosActivity : AppCompatActivity() {
 
     private fun loadPhotosList() {
         // Get photos from database, ordered by download amount
-        database.collection(Consts.BDPath.curatedPhotos).orderBy("downloads", Query.Direction.DESCENDING).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.curatedPhotos).orderBy("downloads", Query.Direction.DESCENDING).get().addOnSuccessListener {
             // Construct a list from the data gotten
             for(doc in it){
                 val photo = listOf<Any>(

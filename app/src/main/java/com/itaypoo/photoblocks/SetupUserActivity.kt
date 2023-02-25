@@ -140,7 +140,7 @@ class SetupUserActivity : AppCompatActivity() {
 
     private fun uploadUserToFirestore() {
         val userHashMap = user.toHashMap()
-        database.collection(Consts.BDPath.users).add(userHashMap).addOnFailureListener{
+        database.collection(Consts.DBPath.users).add(userHashMap).addOnFailureListener{
             // Uploading user failed. Check if it is caused by user not having an internet connection
             if(it is FirebaseNetworkException){
                 enableButtonWithMessage("Uploading failed. Please check your internet connection.")
@@ -174,5 +174,9 @@ class SetupUserActivity : AppCompatActivity() {
         val msg = Snackbar.make(binding.completeButton, text, Snackbar.LENGTH_SHORT)
         msg.anchorView = binding.completeButton
         msg.show()
+    }
+
+    override fun onBackPressed() {
+        // Disable back button
     }
 }

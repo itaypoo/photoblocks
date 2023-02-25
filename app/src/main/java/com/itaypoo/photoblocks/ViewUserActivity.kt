@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
@@ -93,21 +92,21 @@ class ViewUserActivity : AppCompatActivity() {
         }
 
         // Count blocks the user is in
-        val query = database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", viewUser.databaseId!!).count().get(
+        val query = database.collection(Consts.DBPath.blockMembers).whereEqualTo("memberId", viewUser.databaseId!!).count().get(
             AggregateSource.SERVER)
         query.addOnSuccessListener {
             binding.viewUserBlockCountText.text = it.count.toString() + " " + getString(R.string.stats_blocks_joined)
         }
 
         // Count posts uploaded
-        val query2 = database.collection(Consts.BDPath.blockPosts).whereEqualTo("creatorId", viewUser.databaseId!!).count().get(
+        val query2 = database.collection(Consts.DBPath.blockPosts).whereEqualTo("creatorId", viewUser.databaseId!!).count().get(
             AggregateSource.SERVER)
         query2.addOnSuccessListener {
             binding.viewUserImageCountText.text = it.count.toString() + " " + getString(R.string.images_uploaded)
         }
 
         // Count comments written
-        val query3 = database.collection(Consts.BDPath.blockComments).whereEqualTo("authorId", viewUser.databaseId!!).count().get(
+        val query3 = database.collection(Consts.DBPath.blockComments).whereEqualTo("authorId", viewUser.databaseId!!).count().get(
             AggregateSource.SERVER)
         query3.addOnSuccessListener {
             binding.viewUserCommentCountText.text = it.count.toString() + " " + getString(R.string.comments_written)
@@ -169,7 +168,7 @@ class ViewUserActivity : AppCompatActivity() {
 
     private fun loadUserBlocks() {
 
-        val memberModelsRef = database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", viewUser.databaseId)
+        val memberModelsRef = database.collection(Consts.DBPath.blockMembers).whereEqualTo("memberId", viewUser.databaseId)
 
         GlobalScope.launch(Dispatchers.IO) {
             // Await all blocks ids that the user is in
@@ -183,14 +182,14 @@ class ViewUserActivity : AppCompatActivity() {
             // Await all blocks
             val blockList = mutableListOf<Block>()
             for(id in idList){
-                val q = database.collection(Consts.BDPath.blocks).document(id)
+                val q = database.collection(Consts.DBPath.blocks).document(id)
                 val doc = q.get().await()
                 blockList.add(FirebaseUtils.ObjectFromDoc.Block(doc))
             }
 
             // Set up recycler
             withContext(Dispatchers.Main){  // Only update UI in the main dispatcher!
-                val adapter = BlockListAdapter(blockList, this@ViewUserActivity)
+                val adapter = BlockListAdapter(blockList, database,this@ViewUserActivity)
                 binding.viewUserBlockRecycler.layoutManager = LinearLayoutManager(this@ViewUserActivity)
                 binding.viewUserBlockRecycler.adapter = adapter
 

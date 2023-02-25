@@ -39,6 +39,13 @@
             android:textColor="@color/on_background"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/blockMemberItem_leaveIcon"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:srcCompat="@drawable/icon_log_out" />
+
         <TextView
             android:id="@+id/blockMemberItem_roleText"
             android:layout_width="wrap_content"
@@ -51,7 +58,8 @@
             android:paddingEnd="15dp"
             android:text="@string/block_admin"
             android:textColor="@color/on_tertiary"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="visible" />
 
     </LinearLayout>
 

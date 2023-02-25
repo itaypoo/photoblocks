@@ -148,7 +148,7 @@ class UserSettingsActivity : AppCompatActivity() {
             val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.bounce_down)
             binding.privateCard.startAnimation(bounceAnim)
 
-            database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("isPrivate", isP).addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(AppUtils.currentUser!!.databaseId!!).update("isPrivate", isP).addOnSuccessListener {
                 AppUtils.currentUser!!.isPrivate = isP
                 // Update UI
                 if(!isP){
@@ -263,19 +263,19 @@ class UserSettingsActivity : AppCompatActivity() {
         }
 
         // Count blocks the user is in
-        val query = database.collection(Consts.BDPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        val query = database.collection(Consts.DBPath.blockMembers).whereEqualTo("memberId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
         query.addOnSuccessListener {
             binding.blockCountText.text = it.count.toString() + " " + getString(R.string.stats_blocks_joined)
         }
 
         // Count posts uploaded
-        val query2 = database.collection(Consts.BDPath.blockPosts).whereEqualTo("creatorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        val query2 = database.collection(Consts.DBPath.blockPosts).whereEqualTo("creatorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
         query2.addOnSuccessListener {
             binding.imageCountText.text = it.count.toString() + " " + getString(R.string.images_uploaded)
         }
 
         // Count comments written
-        val query3 = database.collection(Consts.BDPath.blockComments).whereEqualTo("authorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
+        val query3 = database.collection(Consts.DBPath.blockComments).whereEqualTo("authorId", AppUtils.currentUser!!.databaseId).count().get(AggregateSource.SERVER)
         query3.addOnSuccessListener {
             binding.commentCountText.text = it.count.toString() + " " + getString(R.string.comments_written)
         }
@@ -322,7 +322,7 @@ class UserSettingsActivity : AppCompatActivity() {
 
     private fun changeUserName(newName: String){
         if(AppUtils.currentUser != null && AppUtils.currentUser!!.databaseId != null){
-            database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(AppUtils.currentUser!!.databaseId!!).update("name", newName).addOnSuccessListener {
                 // Name update success, update UI
                 AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.name_changed_alert))
                 AppUtils.currentUser!!.name = newName
@@ -363,7 +363,7 @@ class UserSettingsActivity : AppCompatActivity() {
     }
 
     private fun removeBannerImage(){
-        database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("bannerImageUrl", null).addOnSuccessListener {
+        database.collection(Consts.DBPath.users).document(AppUtils.currentUser!!.databaseId!!).update("bannerImageUrl", null).addOnSuccessListener {
             AppUtils.currentUser?.bannerImageUrl = null
             loadBannerImage()
         }
@@ -410,7 +410,7 @@ class UserSettingsActivity : AppCompatActivity() {
                         AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.pfp_changed_alert))
 
                         // Update firestore user with the new image url
-                        database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
+                        database.collection(Consts.DBPath.users).document(AppUtils.currentUser!!.databaseId!!).update("profilePhotoUrl", it.toString())
                     }.
                     addOnFailureListener{
                         // Unknown error when getting photo url
@@ -433,7 +433,7 @@ class UserSettingsActivity : AppCompatActivity() {
                         AppUtils.makeCancelableSnackbar(binding.root, getString(R.string.banner_updated))
                         // Update user
                         AppUtils.currentUser?.bannerImageUrl = it.toString()
-                        database.collection(Consts.BDPath.users).document(AppUtils.currentUser!!.databaseId!!).update("bannerImageUrl", it.toString())
+                        database.collection(Consts.DBPath.users).document(AppUtils.currentUser!!.databaseId!!).update("bannerImageUrl", it.toString())
                         // Update UI
                         loadBannerImage()
                     }

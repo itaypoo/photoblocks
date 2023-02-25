@@ -8,7 +8,7 @@ object Consts {
     }
 
     // Paths for collection in Firestore
-    internal object BDPath {
+    internal object DBPath {
         const val users = "users"
         const val userNotifications = "userNotifications"
 
@@ -16,6 +16,7 @@ object Consts {
         const val blockPosts = "blockPosts"
         const val blockComments = "blockComments"
         const val blockMembers = "blockMembers"
+        const val blockInviteCodes = "blockInviteCodes"
         const val pendingBlockInvitations = "pendingBlockInvitations"
 
         const val postLikes = "postLikes"

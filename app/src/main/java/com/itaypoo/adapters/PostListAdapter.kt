@@ -1,9 +1,6 @@
 package com.itaypoo.adapters
 
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,15 +11,8 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itaypoo.helpers.AppUtils
 import com.itaypoo.helpers.Consts
@@ -122,7 +112,7 @@ class PostListAdapter(private val postCreatorList: MutableList<Pair<BlockPost, U
         val post = postCreatorList[position].first
         val creator = postCreatorList[position].second
 
-        val q = database.collection(Consts.BDPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
+        val q = database.collection(Consts.DBPath.postLikes).whereEqualTo("userId", AppUtils.currentUser!!.databaseId!!)
         q.whereEqualTo("postId", post.databaseId!!).get().addOnSuccessListener {
             var liked = false
 

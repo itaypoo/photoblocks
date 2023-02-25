@@ -142,6 +142,16 @@ object FirebaseUtils {
             )
         }
 
+        fun BlockInviteCode(doc: DocumentSnapshot): BlockInviteCode{
+            return BlockInviteCode(
+                doc.id,
+                (doc.get("creationTime") as Timestamp).toDate(),
+
+                doc.get("blockId") as String,
+                doc.get("code") as String
+            )
+        }
+
     }
 
 }

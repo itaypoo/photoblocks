@@ -22,7 +22,6 @@ import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.ContactsUtils
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.databinding.ActivityPhoneAuthBinding
-import com.itaypoo.photoblockslib.User
 import java.util.concurrent.TimeUnit
 
 class PhoneAuthActivity : AppCompatActivity() {
@@ -209,7 +208,7 @@ class PhoneAuthActivity : AppCompatActivity() {
 
     private fun signInComplete() {
         // Find if a user with that phone number exists. if it does - login, if it does not - go to user creation screen
-        database.collection(Consts.BDPath.users).whereEqualTo("phoneNumber", phoneNumber).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.users).whereEqualTo("phoneNumber", phoneNumber).get().addOnSuccessListener {
             if(it.isEmpty){
                 // A user with this phone number does not exist
                 val setupIntent = Intent(this, SetupUserActivity::class.java)
@@ -253,6 +252,10 @@ class PhoneAuthActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onBackPressed() {
+        // Disable back button
     }
 
 }

@@ -10,6 +10,9 @@
         android:id="@+id/blockMenuItem_collage"
         android:title="@string/collage_settings"/>
     <item
+        android:id="@+id/blockMenuItem_inviteCode"
+        android:title="@string/invite_via_code"/>
+    <item
         android:id="@+id/blockMenuItem_delete"
         android:title="@string/delete_block"/>
 </menu>

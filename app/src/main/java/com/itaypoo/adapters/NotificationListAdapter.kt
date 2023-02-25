@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +11,13 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itaypoo.helpers.Consts
 import com.itaypoo.helpers.FirebaseUtils
 import com.itaypoo.photoblocks.R
-import com.itaypoo.photoblocks.ViewBlockActivity
 import com.itaypoo.photoblockslib.*
-import javax.microedition.khronos.opengles.GL
 
 class NotificationListAdapter(private val notifList: MutableList<Notification>,
                               private val context: Context, private val database: FirebaseFirestore,
@@ -143,10 +139,10 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private fun bindViewHolderBlockComment(holder: BlockCommentViewHolder, notif: Notification){
         // Get comment
-        database.collection(Consts.BDPath.blockComments).document(notif.content).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockComments).document(notif.content).get().addOnSuccessListener {
             val comment = FirebaseUtils.ObjectFromDoc.BlockComment(it)
             // Get sender
-            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(notif.senderId).get().addOnSuccessListener {
                 val sender = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 blockCommentQueriesComplete(holder, comment, sender)
             }
@@ -170,10 +166,10 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private fun bindViewHolderBlockInvitation(holder: BlockInviteViewHolder, notif: Notification){
         // Get block
-        database.collection(Consts.BDPath.blocks).document(notif.content).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blocks).document(notif.content).get().addOnSuccessListener {
             val block = FirebaseUtils.ObjectFromDoc.Block(it)
             // Get inviter user
-            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(notif.senderId).get().addOnSuccessListener {
                 val inviter = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 // Bind viewHolder
                 blockInvitationQueriesComplete(holder, notif, block, inviter)
@@ -205,10 +201,10 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private fun bindViewHolderPostLike(holder: PostLikeViewHolder, notif: Notification){
         // Get post
-        database.collection(Consts.BDPath.blockPosts).document(notif.content).get().addOnSuccessListener {
+        database.collection(Consts.DBPath.blockPosts).document(notif.content).get().addOnSuccessListener {
             val post = FirebaseUtils.ObjectFromDoc.BlockPost(it)
             // Get sender user
-            database.collection(Consts.BDPath.users).document(notif.senderId).get().addOnSuccessListener {
+            database.collection(Consts.DBPath.users).document(notif.senderId).get().addOnSuccessListener {
                 val sender = FirebaseUtils.ObjectFromDoc.User(it, contentResolver)
                 postLikeQueriesComplete(holder, post, sender)
             }

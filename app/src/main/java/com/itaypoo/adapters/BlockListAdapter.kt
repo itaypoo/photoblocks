@@ -19,11 +19,14 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.FirebaseFirestore
 import com.itaypoo.helpers.AppUtils
+import com.itaypoo.helpers.Consts
 import com.itaypoo.photoblocks.R
 import com.itaypoo.photoblockslib.Block
 
-class BlockListAdapter(private val blockList: MutableList<Block>, private val context: Context) :
+class BlockListAdapter(private val blockList: MutableList<Block>, private val database: FirebaseFirestore, private val context: Context) :
     RecyclerView.Adapter<BlockListAdapter.ViewHolder>() {
 
     // Listener for item click
@@ -33,6 +36,7 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val coverImagePreview: ImageView
         val imageGradient: ImageView
+        val membersText: TextView
         val titleText: TextView
         val cardView: CardView
         val dateText: TextView
@@ -43,6 +47,7 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
             view.translationY = 100F
             coverImagePreview = view.findViewById(R.id.blockItem_photoPreview)
             imageGradient = view.findViewById(R.id.blockItem_gradient)
+            membersText = view.findViewById(R.id.blockItem_membersText)
             titleText = view.findViewById(R.id.blockItem_titleText)
             cardView = view.findViewById(R.id.blockItem_cardView)
             dateText = view.findViewById(R.id.blockItem_dateText)
@@ -54,7 +59,6 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.recycler_item_block, viewGroup, false)
-
         return ViewHolder(view)
     }
 
@@ -70,6 +74,11 @@ class BlockListAdapter(private val blockList: MutableList<Block>, private val co
         viewHolder.imageGradient.imageTintList = ColorStateList.valueOf( block.secondaryColor.toInt() )
 
         viewHolder.dateText.text = AppUtils.DateString(block.creationTime).dayMonthText()
+
+        // Load member amount
+        database.collection(Consts.DBPath.blockMembers).whereEqualTo("blockId", block.databaseId).count().get(AggregateSource.SERVER).addOnSuccessListener {
+            viewHolder.membersText.text = it.count.toString()
+        }
 
         // Load image to imageView using Glide
         // Fade in view after image is loaded
